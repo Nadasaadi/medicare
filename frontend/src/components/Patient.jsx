@@ -3,7 +3,7 @@ import imageform from "../assets/la-personne.png";
 import { AuthContext } from '../context/AuthContext';
 
 import axios from 'axios'; // Importez Axios
-import { useAuthContext } from '../../hooks/useAuthContext';
+import { useAuthContext } from "../hooks/useAuthContext";
 const SIGNUP_URL = 'http://localhost:9000/user/signup';
 const LOGIN_URL = 'http://localhost:9000/user/login';
 
@@ -65,7 +65,7 @@ const [errorMessage, setErrorMessage] = useState('');
       }
    // Navigate to another page after login/signup
   } catch (error) {
-    if (error.response && error.response.status === 409) {
+    if (error.response) {
       setErrorMessage('L\'adresse e-mail existe déjà. Veuillez vous connecter ou utiliser une autre adresse e-mail.');
     } else {
       console.error('Error while submitting the form:', error.response.data);

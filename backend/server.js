@@ -1,6 +1,7 @@
 const express = require('express');//importe express
 const bodyParser = require('body-parser');
 
+
 const app = express();//creer une instance de l'application express
 const PORT = 9000;
 const cors = require('cors');

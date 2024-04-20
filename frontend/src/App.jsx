@@ -6,7 +6,7 @@ import Home from './components/Home';
 import Navbar from './components/Navbar';
 import Contact from './components/Contact';
 import Savoir_plus from './components/Savoir_plus'
-import { useAuthContext } from '../hooks/useAuthContext';
+import { useAuthContext } from "./hooks/useAuthContext";
 import Professionel from './components/Professionel';
 
 
