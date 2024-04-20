@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import './Styleprofissionel.css'; // Import du fichier CSS
 
 const Professionel = () => {
@@ -11,6 +12,7 @@ const Professionel = () => {
   const [address, setAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
     // Logique de connexion
@@ -123,13 +125,24 @@ const Professionel = () => {
             required
           />
           <TextField
-            type="password"
+            type={showPassword ? "text" : "password"}
             label="Mot de passe"
             value={password}
             onChange={handlePasswordChange}
             variant="outlined"
             fullWidth
             required
+            InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
           />
           {isSignUp && (
             <TextField
