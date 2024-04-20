@@ -1,0 +1,189 @@
+/* styleEP.css */
+.espace-patient-container {
+  display: flex;
+  justify-content: center; /* Aligner horizontalement la section au centre */
+  align-items: center; /* Aligner verticalement la section au centre */
+  height: 100vh; /* Utiliser toute la hauteur de l'écran */
+}
+.main-content {
+  max-width: 600px; /* Limiter la largeur de la section pour éviter qu'elle ne prenne toute la largeur de l'écran */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Média queries pour les petits écrans */
+@media (max-width: 768px) {
+  .espace-patient-container {
+    flex-direction: column; /* Afficher les éléments verticalement sur les petits écrans */
+  }
+}
+
+.profil-container {
+  background-color: #9aa7ef3d;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+ 
+ 
+}
+
+.profil-container h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.label {
+  font-weight: bold;
+  color: #0003cc;
+}
+
+.profil-container p {
+  margin: 5px 0;
+  width: 100%;
+}
+
+.analyse-container,
+.vaccin-container {
+  margin-top: 20px;  /* Centre l'élément horizontalement et verticalement */
+}
+
+.analyse,
+.vaccin {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.analyse p,
+.vaccin p {
+  margin: 5px 0;
+}
+
+
+.logout-button {
+  margin-bottom: 10px;
+  background-color: #3369ff;
+  color: white;
+  border: 1px solid #fdfdfd;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+
+}
+.logout-button svg{
+  vertical-align: middle;
+}
+.logout-button:hover {
+  background-color: #cc0000;
+}
+.button-resp{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+
+/*PAtient navbar style*/
+.patient-nav {
+  background-color: #f0f0f0;
+  padding: 20px;
+  position: fixed;
+  top: 50px; /* Ajustez la position verticale pour éviter de cacher le navbar */
+  left: 0px;
+  width: 180px;
+  height: calc(100vh - 50px); /* Utilisez une hauteur dynamique pour ajuster en fonction de la hauteur du navbar */
+}
+
+.patient-navbar-nav {
+  list-style-type: none; /* Supprimer les puces de la liste */
+  padding: 0; /* Supprimer le remplissage par défaut */
+  margin: 0; /* Supprimer les marges par défaut */
+  display: flex; /* Utiliser flexbox pour aligner les éléments horizontalement */
+  flex-direction: column; /* Afficher les éléments verticalement dans la barre latérale */
+}
+
+.patient-nav-item {
+  margin-bottom: 20px; /* Espacement entre chaque élément de la liste */
+}
+
+.patient-nav-link {
+  text-decoration: none; /* Supprimer la soulignement des liens */
+  color: #333; /* Couleur du texte des liens */
+  display: flex; /* Utiliser flexbox pour aligner l'icône et le texte verticalement */
+  align-items: center; /* Aligner les éléments verticalement */
+  padding: 10px; /* Espacement intérieur de chaque lien */
+  transition: background-color 0.3s ease; /* Animation de transition */
+}
+
+.patient-nav-link:hover,
+.patient-nav-link:focus {
+  background-color: #e0e0e0; /* Couleur de fond lors du survol ou du focus */
+  color: #007bff; /* Couleur du texte lors du survol ou du focus */
+}
+
+.patient-nav-link svg {
+  margin-right: 10px; /* Espacement entre l'icône et le texte */
+}
+
+/* Afficher le bouton de menu sur les petits écrans */
+.menu-btn {
+  display: none; /* Masquer le bouton de menu par défaut */
+}
+
+/* Media queries pour les petits écrans */
+@media (max-width: 768px) {
+  .patient-navbar-nav {
+    display: none; /* Masquer le menu de navigation */
+  }
+  .patient-navbar-nav.show-menu {
+    display: block; /* Afficher le menu de navigation lorsque le bouton de menu est cliqué */
+  }
+  .menu-btn {
+    display: block; /* Afficher le bouton de menu */
+    text-align: right; /* Aligner le bouton à droite */
+    cursor: pointer; /* Afficher le curseur pointer */
+  }
+}
+
+.error-message {
+  color: red;
+  animation-name: shake;
+  animation-duration: 0.5s;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+/*analyse style*/
+.analyse-navigation {
+  display: flex;
+}
+
+.analyse-navigation button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  background-color: #ccc;
+  border: none;
+  cursor: pointer;
+}
+
+.analyse-navigation button.selected {
+  background-color: #007bff;
+  color: white;
+}
+.analyse-navigation-p{
+  color: #007bff;
+  text-align: center;
+  margin: 10px;
+}
