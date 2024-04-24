@@ -10,7 +10,18 @@
   z-index: 999;
   width: 100%; /* Assurez-vous que la barre de navigation occupe toute la largeur */
   }
+  .font-size-toggle-button {
+    background-color: transparent; /* Couleur de fond transparente */
+    border: none; /* Supprime les bordures */
+    color: #ffffff;
+    cursor: pointer; /* Curseur pointeur au survol */
+    outline: none; /* Supprime la bordure de focus */
+    transition: transform 0.3s ease; /* Animation de transition pour la transformation */
+  }
   
+  .font-size-toggle-button:hover {
+    transform: scale(1.2); /* Zoom de 20% au survol */
+  }
   .navbar-links-container {
     display: flex;
     align-items: center;
@@ -92,3 +103,7 @@
 
 
 
+.large-font {
+  font-size: 1.4em; /* Exemple de taille de police agrandie */
+  /* Autres styles pour le grand format */
+}

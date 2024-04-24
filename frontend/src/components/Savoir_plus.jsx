@@ -1,15 +1,15 @@
 import React from 'react';
-
-
+import { useFontSize } from '../context/FontSizeContext';
 import allergie from '../assets/allergie.jpg';
 import gestion from '../assets/gestion.jpg';
 import portrait from '../assets/portrait.jpg';
 import Partage from '../assets/partage.jpg'; // Ajout de l'image pour la gestion du temps
 
 function Savoir_plus() {
+  const { largeFont } = useFontSize(); 
   return (
     <section id="services">
-      <div className="container">
+      <div className= {`container ${largeFont ? 'large-font' : ''}`}>
       <h1>Nos services</h1>
         <h3>Voici quelques-uns des services que nous offrons:</h3>
         <ul>

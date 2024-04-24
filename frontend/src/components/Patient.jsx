@@ -1,39 +1,47 @@
 import React, { useState } from 'react';
 import imageform from "../assets/la-personne.png";
-import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { TextField, Button, Select, MenuItem,IconButton,InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import axios from 'axios';
-import { useAuthContext } from '../../hooks/useAuthContext';
-
+import { useFontSize } from '../context/FontSizeContext';
+import axios from 'axios'; // Importez Axios
+import './patientform.css'; // Import du fichier CSS
+import { useAuthContext } from "../hooks/useAuthContext";
 const SIGNUP_URL = 'http://localhost:9000/user/signup';
 const LOGIN_URL = 'http://localhost:9000/user/login';
 
 function Patient() {
-  const { dispatch } = useAuthContext();
+  const { largeFont } = useFontSize(); 
+  // update user context 
+  const {dispatch} = useAuthContext()
+  // State variables to store input values
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isNewMember, setIsNewMember] = useState(false);
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
-  const [date_naissance, setDate_naissance] = useState('');
+  const [date_naissance, setDate_naissance] = useState(null);
   const [sexe, setSexe] = useState('M');
   const [lieu_naissance, setLieu_naissance] = useState('');
-  const [showWelcome, setShowWelcome] = useState(true);
   const [emailError, setEmailError] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  // Déclarez un état pour stocker le message d'erreur
+  const [errorMessage, setErrorMessage] = useState('');
 
+  // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      // Validation de l'e-mail
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         setEmailError('Veuillez entrer une adresse e-mail valide.');
         return;
       }
-
+ 
+      // Si l'e-mail est valide, réinitialiser l'erreur d'e-mail
       setEmailError('');
       if (isNewMember) {
+        // Logic for signing up
         const response = await axios.post(SIGNUP_URL, {
           email,
           password,
@@ -43,146 +51,152 @@ function Patient() {
           sexe,
           lieu_naissance,
         });
-        if (response.data) {
-          dispatch({ type: "login", payload: response.data });
+        if(response.data){
+          dispatch({type: "login", payload: response.data});
           localStorage.setItem("user", JSON.stringify(response.data));
         }
       } else {
+        // Logic for logging in
         const response = await axios.post(LOGIN_URL, {
           email,
           password,
         });
-        if (response.data) {
-          dispatch({ type: "login", payload: response.data });
+        if(response.data){
+          dispatch({type: "login", payload: response.data});
           localStorage.setItem("user", JSON.stringify(response.data));
         }
       }
-    } catch (error) {
-      if (error.response && error.response.status === 409) {
-        setErrorMessage('L\'adresse e-mail existe déjà. Veuillez vous connecter ou utiliser une autre adresse e-mail.');
-      } else {
-        console.error('Error while submitting the form:', error.response.data);
-      }
+   // Navigate to another page after login/signup
+  } catch (error) {
+    if (error.response) {
+      setErrorMessage(error.response.data.message);
+    } else {
+      console.error('Error while submitting the form:', error.response.data);
     }
+  }
   };
 
   return (
     <>
-      {showWelcome && (
-        <div className="welcome-text">
-          Bienvenue dans notre espace patient!
+    
+    <div className={`patient-page-container ${largeFont ? 'large-font' : ''}`}>
+    <div className="health-image">
+    <img src={imageform}  alt="Image santé"  />
+    </div>
+    <h1>Bienvenue dans notre espace patient!</h1>
+      <form onSubmit={handleSubmit} className="login-form">
+        <div className="form-group-patient">
+          <TextField
+            type="email"
+            label="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="form-control" 
+            placeholder="XXXX@gmail.com"
+            fullWidth
+            required
+          />
+          {emailError && <p className="error-message">{emailError}</p>}
         </div>
-      )}
-      <div className="patient-page-container">
-        <div className="health-image">
-          <img src={imageform} alt="Image santé" />
-        </div>
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group-patient">
-            <label><span className="required">*</span>Email:</label>
-            <TextField
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="form-control"
-              placeholder="XXXX@gmail.com"
-              required
-            />
-            {emailError && <p className="error-message">{emailError}</p>}
-            {errorMessage && (<p className="error-message">{errorMessage}</p>)}
-          </div>
-          <div className="form-group-patient">
-            <label><span className="required">*</span>Password:</label>
-            <TextField
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="form-control"
-              required
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </div>
-          {isNewMember && (
-            <>
-              <div className="form-group-patient">
-                <label><span className="required">*</span>Nom:</label>
-                <TextField
-                  type="text"
-                  value={nom}
-                  onChange={(e) => setNom(e.target.value)}
-                  className="form-control"
-                  required
-                />
-              </div>
-              <div className="form-group-patient">
-                <label><span className="required">*</span>Prénom:</label>
-                <TextField
-                  type="text"
-                  value={prenom}
-                  onChange={(e) => setPrenom(e.target.value)}
-                  className="form-control"
-                  required
-                />
-              </div>
-              <div className="form-group-patient">
-                <label><span className="required">*</span>Date naissance:</label>
-                <TextField
-                  type="date"
-                  value={date_naissance}
-                  onChange={(e) => setDate_naissance(e.target.value)}
-                  className="form-control"
-                  required
-                />
-              </div>
-              <div className="form-group-patient">
-                <label><span className="required">*</span>Sexe:</label>
-                <TextField
-                  select
-                  value={sexe}
-                  onChange={(e) => setSexe(e.target.value)}
-                  className="form-control"
-                  required
+        <div className="form-group-patient">
+          <TextField
+          type={showPassword ? "text" : "password"}
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="form-control"
+            fullWidth
+            required
+            InputProps={{
+            endAdornment: (
+            <InputAdornment position="end" >
+                <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{ position: "absolute", right: 0, bottom:0, top:0}}
                 >
-                  <option value="M">Homme</option>
-                  <option value="F">Femme</option>
-                </TextField>
-              </div>
-              <div className="form-group-patient">
-                <label><span className="required">*</span>Lieu naissance:</label>
-                <TextField
-                  type="text"
-                  value={lieu_naissance}
-                  onChange={(e) => setLieu_naissance(e.target.value)}
-                  className="form-control"
-                  required
-                />
-              </div>
-            </>
-          )}
-          <div className="form-group-patient">
-            <input
-              type="checkbox"
-              checked={isNewMember}
-              onChange={(e) => setIsNewMember(e.target.checked)}
-              className="form-check-input"
-            />
-            <label className="form-check-label">Inscrivez-vous en tant que nouveau membre</label>
-          </div>
-          <button type="submit" className="btn btn-primary">
-            {isNewMember ? 'Sign Up' : 'Log In'}
-          </button>
-        </form>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+            </InputAdornment>
+        ),
+    }}
+          />
+        </div>
+        {isNewMember && (
+          <>
+            <div className="form-group-patient">
+              <TextField
+                type="text"
+                label="Nom"
+                value={nom}
+                onChange={(e) => setNom(e.target.value)}
+                className="form-control"
+                fullWidth
+                required
+              />
+            </div>
+            <div className="form-group-patient">
+              <TextField
+                type="text"
+                label="Prénom"
+                value={prenom}
+                onChange={(e) => setPrenom(e.target.value)}
+                className="form-control"
+                fullWidth
+                required
+              />
+            </div>
+            <div className="form-group-patient">
+        <Select
+          label="Sexe"
+          value={sexe}
+          onChange={(e) => setSexe(e.target.value)}
+          fullWidth
+          required
+        >
+          <MenuItem value="M">Homme</MenuItem>
+          <MenuItem value="F">Femme</MenuItem>
+        </Select>
       </div>
+            <div className="form-group-patient">
+              <TextField
+                type="date"
+                label="Date de naissance"
+                value={date_naissance}
+                onChange={(e) => setDate_naissance(e.target.value)}
+                className="form-control"
+                fullWidth
+                required
+                InputLabelProps={{ shrink: true }}
+              />
+            </div>
+  
+            <div className="form-group-patient">
+              <TextField
+                type="text"
+                label="Lieu de naissance"
+                value={lieu_naissance}
+                onChange={(e) => setLieu_naissance(e.target.value)}
+                className="form-control"
+                fullWidth
+                required
+              />
+            </div>
+          </>
+        )}
+        <Button className='login-bouton' type="submit" variant="contained" color="primary">
+  {isNewMember ? 'S\'inscrire' : 'Se connecter'}
+</Button>
+
+         <Button
+          onClick={() => setIsNewMember(!isNewMember)}
+          fullWidth
+        >
+          {isNewMember ? 'Utiliser un compte existant' : 'Créer un nouveau compte'}
+        </Button>
+        {errorMessage && (<p className="error-message">{errorMessage}</p> )}
+       
+      </form>
+    </div>
     </>
   );
 }

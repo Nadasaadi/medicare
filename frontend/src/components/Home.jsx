@@ -3,10 +3,13 @@ import BannerImage from "../assets/doctor-nurses-special-equipment-removebg-prev
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from 'react-router-dom';
 import AdminForm from './Adminform';
+import { useFontSize } from '../context/FontSizeContext'; // importer le hook du contexte de la taille de la police
 const Home = () => {
+  
+  const { largeFont } = useFontSize(); // Utilisez le hook pour lire l'état de l'agrandissement du texte
   return (
     <>
-    <div className="home-container">
+     <div className={`home-container ${largeFont ? 'large-font' : ''}`}> {/* Utilisez une classe conditionnelle pour agrandir le texte */}
       <div className="home-banner-container">
         <div className="home-image-section">
           <img src={BannerImage} alt="" />

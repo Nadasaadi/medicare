@@ -5,7 +5,5 @@ const connection = mysql.createConnection({
     password: 'nadasaadi2003*', // Votre mot de passe MySQL
     database: 'medicare' // Le nom de votre base de données MySQL
 });
-
 const db = connection.promise();
-
 module.exports = db;

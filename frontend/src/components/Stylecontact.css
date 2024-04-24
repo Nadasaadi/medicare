@@ -4,7 +4,11 @@
     margin: 0 auto;
     padding: 20px;
 }
-
+.large-font {
+    font-size: 1.4em; /* Exemple de taille de police agrandie */
+    /* Autres styles pour le grand format */
+  }
+  
 h1 {
     text-align: center;
     color: #0050d2;
@@ -12,6 +16,10 @@ h1 {
 
 .questions-container {
     margin-bottom: 40px;
+    transition: transform 0.3s ease; /* Ajoutez une transition pour une animation fluide */
+}
+.questions-container :hover{
+    transform: scale(1.02); /* Zoom de 20% au survol */
 }
 
 .questions-container h2 {
@@ -113,3 +121,25 @@ h1 {
     margin: 30px;
     text-align: center;
 }
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px; /* Augmentez la marge en bas pour espacer du reste du formulaire */
+    color: #333; /* Couleur du texte */
+  }
+
+  /* Ajout de style à la liste déroulante */
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    margin-bottom: 30px; /* Ajout de marge en bas */
+  }
+  
+  /* Style pour les options de la liste déroulante */
+  option {
+    font-size: 16px;
+  }

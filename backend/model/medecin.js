@@ -3,27 +3,27 @@ const db =  require("../util/database");
 
 
 
-class User {
-    constructor(email, password, nom, prenom, date_naissance, sexe, lieu_naissance){
+class Medecin {
+    constructor(email, password, nom, prenom, specialite,  adresse, numero_tel){
         this.email = email;
         this.password = password;
         this.nom = nom;
         this.prenom = prenom;
-        this.date_naissancec = date_naissance;
-        this.sexe = sexe;
-        this.lieu_naissance = lieu_naissance;
+        this.specialite = specialite;
+        this.adresse = adresse;
+        this.numero_tel = numero_tel;
     };
 
 
     static async testExistEmail(email) {
-        return await db.execute( `SELECT email from patient WHERE email = "${email}" ;` )
+        return await db.execute( `SELECT email from medecin WHERE email = "${email}" ;` )
     }
     
     static async testExistPassword(password) {
-        return await db.execute( `SELECT password from patient WHERE password = "${password}" ;` )
+        return await db.execute( `SELECT password from medecin WHERE password = "${password}" ;` )
     }
-    static async login({email, password}) {
-        const [[userData]] = await db.execute( `SELECT * from patient WHERE email = "${email}";` );
+    static async loginM({email, password}) {
+        const [[userData]] = await db.execute( `SELECT * from medecin WHERE email = "${email}";` );
         if (!userData) {
             throw Error("invalid email")
         }
@@ -37,14 +37,14 @@ class User {
     }
     
 
-    static async signup ({email, password, nom, prenom, date_naissance, sexe,  lieu_naissance}) {
+    static async signupM ({email, password, nom, prenom, specialite,  adresse, numero_tel}) {
         const [[existEmail]] = await User.testExistEmail(email);
         if(existEmail){
             throw Error("email alredy exist");
         }
-        return await db.execute( `Insert INTO patient (email, password, nom, prenom , date_naissance , sexe  , lieu_naissance) VALUES ("${email}", "${password}", "${nom}", "${prenom}",  "${date_naissance}", "${sexe}", "${lieu_naissance}");` );
+        return await db.execute( `Insert INTO medecin (email, password, nom, prenom, specialite,  adresse, numero_tel) VALUES ("${email}", "${password}", "${nom}", "${prenom}",  "${specialite}", "${adresse}", "${numero_tel}");` );
     }
 }
 
 
-module.exports = User;
+module.exports = Medecin;

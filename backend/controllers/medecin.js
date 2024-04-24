@@ -1,28 +1,28 @@
 const bcrypt = require("bcrypt");
 const db = require("../util/database");
-const User = require("../model/user");
+const Medecin = require("../model/medecin");
 
-const signup = async (req, res) => {
+const signupM = async (req, res) => {
     try {
-        const {email, password, nom, prenom, sexe, date_naissance, lieu_naissance} = req.body;
+        const {email, password, nom, prenom, specialite , adresse, numero_tel} = req.body;
         
         // Hasher le mot de passe
         const hashedPassword = await bcrypt.hash(password, 10); // 10 est le nombre de tours de hachage
 
         // Créer un nouvel utilisateur avec le mot de passe haché
-        await User.signup({email, password: hashedPassword, nom, prenom, sexe, date_naissance, lieu_naissance});
+        await Medecin.signupM({email, password: hashedPassword, nom, prenom, sexe, date_naissance, lieu_naissance});
 
-        res.status(200).json({email, password, nom, prenom, sexe, date_naissance, lieu_naissance});
+        res.status(200).json({email, password, nom, prenom, specialite , adresse, numero_tel});
     } catch(error) {
         res.status(400).json({"error": error.message});
     }
 }
 
-const login = async (req, res) => {
+const loginM = async (req, res) => {
     const {email, password} = req.body;
     try {
 
-        const data = await User.login({email, password});
+        const data = await Medecin.loginM({email, password});
         // Si le mot de passe est valide, renvoyer les données de l'utilisateur
         res.status(200).json(data);
     } catch(error) {
@@ -31,4 +31,4 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = {signup, login};
+module.exports = {signupM, loginM};

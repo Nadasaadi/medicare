@@ -169,7 +169,12 @@
 .analyse-navigation {
   display: flex;
 }
-
+.large-font {
+  font-size: 1.4em; /* Exemple de taille de police agrandie */
+}
+.large-font button{
+  font-size: 1.3rem;
+}
 .analyse-navigation button {
   margin-right: 10px;
   padding: 5px 10px;
@@ -177,6 +182,7 @@
   border: none;
   cursor: pointer;
 }
+
 
 .analyse-navigation button.selected {
   background-color: #007bff;

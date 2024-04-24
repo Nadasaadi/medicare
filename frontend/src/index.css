@@ -157,91 +157,12 @@ body {
     display: none;
   }
 }
-.patient-page-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: #334a912a;
-  position: relative;
-}
 
-.login-form {
-  display: flex;
-  flex-direction: column;
+.large-font {
+  font-size: 1.4em; /*taille de police agrandie */
 }
-
-.form-group-patient {
-  margin-bottom: 10px;
-}
-
-.label {
-  margin-bottom: 5px;
-}
-
-.form-control {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #1a0582;
-  border-radius: 12px;
-  background-color: #ffffff;
-  
-}
-
-.form-check-input {
-  margin-right: 5px;
-}
-.health-image {
-  position: absolute;
-  top: -18px; /* Ajustez la position verticale selon vos besoins */
-  left: 10%; /* Positionnement au centre */
-  transform: translateX(-50%); /* Centrage horizontal */
-  width: 30px; /* Largeur de l'icône */
-  height: 30px; /* Hauteur de l'icône */
-  bottom: 80px;
-}
-.required {
-  color: red; /* Couleur rouge pour l'astérisque */
-}
-
-
-
-
-.btn {
-  padding: 8px 20px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background-color: #03045F;
-  color: #fff;
-}
-
-.btn-primary:hover {
-  background-color: #205308;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.954); /* Ombre sous le bouton */
-  
-}
-.welcome-text {
-  opacity: 0;
-  animation: fadeIn 2s forwards;
-  font-size: 24px; /* Taille de la police */
-  color:#0050d2; /* Couleur du texte */
-  text-align: center; /* Centrage horizontal */
-  margin-top: 30px; /* Espacement depuis le haut */
-  margin-bottom: 30px; /* Espacement depuis le bas */
-  padding-bottom: 50px;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.large-font .primary-text{
+  font-size: 1.4em; 
 }
 
 

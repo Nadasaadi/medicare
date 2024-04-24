@@ -6,13 +6,13 @@ import Home from './components/Home';
 import Navbar from './components/Navbar';
 import Contact from './components/Contact';
 import Savoir_plus from './components/Savoir_plus'
-import { useAuthContext } from '../hooks/useAuthContext';
+import { useAuthContext } from "./hooks/useAuthContext";
 import Professionel from './components/Professionel';
-
-
+import { FontSizeProvider } from './context/FontSizeContext'; 
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 function App() {
-  //const [count, setCount] = useState(0)
+  const queryClient = new QueryClient();
   const {user} = useAuthContext();
   console.log("user rfrom app.js", user)
   const router=createBrowserRouter(
@@ -28,9 +28,17 @@ function App() {
   )
   return (
     
+    <QueryClientProvider client={queryClient}> 
+    <FontSizeProvider>
    <div>
+   
     <RouterProvider router={router}/>
+   
+   
    </div>
+   </FontSizeProvider>
+   </QueryClientProvider>
+    
   )
 }
 

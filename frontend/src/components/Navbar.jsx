@@ -9,18 +9,23 @@ import { IoHome } from "react-icons/io5";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import LoginForm from "./Loginform"
+import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
+import { useFontSize } from '../context/FontSizeContext'; // Importez le hook du contexte
 import './navbarstyle.css'; // Import du fichier CSS
 
 const Navbar = () => {
   const location = useLocation();
+  const { largeFont, setLargeFont } = useFontSize(); // Utilisez le hook du contexte pour lire et mettre à jour l'état
   const [openMenu, setOpenMenu] = useState(false);
-
+  
   const handleLogin = ({ email, password }) => {
     console.log("Email:", email);
     console.log("Password:", password);
     // Gérer la connexion ou rediriger l'utilisateur après connexion
   };
-
+  const toggleLargeFont = () => {
+    setLargeFont(!largeFont); // Inversez l'état de l'agrandissement du texte
+  };
   const menuOptions = [
     {
       text: "Accueil",
@@ -46,7 +51,7 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="navigation">
+      <header className={`navigation ${largeFont ? 'large-font' : ''}`}> {/* Appliquer une classe conditionnelle pour agrandir le texte */}
         <img className="nav-logo-container" src={Logo} alt="" />
         <nav className="navbar-links-container">
           {menuOptions.map((item, index) => (
@@ -83,6 +88,9 @@ const Navbar = () => {
         {(location.pathname === "/" || location.pathname === "/Contact") && (
           <LoginForm onLogin={handleLogin} />
         )}
+                {/* Ajouter un bouton pour activer/désactiver l'agrandissement de la police */}
+                <button onClick={toggleLargeFont} className="font-size-toggle-button">Agrandir 
+                </button>
       </header>
       <main>
         <Outlet />

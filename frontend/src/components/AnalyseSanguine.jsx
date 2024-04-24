@@ -1,29 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Importez Axios pour effectuer des requêtes HTTP
-
+import { useQuery } from 'react-query';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { useFontSize } from '../context/FontSizeContext';
+const ANALYSE_URL='http://localhost:9000/analyse/';
 function AnalyseSanguine() {
-  // État local pour stocker les données des analyses sanguines
-  const [analysesSanguines, setAnalysesSanguines] = useState([]);
+  const {user}  = useAuthContext(); // Utiliser le hook useAuthContext pour récupérer le contexte d'authentification  
+  const id_patient = user.id_patient; // Récupérer l'ID du patient à partir du contexte d'authentification
+  const { largeFont } = useFontSize();
 
-  // Effet pour charger les données des analyses sanguines depuis la base de données
-  useEffect(() => {
-    const fetchAnalysesSanguines = async () => {
-      try {
-        const response = await axios.get('/api/analyses-sanguines');
-        console.log('Données des analyses sanguines:', response.data); // Vérifier les données reçues
-        setAnalysesSanguines(response.data);
-      } catch (error) {
-        console.error('Erreur lors du chargement des analyses sanguines:', error);
-      }
-    };
+
+  //console.log(id_patient,"nada");
+  const { isLoading, error, data: analysesSanguines } = useQuery('analysesSanguines', async () => {
+    const response = await axios.get(ANALYSE_URL, { params : { id_patient: id_patient } });
+    return response.data;
+  });
   
-    fetchAnalysesSanguines();
-  }, []);
-  
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
   
 
   return (
-    <div>
+    <div className={largeFont ? 'large-font' : ''}>
       {/* Affichage des analyses sanguines */}
       <table>
         <thead>

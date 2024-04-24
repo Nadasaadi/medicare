@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
 import { TextField, Button, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useFontSize } from '../context/FontSizeContext';
 import './Styleprofissionel.css'; // Import du fichier CSS
-
+import axios from 'axios'; // Importez Axios
+const SIGNUPM_URL = 'http://localhost:9000/medecin/signupM';
+const LOGINM_URL = 'http://localhost:9000/medecin/loginM';
 const Professionel = () => {
+  const { largeFont } = useFontSize();
+  // update user context 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [surname, setSurname] = useState('');
-  const [specialty, setSpecialty] = useState('');
-  const [address, setAddress] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [nom, setNom] = useState('');
+  const [prenom, setPrenom] = useState('');
+  const [specialite, setSpecialite] = useState('');
+  const [adresse, setAdresse] = useState('');
+  const [numero_tel, setNumero_tel] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  const handleLogin = () => {
-    // Logique de connexion
-  };
-
-  const handleSignUp = () => {
-    // Logique d'inscription
-  };
+// Déclarez un état pour stocker le message d'erreur
+const [errorMessage, setErrorMessage] = useState('');
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -31,87 +30,142 @@ const Professionel = () => {
   };
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    setNom(e.target.value);
   };
 
   const handleSurnameChange = (e) => {
-    setSurname(e.target.value);
+    setPrenom(e.target.value);
   };
 
   const handleSpecialtyChange = (e) => {
-    setSpecialty(e.target.value);
+    setSpecialite(e.target.value);
   };
 
   const handleAddressChange = (e) => {
-    setAddress(e.target.value);
+    setAdresse(e.target.value);
   };
 
   const handlePhoneNumberChange = (e) => {
-    setPhoneNumber(e.target.value);
+    setNumero_tel(e.target.value);
   };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     
-    if (isSignUp) {
-      // Logique de validation et envoi des données d'inscription
+    try {
+      // Validation de l'e-mail
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setEmailError('Veuillez entrer une adresse e-mail valide.');
+        return;
+      }
+ 
+      // Si l'e-mail est valide, réinitialiser l'erreur d'e-mail
+      setEmailError('');
+      if (isSignUp) {
+        // Logic for signing up
+        const response = await axios.post(SIGNUPM_URL, {
+          email,
+          password,
+          nom,
+          prenom,
+          specialite,
+          adresse,
+          numero_tel,
+        });
+        console.log(response.data);
+        if(response.data){
+          dispatch({type: "login", payload: response.data});
+          localStorage.setItem("medecin", JSON.stringify(response.data));
+        }
+      } else {
+        // Logic for logging in
+        const response = await axios.post(LOGINM_URL, {
+          email,
+          password,
+        });
+        if(response.data){
+          dispatch({type: "login", payload: response.data});
+          localStorage.setItem("medecin", JSON.stringify(response.data));
+        }
+      }
+   // Navigate to another page after login/signup
+  } catch (error) {
+    if (error.response) {
+      setErrorMessage(error.response.data.message);
     } else {
-      // Logique de validation et envoi des données de connexion
+      console.error('Error while submitting the form:',error.response.data);
     }
+  }
   };
 
   return (
-    <div className="professional-page">
+    <div className={`professional-page ${largeFont ? 'large-font' : ''}`}>
       <div className="form-section">
       
-        <h1>Bienvenue</h1>
+        <h1>Bienvenue dans notre espace professionnel!</h1>
         <form onSubmit={handleFormSubmit}>
           {isSignUp && (
             <>
               <TextField
                 type="text"
                 label="Nom"
-                value={name}
+                value={nom}
                 onChange={handleNameChange}
                 variant="outlined"
                 fullWidth
                 required
+                InputProps={{
+        style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
+    }}
               />
               <TextField
                 type="text"
                 label="Prénom"
-                value={surname}
+                value={prenom}
                 onChange={handleSurnameChange}
                 variant="outlined"
                 fullWidth
                 required
+                InputProps={{
+        style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
+    }}
               />
               <TextField
                 type="text"
                 label="Spécialité"
-                value={specialty}
+                value={specialite}
                 onChange={handleSpecialtyChange}
                 variant="outlined"
                 fullWidth
                 required
+                InputProps={{
+        style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
+    }}
               />
               <TextField
                 type="text"
                 label="Adresse"
-                value={address}
+                value={adresse}
                 onChange={handleAddressChange}
                 variant="outlined"
                 fullWidth
-                required
+                required 
+                InputProps={{
+        style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
+    }}
               />
               <TextField
                 type="tel"
                 label="Numéro de téléphone"
-                value={phoneNumber}
+                value={numero_tel}
                 onChange={handlePhoneNumberChange}
                 variant="outlined"
                 fullWidth
                 required
+                InputProps={{
+        style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
+    }}
               />
             </>
           )}
@@ -122,7 +176,11 @@ const Professionel = () => {
             onChange={handleEmailChange}
             variant="outlined"
             fullWidth
+            InputProps={{
+            style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
+            }}
             required
+            
           />
           <TextField
             type={showPassword ? "text" : "password"}
@@ -133,33 +191,41 @@ const Professionel = () => {
             fullWidth
             required
             InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
+        style: { paddingLeft: '8px' }, // Ajoute une marge intérieure de 8 pixels à gauche du texte
+        endAdornment: (
+            <InputAdornment position="end" >
+                <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{ position: "absolute", right: 0, bottom:0, top:0}}
+                >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+            </InputAdornment>
+        ),
+    }}
           />
           {isSignUp && (
             <TextField
-              type="password"
+             type={showPassword ? "text" : "password"}
               label="Confirmer le mot de passe"
               variant="outlined"
               fullWidth
               required
+              InputProps={{
+            style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
+            }}
+              
             />
           )}
           <Button className='login-bouton' type="submit" variant="contained" color="primary">
             {isSignUp ? 'S\'inscrire' : 'Se connecter'}
           </Button>
         </form>
-        <Button className='signupboutton' onClick={() => setIsSignUp(!isSignUp)}>
+        <Button  onClick={() => setIsSignUp(!isSignUp)}>
           {isSignUp ? 'Déjà un compte ? Se connecter' : 'Pas encore de compte ? S\'inscrire'}
         </Button>
+        {errorMessage && (<p className="error-message">{errorMessage}</p> )}
+       
       </div>
     </div>
   );
