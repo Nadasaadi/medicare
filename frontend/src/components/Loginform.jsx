@@ -28,23 +28,34 @@ const LoginForm = ({ onLogin }) => {
     <div className="login-container">
       {step >= 1 && (
         <TextField
+        size="15px"
           className="inputhome"
           id="email"
           label="Email"
           variant="outlined"
           value={email}
-          InputProps={{ style: { color: "white" } }} // Changer la couleur du texte entré
-          InputLabelProps={{ style: { color: "white" } }} // Changer la couleur du label
+          InputProps={{ 
+            style: { color: "white" },
+            inputProps: { style: { borderWidth: "1px", borderColor: "white", fontSize: "10px" ,height:"7px"} } // Ajuster la taille de la bordure
+          }}
+          InputLabelProps={{ style: { color: "white", textAlign: "center"} }} // Changer la couleur du label
+          
           onChange={handleEmailChange}
         />
       )}
+      {/* Ajouter un espace entre les champs email et mot de passe */}
+      <div style={{ margin: "5px" }} />
+
       {step >= 2 && (
         <TextField
           className="inputhome"
           id="password"
           label="Password"
           type="password"
-          InputProps={{ style: { color: "white" } }} // Changer la couleur du texte entré
+          InputProps={{ 
+            style: { color: "white" },
+            inputProps: { style: { borderWidth: "1px", fontSize: "10px" ,height:"7px"} } // Ajuster la taille de la bordure
+          }}
           InputLabelProps={{ style: { color: "white" } }} // Changer la couleur du label
           variant="outlined"
           value={password}
@@ -63,7 +74,7 @@ const LoginForm = ({ onLogin }) => {
       )}
       {step === 2 && ( // Afficher le bouton "Login" seulement si step === 2
         <Button className="boutonhomeform"  color="primary" onClick={handleLogin}>
-         Admin
+         Login
         </Button>
       )}
     </div>

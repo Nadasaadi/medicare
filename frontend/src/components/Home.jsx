@@ -3,6 +3,7 @@ import BannerImage from "../assets/doctor-nurses-special-equipment-removebg-prev
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from 'react-router-dom';
 import AdminForm from './Adminform';
+import Footer from "./Footer"
 import { useFontSize } from '../context/FontSizeContext'; // importer le hook du contexte de la taille de la police
 const Home = () => {
   
@@ -26,7 +27,7 @@ const Home = () => {
           <Link  className="secondary-button" to="/savoir_plus">Savoir plus <FiArrowRight /></Link>
           </button>
 
-        
+        <Footer/>
 
           
         </div>

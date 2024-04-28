@@ -5,6 +5,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useFontSize } from '../context/FontSizeContext';
 import axios from 'axios'; // Importez Axios
 import './patientform.css'; // Import du fichier CSS
+import Footer from './Footer';
 import { useAuthContext } from "../hooks/useAuthContext";
 const SIGNUP_URL = 'http://localhost:9000/user/signup';
 const LOGIN_URL = 'http://localhost:9000/user/login';
@@ -197,6 +198,7 @@ function Patient() {
        
       </form>
     </div>
+    <Footer/>
     </>
   );
 }

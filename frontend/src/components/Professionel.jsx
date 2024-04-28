@@ -175,6 +175,7 @@ const [errorMessage, setErrorMessage] = useState('');
             value={email}
             onChange={handleEmailChange}
             variant="outlined"
+            placeholder="XXXX@gmail.com"
             fullWidth
             InputProps={{
             style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
