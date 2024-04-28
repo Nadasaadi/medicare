@@ -32,6 +32,7 @@ CREATE TABLE medecin (
     adresse VARCHAR(255),
     numero_tel VARCHAR(15)
 );
+select * from medecin;
 -- les tables d analyse
 CREATE TABLE AnalysesSanguines (
     ID_Analyse INT PRIMARY KEY AUTO_INCREMENT,
@@ -50,7 +51,7 @@ CREATE TABLE AnalysesSanguines (
     AutresInformations TEXT,
     FOREIGN KEY (ID_Patient) REFERENCES patient(id_patient)
 );
-
+SELECT * FROM AnalysesSanguines WHERE ID_Patient = 15;
 CREATE TABLE analyse_urinaire (
     id_analyse INT PRIMARY KEY AUTO_INCREMENT,
     id_patient INT,
@@ -61,6 +62,7 @@ CREATE TABLE analyse_urinaire (
     autres_informations TEXT,
     FOREIGN KEY (id_patient) REFERENCES patient(id_patient)
 );
+SELECT * FROM AnalysesSanguines WHERE ID_Patient =15;
 
 
 CREATE TABLE AnalyseMicrobiologique (
@@ -107,20 +109,19 @@ CREATE TABLE ImagerieMedicale (
     FOREIGN KEY (patient_id) REFERENCES patient(id_patient)
 );
 -- creation de la table qui va stocké les messages envoyer pour contactez l admin du site
+DROP TABLE MessagesContact;
+
 CREATE TABLE MessagesContact (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    ID_Patient INT,
-    ID_Medecin INT,
-    ID_Admin INT,
     Email VARCHAR(255),
     Message TEXT,
-    DateEnvoi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,-- Un champ pour enregistrer la date et l'heure à laquelle le message a été envoyé
-    FOREIGN KEY (ID_Patient) REFERENCES patient(id_patient),
-    FOREIGN KEY (ID_Medecin) REFERENCES medecin(id_medecin),
-    FOREIGN KEY (ID_Admin) REFERENCES Administrateurs(ID)
+    DateEnvoi TIMESTAMP DEFAULT CURRENT_TIMESTAMP-- Un champ pour enregistrer la date et l'heure à laquelle le message a été envoyé
+    -- FOREIGN KEY (ID_Patient) REFERENCES patient(id_patient),
+    -- FOREIGN KEY (ID_Medecin) REFERENCES medecin(id_medecin),
+    -- FOREIGN KEY (ID_Admin) REFERENCES Admin(ID)
 );
 
-
+select * from MessagesContact;
 -- insertion dans table analyse sanguine 
 
 
@@ -131,7 +132,7 @@ SELECT * FROM AnalysesSanguines;
 
 
 INSERT INTO AnalysesSanguines (ID_Patient, Date, Type, MarqueurSanguin, Resultat, UniteMesure, AutresInformations)
-VALUES (1, '2024-04-16', 'Numération formule sanguine (NFS)', 'ALAT', 3.5, 'U/L', 'Résultat dans la plage normale.');
+VALUES (15, '2024-04-16', 'Numération formule sanguine (NFS)', 'ALAT', 3.5, 'U/L', 'Résultat dans la plage normale.');
 
 INSERT INTO medecin (nom, prenom, email, password, specialite, adresse, numero_tel)
 VALUES ('saadi', 'nada', 'nada@gmail.com', 'nada', 'Cardiologie', '123 Rue de la Santé', '0123456789');
