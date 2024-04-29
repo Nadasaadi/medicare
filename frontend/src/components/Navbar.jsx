@@ -11,7 +11,7 @@ import { NavLink, Outlet, useLocation } from "react-router-dom";
 import LoginForm from "./Loginform"
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
 import { useFontSize } from '../context/FontSizeContext'; // Importez le hook du contexte
-import './navbarstyle.css'; // Import du fichier CSS
+import '../css/navbarstyle.css'; // Import du fichier CSS
 
 const Navbar = () => {
   const location = useLocation();
@@ -35,27 +35,27 @@ const Navbar = () => {
     {
       text: "Espace Patient",
       icon: <FaHospitalUser />,
-      link: "/Patient"
+      link: "espace-patient"
     },
     {
       text: "Espace Professionnel",
       icon: <FaUserMd />,
-      link: "/EspacePro"
+      link: "/espace-medecin"
     },
     {
       text: "Contact",
       icon: <MdOutlineAlternateEmail />,
-      link: "/Contact"
+      link: "/contact"
     },
   ];
 
   return (
-    <>
       <header className={`navigation ${largeFont ? 'large-font' : ''}`}> {/* Appliquer une classe conditionnelle pour agrandir le texte */}
         <img className="nav-logo-container" src={Logo} alt="" />
         <nav className="navbar-links-container">
           {menuOptions.map((item, index) => (
-            <NavLink key={index} to={item.link} activeClassName="activeLink">
+            // <NavLink key={index} to={item.link} activeClassName="activeLink">
+            <NavLink key={index} to={item.link} >
               <span>{item.text}</span>
             </NavLink>
           ))}
@@ -92,10 +92,6 @@ const Navbar = () => {
                 <button onClick={toggleLargeFont} className="font-size-toggle-button">Agrandir 
                 </button>
       </header>
-      <main>
-        <Outlet />
-      </main>
-    </>
   )
 }
 

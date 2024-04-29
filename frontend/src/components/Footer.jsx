@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { SiLinkedin } from "react-icons/si";
 import { FaFacebookF } from "react-icons/fa";
-import "./FooterStyle.css";
+import "../css/FooterStyle.css";
 
 const Footer = () => {
   const [showTermsModal, setShowTermsModal] = useState(false);

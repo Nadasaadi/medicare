@@ -1,10 +1,12 @@
 import React from 'react'
-import { AuthContext } from '../context/AuthContext'; // Importez le contexte d'authentification
+import { AuthContext } from '../../context/AuthContext'; // Importez le contexte d'authentification
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useFontSize } from '../context/FontSizeContext';
-const Profil = ({ patient }) => {
+import { useFontSize } from '../../context/FontSizeContext';
+import { useAuthContext } from '../../hooks/useAuthContext';
+const Profil = () => {
+  const {user } = useAuthContext()
   const { largeFont } = useFontSize(); 
-    const { nom, prenom, sexe, date_naissance, lieu_naissance } = patient;
+    const { nom, prenom, sexe, date_naissance, lieu_naissance } = user;
     const { logout } = React.useContext(AuthContext);
     return (
       <div id='profil' className=  {`profil-container ${largeFont ? 'large-font' : ''}`}>

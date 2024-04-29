@@ -2,8 +2,8 @@ import React from 'react';
 import BannerImage from "../assets/doctor-nurses-special-equipment-removebg-preview.png";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from 'react-router-dom';
-import AdminForm from './Adminform';
-import Footer from "./Footer"
+import AdminForm from '../components/Adminform';
+import Footer from "../components/Footer"
 import { useFontSize } from '../context/FontSizeContext'; // importer le hook du contexte de la taille de la police
 const Home = () => {
   

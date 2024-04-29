@@ -7,7 +7,7 @@
 }
 .main-content {
   max-width: 600px; /* Limiter la largeur de la section pour éviter qu'elle ne prenne toute la largeur de l'écran */
-  padding: 20px;
+  padding: 20px ;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -93,7 +93,7 @@
 /*PAtient navbar style*/
 .patient-nav {
   background-color: #f0f0f0;
-  padding: 20px;
+  /* padding: 20px 0; */
   position: fixed;
   top: 50px; /* Ajustez la position verticale pour éviter de cacher le navbar */
   left: 0px;
@@ -109,9 +109,9 @@
   flex-direction: column; /* Afficher les éléments verticalement dans la barre latérale */
 }
 
-.patient-nav-item {
-  margin-bottom: 20px; /* Espacement entre chaque élément de la liste */
-}
+/* .patient-nav-item { */
+  /*margin-bottom: 20px;  Espacement entre chaque élément de la liste */
+/* } */
 
 .patient-nav-link {
   text-decoration: none; /* Supprimer la soulignement des liens */

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { TextField, Button, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useFontSize } from '../context/FontSizeContext';
-import './Styleprofissionel.css'; // Import du fichier CSS
+import { useFontSize } from '../../context/FontSizeContext';
+import '../../css/Styleprofissionel.css'; // Import du fichier CSS
 import axios from 'axios'; // Importez Axios
 const SIGNUPM_URL = 'http://localhost:9000/medecin/signupM';
 const LOGINM_URL = 'http://localhost:9000/medecin/loginM';
-const Professionel = () => {
+const AuthenticateMedecin = () => {
   const { largeFont } = useFontSize();
   // update user context 
   const [email, setEmail] = useState('');
@@ -19,6 +19,7 @@ const Professionel = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 // Déclarez un état pour stocker le message d'erreur
+const [emailErrorMessage, setEmailErrorMessage] = useState('');
 const [errorMessage, setErrorMessage] = useState('');
 
   const handleEmailChange = (e) => {
@@ -56,12 +57,12 @@ const [errorMessage, setErrorMessage] = useState('');
       // Validation de l'e-mail
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        setEmailError('Veuillez entrer une adresse e-mail valide.');
+        setEmailErrorMessage('Veuillez entrer une adresse e-mail valide.');
         return;
       }
  
       // Si l'e-mail est valide, réinitialiser l'erreur d'e-mail
-      setEmailError('');
+      setEmailErrorMessage('');
       if (isSignUp) {
         // Logic for signing up
         const response = await axios.post(SIGNUPM_URL, {
@@ -94,7 +95,7 @@ const [errorMessage, setErrorMessage] = useState('');
     if (error.response) {
       setErrorMessage(error.response.data.message);
     } else {
-      console.error('Error while submitting the form:',error.response.data);
+      console.error('Error while submitting the form:', error);
     }
   }
   };
@@ -232,4 +233,4 @@ const [errorMessage, setErrorMessage] = useState('');
   );
 };
 
-export default Professionel;
+export default AuthenticateMedecin;

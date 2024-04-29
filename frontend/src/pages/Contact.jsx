@@ -1,7 +1,7 @@
 // Contact.js
 
 import React, { useState } from 'react';
-import './Stylecontact.css'; // Import du fichier CSS
+import '../css/Stylecontact.css'; // Import du fichier CSS
 import axios from 'axios'; // Importez Axios
 import { useFontSize } from '../context/FontSizeContext';
 const CONTACT_URL = 'http://localhost:9000/contact/';

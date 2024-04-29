@@ -5,14 +5,14 @@ const Medecin = require("../model/medecin");
 const signupM = async (req, res) => {
     try {
         const {email, password, nom, prenom, specialite , adresse, numero_tel} = req.body;
-        
+        console.log("hi nadji")
         // Hasher le mot de passe
-        const hashedPassword = await bcrypt.hash(password, 10); // 10 est le nombre de tours de hachage
+        // const hashedPassword = await bcrypt.hash(password, 10); // 10 est le nombre de tours de hachage
 
-        // Créer un nouvel utilisateur avec le mot de passe haché
-        await Medecin.signupM({email, password: hashedPassword, nom, prenom, sexe, date_naissance, lieu_naissance});
+        // // Créer un nouvel utilisateur avec le mot de passe haché
+        // await Medecin.signupM({email, password: hashedPassword, nom, prenom, sexe, date_naissance, lieu_naissance});
 
-        res.status(200).json({email, password, nom, prenom, specialite , adresse, numero_tel});
+        // res.status(200).json({email, password, nom, prenom, specialite , adresse, numero_tel});
     } catch(error) {
         res.status(400).json({"error": error.message});
     }

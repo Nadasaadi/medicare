@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const EspaceProfessionnel = () => {
+const MedecinProfil = () => {
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
   const [specialite, setSpecialite] = useState('');
@@ -44,4 +44,4 @@ const EspaceProfessionnel = () => {
   );
 };
 
-export default EspaceProfessionnel;
+export default MedecinProfil;

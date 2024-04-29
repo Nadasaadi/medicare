@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import imageform from "../assets/la-personne.png";
+import imageform from "../../assets/la-personne.png";
 import { TextField, Button, Select, MenuItem,IconButton,InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useFontSize } from '../context/FontSizeContext';
+import { useFontSize } from '../../context/FontSizeContext';
 import axios from 'axios'; // Importez Axios
-import './patientform.css'; // Import du fichier CSS
-import Footer from './Footer';
-import { useAuthContext } from "../hooks/useAuthContext";
+import '../../css/patientform.css'; // Import du fichier CSS
+import Footer from '../../components/Footer';
+import { useAuthContext } from "../../hooks/useAuthContext";
 const SIGNUP_URL = 'http://localhost:9000/user/signup';
 const LOGIN_URL = 'http://localhost:9000/user/login';
 
-function Patient() {
+function AuthenticatePatient() {
   const { largeFont } = useFontSize(); 
   // update user context 
   const {dispatch} = useAuthContext()
@@ -203,4 +203,4 @@ function Patient() {
   );
 }
 
-export default Patient;
+export default AuthenticatePatient;

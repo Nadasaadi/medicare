@@ -13,7 +13,6 @@ class AnalyseSanguine {
 
     }
     static async getAllAnalysesSanguines(id_patient) {
-      console.log(id_patient);
       const analysesSanguines = await db.query('SELECT * FROM AnalysesSanguines WHERE ID_Patient = ?', [id_patient]);
       console.log(analysesSanguines,"message--------------------- ");
       return analysesSanguines;

@@ -7,6 +7,9 @@ import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import ImageIcon from '@mui/icons-material/Image';
 import { HiOutlineBars3 } from "react-icons/hi2";
 import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import AnalyseNav from '../analyse/AnalyseNav';
+import { Divider } from '@mui/material';
 
 const Patientnav = ({ onNavigationChange }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -24,34 +27,37 @@ const Patientnav = ({ onNavigationChange }) => {
       <div className="patient-nav">
         <ul className={`patient-navbar-nav ${showMenu ? 'show-menu' : ''}`}>
           <li className="patient-nav-item">
-            <a className="patient-nav-link" href="#profil" onClick={() => handleNavigation('profil')}>
+            <NavLink className="patient-nav-link" to={'profil'}>
               <AccountCircleIcon /> Profil
-            </a>
+            </NavLink>
           </li>
+          <Divider/>
           <li className="patient-nav-item">
-            <a className="patient-nav-link" href="#analyse" onClick={() => handleNavigation('analyse')}>
+            {/* <NavLink className="patient-nav-link" to={'analyse'}>
               <AnalyticsIcon /> Analyses
-            </a>
+            </NavLink> */}
+            <AnalyseNav/>
           </li>
+          <Divider/>
           <li className="patient-nav-item">
-            <a className="patient-nav-link" href="#vaccin" onClick={() => handleNavigation('vaccin')}>
+            <NavLink className="patient-nav-link" href="#vaccin" onClick={() => handleNavigation('vaccin')}>
               <VaccinesIcon /> Vaccins
-            </a>
+            </NavLink>
           </li>
           <li className="patient-nav-item">
-            <a className="patient-nav-link" href="#allergie" onClick={() => handleNavigation('allergie')}>
+            <NavLink className="patient-nav-link" href="#allergie" onClick={() => handleNavigation('allergie')}>
               <HealthAndSafetyIcon /> Allergie
-            </a>
+            </NavLink>
           </li>
           <li className="patient-nav-item">
-            <a className="patient-nav-link" href="#maladie-chronique" onClick={() => handleNavigation('maladie-chronique')}>
+            <NavLink className="patient-nav-link" href="#maladie-chronique" onClick={() => handleNavigation('maladie-chronique')}>
               <MedicalInformationIcon /> Maladie chronique
-            </a>
+            </NavLink>
           </li>
           <li className="patient-nav-item">
-            <a className="patient-nav-link" href="#imagerie-medicale" onClick={() => handleNavigation('imagerie-medicale')}>
+            <NavLink className="patient-nav-link" href="#imagerie-medicale" onClick={() => handleNavigation('imagerie-medicale')}>
               <ImageIcon /> Imagerie médicale
-            </a>
+            </NavLink>
           </li>
         </ul>
         <div className="menu-btn" onClick={toggleMenu}>

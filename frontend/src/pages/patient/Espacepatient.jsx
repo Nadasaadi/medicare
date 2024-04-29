@@ -1,6 +1,12 @@
+
+/*
+  this page is no lnager used it been replace with PatientLayout
+*/
+
+
 import React, { useState } from 'react';
-import './styleEP.css';
-import { AuthContext } from '../context/AuthContext';
+import '../../css/styleEP.css';
+import { AuthContext } from '../../context/AuthContext';
 import Analyse from './Analyse';
 import Vaccin from './Vaccin';
 import Profil from './Profil';

@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Importez Axios pour effectuer des requêtes HTTP
-import { useQuery } from 'react-query';
-import { useAuthContext } from '../hooks/useAuthContext';
-import { useFontSize } from '../context/FontSizeContext';
+// import { useQuery } from 'react-query';
+import { useAuthContext } from '../../../hooks/useAuthContext';
+import { useFontSize } from '../../../context/FontSizeContext';
+import { useLoaderData, useParams } from 'react-router-dom';
 const ANALYSE_URL='http://localhost:9000/analyse/';
 function AnalyseSanguine() {
   const {user}  = useAuthContext(); // Utiliser le hook useAuthContext pour récupérer le contexte d'authentification  
-  const id_patient = user.id_patient; // Récupérer l'ID du patient à partir du contexte d'authentification
+  // const id_patient = user.id_patient; // Récupérer l'ID du patient à partir du contexte d'authentification
   const { largeFont } = useFontSize();
-
-
+  const  {id_patient} = useParams()
+  const sanguineAnalyse = useLoaderData()
+  // console.log(sanguineAnalyse.data)
   //console.log(id_patient,"nada");
-  const { isLoading, error, data: analysesSanguines } = useQuery('analysesSanguines', async () => {
-    const response = await axios.get(ANALYSE_URL, { params : { id_patient: id_patient } });
-    return response.data;
-  });
+  // const { isLoading, error, data: analysesSanguines } = useQuery('analysesSanguines', async () => {
+  //   const response = await axios.get(ANALYSE_URL, { params : { id_patient: id_patient } });
+  //   return response.data;
+  // });
   
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  // if (isLoading) return <div>Loading...</div>;
+  // if (error) return <div>Error: {error.message}</div>;
   
 
   return (
@@ -35,7 +37,7 @@ function AnalyseSanguine() {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(analysesSanguines) && analysesSanguines.map(analyse => (
+          {Array.isArray(sanguineAnalyse?.data) && sanguineAnalyse.data.map(analyse => (
             <tr key={analyse.ID_Analyse}>
               <td>{analyse.Date}</td>
               <td>{analyse.Type}</td>
