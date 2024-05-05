@@ -1,11 +1,14 @@
 // LoginForm.js
 import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
-
+import { useNavigate } from "react-router-dom"; 
+import axios from "axios";
+const LOGIN = 'http://localhost:9000/admin/loginAdmin';
 const LoginForm = ({ onLogin }) => {
   const [step, setStep] = useState(0); // L'étape initiale est 0
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -19,9 +22,23 @@ const LoginForm = ({ onLogin }) => {
     setStep(step + 1); // Passer à l'étape suivante
   };
 
-  const handleLogin = () => {
-    // Gérer la connexion ici ou passer les données à une fonction parente
-    onLogin({ email, password });
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(LOGIN, {
+        email,
+        password,
+      });
+      if(response.data){
+        navigate("/AdminPage"); // Naviguer vers "/AdminPage" après le login réussi
+      }
+    else {
+        throw new Error("Invalid email or password");
+      }
+    } catch (error) {
+      console.log("nada");
+      //setError(error.message);
+    }
   };
 
   return (

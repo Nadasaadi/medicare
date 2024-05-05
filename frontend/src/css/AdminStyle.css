@@ -1,0 +1,202 @@
+.navbar {
+    background-color: #33333383; /* Couleur de fond */
+    padding: 10px; /* Espacement interne */
+    
+  }
+  
+  .navbar__list {
+    display: flex;
+    list-style-type: none; /* Supprime les puces de la liste */
+    margin: 0;
+    padding: 0;
+  }
+  
+  .navbar__item {
+    display: inline; /* Affiche les éléments de liste en ligne */
+    margin-right: 1rem; /* Marge entre les éléments */
+  }
+  
+  .navbar__link {
+    color: white; /* Couleur du texte */
+    text-decoration: none; /* Supprime la décoration de lien */
+    transition: border-bottom 0.3s ease, color 0.3s ease; /* Transition de la bordure inférieure et de la couleur sur une durée de 0.3 secondes avec un effet d'aise */
+    border-bottom: 2px solid transparent; /* Ajout d'une bordure inférieure transparente */
+  }
+  
+  .navbar__link:hover,
+  .navbar__link:focus {
+    color: rgb(25, 74, 153); /* Changement de couleur du texte au survol ou au focus */
+    border-bottom: 2px solid rgb(25, 74, 153); /* Ajout d'une bordure inférieure bleue au survol ou au focus */
+  }
+  .titre-section{
+    color: rgb(5, 24, 94);
+    margin: 20px;
+    animation: fadeIn 2s forwards;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .badge {
+    background-color: #f44336;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+    margin-left: 4px;
+  }
+
+
+  .table-container {
+    margin: 20px;
+    
+  }
+  /* Styles for logout button */
+  .logout-button {
+    background-color: #f44336; /* Rouge */
+    color: white;
+    
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease; /* Transition pour le changement de couleur */
+  }
+  
+  .logout-button:hover {
+    background-color: #d32f2f; /* Rouge plus foncé au survol */
+  }
+  .navbar__item:last-child {
+    margin-right: 0;
+    margin-left: auto; /* Pousse le bouton de déconnexion à la fin */
+  }
+
+  /*privacy policy*/
+  #privacy {
+    margin-top: 20px;
+  }
+  
+  
+
+  #privacy .modifier {
+    background-color: rgb(5, 24, 94);
+    color: #ccc;
+    transition: background-color 0.3s, color 0.3s; /* Transition pour une animation fluide */
+  }
+  
+  #privacy .modifier:hover {
+    background-color: rgb(0, 92, 204); /* Nouvelle couleur de fond au survol */
+    color: rgb(255, 255, 255); /* Nouvelle couleur du texte au survol */
+  }
+  
+  /* Définition de l'animation de couleur */
+  @keyframes changeColor {
+    0% { color: #ccc; }
+    50% { color: rgb(255, 255, 255); }
+    100% { color: #ccc; }
+  }
+  
+  #privacy .modifier:hover {
+    animation: changeColor 1s infinite; /* Utilisation de l'animation au survol */
+  }
+  
+
+  #privacy .content {
+    padding: 20px;
+    border: 1px solid #000000;
+    margin: 20px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  #privacy .content p {
+    margin-bottom: 10px;
+  }
+  
+  #privacy  .edit-buttons {
+    margin-top: 10px;
+    
+  }
+  
+  #privacy .edit-buttons button {
+    margin-right: 10px;
+    background-color: rgb(5, 24, 94);
+    color: #ccc;
+    transition: background-color 0.3s, color 0.3s; /* Transition pour une animation fluide */
+  }
+  #privacy .edit-buttons button:hover {
+    background-color: rgb(0, 92, 204); /* Nouvelle couleur de fond au survol */
+    color: rgb(255, 255, 255); /* Nouvelle couleur du texte au survol */
+  }
+
+
+
+
+
+  /*terme condition*/
+  #terms {
+    margin-top: 20px;
+  }
+  
+  
+
+  #terms .modifier {
+    background-color: rgb(5, 24, 94);
+    color: #ccc;
+    transition: background-color 0.3s, color 0.3s; /* Transition pour une animation fluide */
+  }
+  
+  #terms .modifier:hover {
+    background-color: rgb(0, 92, 204); /* Nouvelle couleur de fond au survol */
+    color: rgb(255, 255, 255); /* Nouvelle couleur du texte au survol */
+  }
+  
+  /* Définition de l'animation de couleur */
+  @keyframes changeColor {
+    0% { color: #ccc; }
+    50% { color: rgb(255, 255, 255); }
+    100% { color: #ccc; }
+  }
+  
+  #terms .modifier:hover {
+    animation: changeColor 1s infinite; /* Utilisation de l'animation au survol */
+  }
+  
+
+  #terms .content {
+    padding: 20px;
+    border: 1px solid #000000;
+    margin: 20px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  #terms .content p {
+    margin-bottom: 10px;
+  }
+  
+  #terms .edit-buttons {
+    margin-top: 10px;
+    
+  }
+  
+  #terms .edit-buttons button {
+    margin-right: 10px;
+    background-color: rgb(5, 24, 94);
+    color: #ccc;
+    transition: background-color 0.3s, color 0.3s; /* Transition pour une animation fluide */
+  }
+  #terms .edit-buttons button:hover {
+    background-color: rgb(0, 92, 204); /* Nouvelle couleur de fond au survol */
+    color: rgb(255, 255, 255); /* Nouvelle couleur du texte au survol */
+  }
+  

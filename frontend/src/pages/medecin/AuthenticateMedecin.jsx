@@ -66,13 +66,7 @@ const [errorMessage, setErrorMessage] = useState('');
       if (isSignUp) {
         // Logic for signing up
         const response = await axios.post(SIGNUPM_URL, {
-          email,
-          password,
-          nom,
-          prenom,
-          specialite,
-          adresse,
-          numero_tel,
+          email, password, nom, prenom, specialite , adresse, numero_tel
         });
         console.log(response.data);
         if(response.data){

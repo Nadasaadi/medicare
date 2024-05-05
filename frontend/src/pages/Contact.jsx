@@ -1,55 +1,50 @@
-// Contact.js
-
 import React, { useState } from 'react';
-import '../css/Stylecontact.css'; // Import du fichier CSS
-import axios from 'axios'; // Importez Axios
+import '../css/Stylecontact.css';
+import axios from 'axios';
 import { useFontSize } from '../context/FontSizeContext';
+import TextField from '@material-ui/core/TextField';
+
 const CONTACT_URL = 'http://localhost:9000/contact/';
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const Contact = () => {
-  const { largeFont } = useFontSize(); 
+  const { largeFont } = useFontSize();
   const questions = [
     { id: 1, question: "Où puis-je trouver mes résultats d'analyses ?", response: " Vos résultats d'analyses seront disponibles dans la section Analyse de votre dossier médical en ligne, généralement dans les 24 à 48 heures suivant les tests." },
     { id: 2, question: " Comment mettre à jour mes informations personnelles ?", response: " Vous pouvez mettre à jour vos informations personnelles en vous connectant à votre compte patient et en sélectionnant l'option Modifier les informations personnelles." },
     { id: 3, question: " Comment puis-je accéder aux dossiers médicaux de mes patients ?", response: "Vous pouvez accéder aux dossiers médicaux de vos patients en vous connectant à votre compte professionnel et chercher le patient avec son e-mail." },
     { id: 4, question: "Comment puis-je mettre à jour les Allergies médicaux de mes patients ?", response: " Vous pouvez mettre à jour les antécédents médicaux de vos patients en sélectionnant le patient concerné dans votre compte professionnel et en utilisant l'option Modifier dans la section allergie" },
   ];
-
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [userType, setUserType] = useState('patient'); // Ajout du state pour le type d'utilisateur
-  const [emailFocused, setEmailFocused] = useState(false);
-  const [messageFocused, setMessageFocused] = useState(false);
-  const [submissionSuccess, setSubmissionSuccess] = useState(false); // État pour gérer l'affichage du message de réussite
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+
   const handleQuestionClick = (questionId) => {
     setSelectedQuestion(selectedQuestion === questionId ? null : questionId);
   };
 
-  const handleSubmit = async (e) => { // Modifiez la fonction pour la rendre asynchrone
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Vérification de la validité de l'email
+    if (!emailRegex.test(email)) {
+      setEmailError(true);
+      return;
+    }
+  
     try {
-      // Effectuez une requête HTTP POST pour envoyer les données du formulaire au backend
       await axios.post(CONTACT_URL, { email, message });
       console.log("Données envoyées avec succès.");
-      // Réinitialisez les champs du formulaire après l'envoi réussi
-      setEmail('');
+      setSubmissionSuccess(true); // Définir le message de succès avant de réinitialiser les champs
+      setEmailError(false);
+      setEmail(''); // Réinitialiser les champs après avoir défini le message de succès
       setMessage('');
-      setSubmissionSuccess(true); // Mettre à jour l'état pour afficher le message de réussite
     } catch (error) {
       console.error("Erreur lors de l'envoi des données:", error);
     }
-  };
-
-  const handleInputChange = (e, setter) => {
-    setter(e.target.value);
-  };
-
-  const handleInputFocus = (setter) => {
-    setter(true);
-  };
-
-  const handleInputBlur = (setter) => {
-    setter(false);
   };
 
   return (
@@ -69,41 +64,35 @@ const Contact = () => {
       <div className="form-container">
         <h2>Pour d'autres questions, envoyez-nous un message</h2>
         <form onSubmit={handleSubmit}>
-        <label htmlFor="userType">Sélectionnez votre type d'utilisateur :</label>
-            <select id="userType" value={userType} onChange={(e) => setUserType(e.target.value)}>
-              <option value="patient">Patient</option>
-              <option value="medecin">Médecin</option>
-              <option value="visiteur">Visiteur</option>
-            </select>
-          <div className={`input-group ${emailFocused || email ? "focused" : ""}`}>
-            <input
-              type="email"
-              id="email"
-              className="email-input"
-              value={email}
-              placeholder=' '
-              onFocus={() => handleInputFocus(setEmailFocused)}
-              onBlur={() => handleInputBlur(setEmailFocused)}
-              onChange={(e) => handleInputChange(e, setEmail)}
-              required
-            />
-            <label htmlFor="email">Email </label>
-          </div>
-          <div className={`input-group ${messageFocused || message ? "focused" : ""}`}>
-            <textarea
-              id="message"
-              className="message-input"
-              value={message}
-              onFocus={() => handleInputFocus(setMessageFocused)}
-              onBlur={() => handleInputBlur(setMessageFocused)}
-              onChange={(e) => handleInputChange(e, setMessage)}
-              required
-              placeholder=' '
-            ></textarea>
-            <label htmlFor="message">Message </label>
-          </div>
-          {submissionSuccess && <p>Votre message a été envoyé avec succès!</p>} {/* Affichage du message de réussite */}
-          <button type="submit" className="submit-button">Envoyer</button>
+          <TextField
+            fullWidth
+            type="email"
+            id="email"
+            label="Email"
+
+            placeholder='xxxx@gmail.com'
+            variant="outlined"
+            value={email}
+            error={emailError}
+            helperText={<span className="error-text">{emailError ? 'Veuillez entrer une adresse email valide.' : ''}</span>}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{ marginTop: '10px', marginBottom: '10px' }}
+            required
+          />
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            id="message"
+            label="Message"
+            variant="outlined"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            style={{ marginTop: '10px', marginBottom: '10px' }}
+            required
+          />
+          {submissionSuccess && <p className="success-message">Votre message a été envoyé avec succès!</p>}
+          <button type="submit" style={{ marginTop: '10px', marginBottom: '10px' }} className="submit-button">Envoyer</button>
         </form>
       </div>
     </div>

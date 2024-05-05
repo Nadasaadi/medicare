@@ -35,12 +35,12 @@ const Navbar = () => {
     {
       text: "Espace Patient",
       icon: <FaHospitalUser />,
-      link: "espace-patient"
+      link: "authenticate-patient"
     },
     {
       text: "Espace Professionnel",
       icon: <FaUserMd />,
-      link: "/espace-medecin"
+      link: "/authenticate-medecin"
     },
     {
       text: "Contact",
@@ -85,7 +85,7 @@ const Navbar = () => {
             <Divider />
           </Box>
         </Drawer>
-        {(location.pathname === "/" || location.pathname === "/Contact") && (
+        {(location.pathname === "/" ) && (
           <LoginForm onLogin={handleLogin} />
         )}
                 {/* Ajouter un bouton pour activer/désactiver l'agrandissement de la police */}
