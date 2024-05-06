@@ -4,6 +4,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useFontSize } from '../../context/FontSizeContext';
 import '../../css/Styleprofissionel.css'; // Import du fichier CSS
 import axios from 'axios'; // Importez Axios
+import { useAuthContextMED } from "../../hooks/useAuthContextMed";
 const SIGNUPM_URL = 'http://localhost:9000/medecin/signupM';
 const LOGINM_URL = 'http://localhost:9000/medecin/loginM';
 const AuthenticateMedecin = () => {
@@ -18,14 +19,17 @@ const AuthenticateMedecin = () => {
   const [numero_tel, setNumero_tel] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
 // Déclarez un état pour stocker le message d'erreur
 const [emailErrorMessage, setEmailErrorMessage] = useState('');
 const [errorMessage, setErrorMessage] = useState('');
-
+const {dispatch} = useAuthContextMED();
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
-
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+  };
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -63,14 +67,26 @@ const [errorMessage, setErrorMessage] = useState('');
  
       // Si l'e-mail est valide, réinitialiser l'erreur d'e-mail
       setEmailErrorMessage('');
+      // Vérifier si le mot de passe et la confirmation du mot de passe correspondent
+    if (isSignUp && password !== confirmPassword) {
+      setErrorMessage('Le mot de passe et la confirmation du mot de passe ne correspondent pas.');
+      return;
+    }
       if (isSignUp) {
         // Logic for signing up
         const response = await axios.post(SIGNUPM_URL, {
-          email, password, nom, prenom, specialite , adresse, numero_tel
+          email,
+           password,
+            nom, 
+            prenom, 
+            specialite ,
+             adresse, 
+             numero_tel
         });
+
         console.log(response.data);
         if(response.data){
-          dispatch({type: "login", payload: response.data});
+          dispatch({type: "loginM", payload: response.data});
           localStorage.setItem("medecin", JSON.stringify(response.data));
         }
       } else {
@@ -80,7 +96,7 @@ const [errorMessage, setErrorMessage] = useState('');
           password,
         });
         if(response.data){
-          dispatch({type: "login", payload: response.data});
+          dispatch({type: "loginM", payload: response.data});
           localStorage.setItem("medecin", JSON.stringify(response.data));
         }
       }
@@ -202,16 +218,17 @@ const [errorMessage, setErrorMessage] = useState('');
           />
           {isSignUp && (
             <TextField
-             type={showPassword ? "text" : "password"}
-              label="Confirmer le mot de passe"
-              variant="outlined"
-              fullWidth
-              required
-              InputProps={{
-            style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
-            }}
-              
-            />
+      type={showPassword ? "text" : "password"}
+      label="Confirmer le mot de passe"
+      value={confirmPassword}
+      onChange={handleConfirmPasswordChange}
+      variant="outlined"
+      fullWidth
+      required
+      InputProps={{
+        style: { paddingLeft: '8px' }
+      }}
+    />
           )}
           <Button className='login-bouton' type="submit" variant="contained" color="primary">
             {isSignUp ? 'S\'inscrire' : 'Se connecter'}

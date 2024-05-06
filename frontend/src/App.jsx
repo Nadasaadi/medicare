@@ -24,6 +24,7 @@ import Contact from './pages/Contact';
 
 // hook
 import { useAuthContext } from "./hooks/useAuthContext";
+import { useAuthContextMED } from './hooks/useAuthContextMed.jsx';
 
 // context
 import { FontSizeProvider } from './context/FontSizeContext'; 
@@ -35,6 +36,9 @@ import { analyseSanguineLoader } from './loaders/analyseSanguineLoader.js';
 function App() {
   // const queryClient = new QueryClient();
   const {user} = useAuthContext();
+  const {medecin}= useAuthContextMED();
+console.log(medecin);
+
   // console.log("user rfrom app.js", user)
   const router=createBrowserRouter(
     createRoutesFromElements(
@@ -42,7 +46,6 @@ function App() {
           <Route index element = {<Home/>} />
           <Route path="/AdminPage" element={<AdminPage/>} />
             <Route path='authenticate-patient' element={!user ? <AuthenticatePatient/> : <Navigate to={"/espace-patient"}/>}/>
-            <Route path="authenticate-medecin" element={!user ? <AuthenticateMedecin/> : <Navigate to={"/MedecinProfil"}/>}/>
           <Route path='espace-patient' element={ user ?  <PatientLayout/> : <Navigate to={"/authenticate-patient"}/>} >
             <Route path='profil' element={ <Profil/> }/>
             {/* <Route path='analyse' element={<AnalyseLayout/>}>
@@ -51,8 +54,10 @@ function App() {
             <Route  path='analyse/urinaire' element={<AnalyseUrinaire/>}/>
             <Route  path='analyse/microbiologique' element={<AnalyseMicrobiologique/>}/>
           </Route>
-          <Route path='MedecinProfil'  element={ user  ?  <MedecinLayout/> : <Navigate to={"/authenticate-medecin"}/>}>
-          <Route path='profil' element={ <MedecinProfil/> }/>
+          
+          <Route path="authenticate-medecin" element={!medecin ? <AuthenticateMedecin/> : <Navigate to={"/MedecinProfil"}/>}/>
+          <Route path='MedecinProfil'  element={ medecin  ?  <MedecinLayout/> : <Navigate to={"/authenticate-medecin"}/>}>
+          <Route path='/MedecinProfil' element={ <MedecinProfil/> }/>
           </Route>
           
           <Route path="/savoir_plus" element={<Savoir_plus/>} />

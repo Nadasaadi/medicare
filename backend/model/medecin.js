@@ -13,7 +13,8 @@ class Medecin {
         this.adresse = adresse;
         this.numero_tel = numero_tel;
     };
-
+   
+  
 
     static async testExistEmail(email) {
         return await db.execute( `SELECT email from medecin WHERE email = "${email}" ;` )
@@ -35,15 +36,25 @@ class Medecin {
         // Retourner les données de l'utilisateur si le mot de passe est correct
         return userData;
     }
-    
 
-    static async signupM ({email, password, nom, prenom, specialite,  adresse, numero_tel}) {
-        const [[existEmail]] = await User.testExistEmail(email);
-        if(existEmail){
-            throw Error("email alredy exist");
+    static async signupM({ email, password, nom, prenom, specialite, adresse, numero_tel }) {
+        const [[existEmail]] = await Medecin.testExistEmail(email);
+        if (existEmail) {
+          throw Error("email alredy exist");
         }
-        return await db.execute( `Insert INTO medecin (email, password, nom, prenom, specialite,  adresse, numero_tel) VALUES ("${email}", "${password}", "${nom}", "${prenom}",  "${specialite}", "${adresse}", "${numero_tel}");` );
-    }
+      
+        // Hasher le mot de passe avant de l'insérer dans la base de données
+        const hashedPassword = await bcrypt.hash(password, 10);
+      
+        // Utiliser des paramètres préparés pour éviter les injections SQL
+        const query = `
+          INSERT INTO medecin (email, password, nom, prenom, specialite, adresse, numero_tel)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
+        `;
+        const values = [email, hashedPassword, nom, prenom, specialite, adresse, numero_tel];
+      
+        return await db.execute(query, values);
+      }
 }
 
 

@@ -4,7 +4,7 @@ import React, { createContext, useEffect, useReducer, useState } from 'react';
 export const AuthContextMed = createContext();
 export const authReducerMed = (state, action) => {
   switch (action.type) {
-    case "login": 
+    case "loginM": 
       return {medecin: action.payload};
     case "logout": 
       return {medecin: null};
@@ -17,8 +17,9 @@ export const AuthProviderMed = ({ children }) => {
   useEffect(()=>{
     const medecin = JSON.parse(localStorage.getItem('medecin'));
     if(medecin) {
-      dispatch({type: "login", payload: medecin});
+      dispatch({type: "loginM", payload: medecin});
     }
+  
 
   }, []);
   const logout = () => {
