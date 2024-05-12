@@ -3,7 +3,7 @@ import '../css/Stylecontact.css';
 import axios from 'axios';
 import { useFontSize } from '../context/FontSizeContext';
 import TextField from '@material-ui/core/TextField';
-
+import Footer from "../components/Footer"
 const CONTACT_URL = 'http://localhost:9000/contact/';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -19,7 +19,7 @@ const Contact = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [submissionSuccess, setSubmissionSuccess] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [emailError, setEmailError] = useState(false);
 
   const handleQuestionClick = (questionId) => {
@@ -28,23 +28,26 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Vérification de la validité de l'email
-    if (!emailRegex.test(email)) {
-      setEmailError(true);
-      return;
-    }
-  
     try {
-      await axios.post(CONTACT_URL, { email, message });
+        // Vérification de la validité de l'email
+        if (!emailRegex.test(email)) {
+          setEmailError(true);
+          return;
+        }
+      const response = await  axios.post(CONTACT_URL, { email, message });
       console.log("Données envoyées avec succès.");
-      setSubmissionSuccess(true); // Définir le message de succès avant de réinitialiser les champs
       setEmailError(false);
-      setEmail(''); // Réinitialiser les champs après avoir défini le message de succès
+      setEmail(''); // Réinitialiser les champs
       setMessage('');
+      setShowSuccessModal(true); // Afficher la fenêtre modale
+     
     } catch (error) {
       console.error("Erreur lors de l'envoi des données:", error);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowSuccessModal(false);
   };
 
   return (
@@ -69,7 +72,6 @@ const Contact = () => {
             type="email"
             id="email"
             label="Email"
-
             placeholder='xxxx@gmail.com'
             variant="outlined"
             value={email}
@@ -91,10 +93,17 @@ const Contact = () => {
             style={{ marginTop: '10px', marginBottom: '10px' }}
             required
           />
-          {submissionSuccess && <p className="success-message">Votre message a été envoyé avec succès!</p>}
           <button type="submit" style={{ marginTop: '10px', marginBottom: '10px' }} className="submit-button">Envoyer</button>
         </form>
+        {showSuccessModal && (
+          <div className="success-modal" onClick={handleCloseModal}>
+            <div className="modal-content">
+              <p>Votre message a été envoyé avec succès!</p>
+            </div>
+          </div>
+        )}
       </div>
+      <Footer/>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useFontSize } from '../../context/FontSizeContext';
 import '../../css/Styleprofissionel.css'; // Import du fichier CSS
 import axios from 'axios'; // Importez Axios
+import Footer from "../../components/Footer"
 import { useAuthContextMED } from "../../hooks/useAuthContextMed";
 const SIGNUPM_URL = 'http://localhost:9000/medecin/signupM';
 const LOGINM_URL = 'http://localhost:9000/medecin/loginM';
@@ -111,6 +112,7 @@ const {dispatch} = useAuthContextMED();
   };
 
   return (
+    <>
     <div className={`professional-page ${largeFont ? 'large-font' : ''}`}>
       <div className="form-section">
       
@@ -240,7 +242,10 @@ const {dispatch} = useAuthContextMED();
         {errorMessage && (<p className="error-message">{errorMessage}</p> )}
        
       </div>
+  
     </div>
+    <Footer/>
+    </>
   );
 };
 

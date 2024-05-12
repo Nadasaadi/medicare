@@ -10,10 +10,11 @@ import Home from './pages/Home';
 import AdminPage from './pages/AdminPage.jsx';
 import Profil from './pages/patient/Profil.jsx';
 import AuthenticatePatient from './pages/patient/AuthenticatePatient.jsx';
-import AnalyseSanguine from './pages/patient/analyse/AnalyseSanguine.jsx';
-// import Analyse from './pages/patient/analyse/Analyse.jsx';
-import AnalyseUrinaire from './pages/patient/analyse/AnalyseUrinaire.jsx';
-import AnalyseMicrobiologique from './pages/patient/analyse/AnalyseMicrobiologique.jsx';
+import Vaccin from './pages/patient/Vaccin.jsx';
+import Allergie from './pages/patient/Allergie.jsx'
+
+
+
 import AuthenticateMedecin from './pages/medecin/AuthenticateMedecin.jsx';
 import MedecinProfil from './pages/medecin/MedecinProfil.jsx';
 import Savoir_plus from './pages/Savoir_plus'
@@ -28,7 +29,12 @@ import { useAuthContextMED } from './hooks/useAuthContextMed.jsx';
 
 // context
 import { FontSizeProvider } from './context/FontSizeContext'; 
-import { analyseSanguineLoader } from './loaders/analyseSanguineLoader.js';
+import { analyseLoader } from './loaders/analyseLoader.js';
+import Analyse from './pages/patient/Analyse.jsx';
+import { vaccinLoader } from './loaders/vaccinLoader.js';
+import { allergieLoader } from './loaders/allergieLoader.js';
+import { maladieLoader } from './loaders/maladieLoader.js';
+import MaladieCH from './pages/patient/MaladieCH.jsx';
 
 
 // import { QueryClient, QueryClientProvider } from 'react-query';
@@ -37,23 +43,24 @@ function App() {
   // const queryClient = new QueryClient();
   const {user} = useAuthContext();
   const {medecin}= useAuthContextMED();
-console.log(medecin);
-
   // console.log("user rfrom app.js", user)
   const router=createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<RootLayout/>}>
           <Route index element = {<Home/>} />
           <Route path="/AdminPage" element={<AdminPage/>} />
-            <Route path='authenticate-patient' element={!user ? <AuthenticatePatient/> : <Navigate to={"/espace-patient"}/>}/>
+          <Route path='authenticate-patient' element={!user ? <AuthenticatePatient/> : <Navigate to={"/espace-patient"}/>}/>
           <Route path='espace-patient' element={ user ?  <PatientLayout/> : <Navigate to={"/authenticate-patient"}/>} >
-            <Route path='profil' element={ <Profil/> }/>
-            {/* <Route path='analyse' element={<AnalyseLayout/>}>
-            </Route> */}
-            <Route  path='analyse/sanguine/:id_patient' loader={analyseSanguineLoader} element={<AnalyseSanguine/>}/>
+            <Route path='profil'  element={ <Profil/> }/>
+            <Route path='vaccin/:id_patient'  loader={vaccinLoader} element={<Vaccin/>}/>
+            <Route path='analyse/:id_patient'  loader={analyseLoader} element={<Analyse/>}/>
+            <Route path='allergie/:id_patient'  loader={allergieLoader} element={<Allergie/>}/>
+            <Route path='maladie/:id_patient'  loader={maladieLoader} element={<MaladieCH/>}/>
+
+            {/* <Route  path='analyse/sanguine/:id_patient' loader={analyseSanguineLoader} element={<AnalyseSanguine/>}/>
             <Route  path='analyse/urinaire' element={<AnalyseUrinaire/>}/>
-            <Route  path='analyse/microbiologique' element={<AnalyseMicrobiologique/>}/>
-          </Route>
+            <Route  path='analyse/microbiologique' element={<AnalyseMicrobiologique/>}/>*/}
+            </Route>
           
           <Route path="authenticate-medecin" element={!medecin ? <AuthenticateMedecin/> : <Navigate to={"/MedecinProfil"}/>}/>
           <Route path='MedecinProfil'  element={ medecin  ?  <MedecinLayout/> : <Navigate to={"/authenticate-medecin"}/>}>

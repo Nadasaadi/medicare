@@ -4,7 +4,7 @@ import allergie from '../assets/allergie.jpg';
 import gestion from '../assets/gestion.jpg';
 import portrait from '../assets/portrait.jpg';
 import Partage from '../assets/partage.jpg'; // Ajout de l'image pour la gestion du temps
-
+import Footer from "../components/Footer"
 function Savoir_plus() {
   const { largeFont } = useFontSize(); 
   return (
@@ -37,7 +37,9 @@ Les professionnels de santé peuvent accéder électroniquement aux dossiers mé
           </li>
         </ul>
       </div>
+      <Footer/>
     </section>
+    
   );
 }
 

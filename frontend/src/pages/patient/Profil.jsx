@@ -1,27 +1,37 @@
-import React from 'react'
-import { AuthContext } from '../../context/AuthContext'; // Importez le contexte d'authentification
-import LogoutIcon from '@mui/icons-material/Logout';
+// Profil.js
+import React from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { Button, Typography,Divider  } from '@mui/material';
 import { useFontSize } from '../../context/FontSizeContext';
 import { useAuthContext } from '../../hooks/useAuthContext';
-const Profil = () => {
-  const {user } = useAuthContext()
-  const { largeFont } = useFontSize(); 
-    const { nom, prenom, sexe, date_naissance, lieu_naissance } = user;
-    const { logout } = React.useContext(AuthContext);
-    return (
-      <div id='profil' className=  {`profil-container ${largeFont ? 'large-font' : ''}`}>
-    
-        <h2>Profil Utilisateur</h2>
-        <p><span className="label">Nom:</span> {nom}</p>
-        <p><span className="label">Prénom:</span> {prenom}</p>
-        <p><span className="label">Sexe:</span> {sexe}</p>
-        <p><span className="label">Date de Naissance:</span> {date_naissance}</p>
-        <p><span className="label">Lieu de Naissance:</span> {lieu_naissance}</p>
-        <div className='button-resp'>
-        <button onClick={logout} className="logout-button"  >Déconnexion <LogoutIcon/></button>
-        </div>
-      </div>
-    );
-  };
+import { useNavigate } from 'react-router-dom';
 
-export default Profil
+const Profil = () => {
+  const { user } = useAuthContext();
+  const { largeFont } = useFontSize();
+  const { nom, prenom, sexe, date_naissance, lieu_naissance } = user;
+  const navigate = useNavigate();
+
+  return (
+    <div id='profil' className={`profil-container ${largeFont ? 'large-font' : ''}`}>
+      <h2>Profil Utilisateur</h2>
+      <p><span className="label">Nom:</span> {nom}</p>
+      <Divider />
+      <p><span className="label">Prénom:</span> {prenom}</p>
+      <Divider />
+      <p><span className="label">Sexe:</span> {sexe}</p>
+      <Divider />
+      <p><span className="label">Date de Naissance:</span> {date_naissance}</p>
+      <Divider />
+      <p><span className="label">Lieu de Naissance:</span> {lieu_naissance}</p>
+      <Divider />
+      <div className='button-resp'>
+       
+      <Button variant="contained" onClick={() => navigate('analyse/:id_patient')} className="next-button">Suivant</Button>
+      
+      </div>
+    </div>
+  );
+};
+
+export default Profil;

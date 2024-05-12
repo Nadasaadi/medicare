@@ -21,7 +21,7 @@
 }
 
 .profil-container {
-  background-color: #9aa7ef3d;
+  background-color: #a9a9ab3d;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -35,16 +35,18 @@
 .profil-container h2 {
   font-size: 24px;
   margin-bottom: 10px;
+  color: #3f51b5;
 }
 
 .label {
   font-weight: bold;
-  color: #0003cc;
+  color: #3f51b5;
 }
 
 .profil-container p {
   margin: 5px 0;
   width: 100%;
+  
 }
 
 .analyse-container,
@@ -66,20 +68,22 @@
 }
 
 
-.logout-button {
+.logout-button1 {
   margin-bottom: 10px;
+  margin-left: 5%;
+  margin-top: 25px;
   background-color: #3369ff;
   color: white;
   border: 1px solid #fdfdfd;
-  padding: 8px 16px;
+  padding: 7px 10px;
   border-radius: 4px;
   cursor: pointer;
 
 }
-.logout-button svg{
+.logout-button1 svg{
   vertical-align: middle;
 }
-.logout-button:hover {
+.logout-button1:hover {
   background-color: #cc0000;
 }
 .button-resp{

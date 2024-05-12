@@ -21,5 +21,6 @@ const PrivacyPolicyController = {
     }
   }
 };
+ 
 
 module.exports = PrivacyPolicyController;

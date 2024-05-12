@@ -22,7 +22,7 @@ const [termCondition, setTermCondition] = useState([]);
         setIsLoading(true);
         const response = await axios.get(PRIVACY_POLICY_URL);
         setPrivacyPolicy(response.data);
-        console.log(response.data);
+       
       } catch (error) {
         console.error('Erreur lors de la récupération de la politique de confidentialité :', error);
       } finally {
@@ -47,7 +47,7 @@ const [termCondition, setTermCondition] = useState([]);
         setIsLoadingTerm(true);
         const response = await axios.get(TERM_CONDITION_URL);
         setTermCondition(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } catch (error) {
         console.error('Erreur lors de la récupération des termes et conditions :', error);
       } finally {
@@ -80,7 +80,7 @@ const [termCondition, setTermCondition] = useState([]);
   return (
     <div className="footer-wrapper">
     <div className="footer-section-one">
-        <div className="footer-icons">
+    <div className="footer-icons">
           <BsTwitter />
           <SiLinkedin />
           <FaFacebookF />

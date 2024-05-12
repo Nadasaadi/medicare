@@ -7,37 +7,36 @@ const StyledTableCell = styled(TableCell)({
   color: '#3f51b5', // Modifiez la couleur selon vos préférences
 });
 
-const VaccinSection = styled('div')({
+const MaladieSection = styled('div')({
   marginTop: '24px',
   backgroundColor: '#f5f5f5',
   padding: '16px',
   borderRadius: '4px',
+  marginLeft :"15%"
 });
 
-const Vaccin = () => {
-  const vaccins = useLoaderData();
+const MaladieCH = () => {
+  const maladies = useLoaderData();
   const { id_patient } = useParams();
 
   return (
-    <VaccinSection>
+    <MaladieSection>
       <Typography variant="h5" gutterBottom sx={{ color: '#3f51b5', position: 'relative', display: 'inline-block', '&::after': { content: '""', position: 'absolute', bottom: 0, left: 0, width: '100%', height: '2px', backgroundColor: '#3f51b5', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s ease-in-out' }, '&:hover::after': { transform: 'scaleX(1)' } }}>
-        Section Vaccins
+        Section des maladies chronique
       </Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <StyledTableCell>Nom du Vaccin</StyledTableCell>
-              <StyledTableCell>Date de Vaccination</StyledTableCell>
-              <StyledTableCell>Remarques</StyledTableCell>
+              <StyledTableCell>Nom Maladie chronique</StyledTableCell>
+              <StyledTableCell>Description</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {vaccins.data.map((vaccin, index) => (
+            {maladies.data.map((maladie, index) => (
               <TableRow key={index}>
-                <TableCell>{vaccin.nom_vaccin}</TableCell>
-                <TableCell>{new Date(vaccin.date_administration).toLocaleDateString()}</TableCell>
-                <TableCell>{vaccin.remarques}</TableCell>
+                <TableCell>{maladie.nom_maladie}</TableCell>
+                <TableCell>{maladie.description}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -46,8 +45,8 @@ const Vaccin = () => {
       <Button variant="contained" color="primary" style={{ marginTop: '16px' }}>
         Suivant
       </Button>
-    </VaccinSection>
+    </MaladieSection>
   );
 };
 
-export default Vaccin;
+export default MaladieCH;

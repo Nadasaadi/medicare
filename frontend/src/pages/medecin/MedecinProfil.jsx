@@ -1,7 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContextMed } from '../../context/AuthContextMed';
-import { Box, Typography, Button, TextField,Select,MenuItem, makeStyles, Avatar } from '@material-ui/core';
+import { Box, Typography, Button, TextField, Select, MenuItem, makeStyles, Avatar } from '@material-ui/core';
 import profil from '../../assets/personne.png';
+import Footer from "../../components/Footer"
+import axios from 'axios';
+const UPDATE_URL = 'http://localhost:9000/medecin/';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -19,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'start',
-    height: '100%', //  pour que le profil prenne toute la distance verticale
+    height: '100%',
   },
   content: {
     flex: 1,
@@ -40,75 +44,147 @@ const MedecinProfil = () => {
   const classes = useStyles();
   const { medecin, logoutMedecin } = useContext(AuthContextMed);
   const [email, setEmail] = useState('');
-  const [showSignupForm, setShowSignupForm] = useState(false);
+  const [updatedMedecin, setUpdatedMedecin] = useState({
+    
+    nom: '',
+    prenom: '',
+    specialite: '',
+    adresse: '',
+    numero_tel: '',
+  });
+  const [isEditing, setIsEditing] = useState(false);
 
   const { logout } = React.useContext(AuthContextMed);
 
+
   // Déstructurer les propriétés de l'objet medecin
-  const { nom, prenom, specialite, adresse, numero_tel } = medecin || {};
+  const { id, nom, prenom, specialite, adresse, numero_tel } = medecin || {};
 
   const handleModifier = () => {
-    // Logique pour modifier les informations du professionnel
-    console.log('Modifier les informations du médecin');
+    setIsEditing(true);
+    setUpdatedMedecin({
+      id: medecin.id,
+      nom: medecin.nom,
+      prenom: medecin.prenom,
+      specialite: medecin.specialite,
+      adresse: medecin.adresse,
+      numero_tel: medecin.numero_tel,
+    });
+  };
+
+  const handleEnregistrer = async () => {
+    try {
+
+      // Utiliser l'ID récupéré du contexte AuthContextMed
+      const response = await axios.put(`${UPDATE_URL}${id}`, updatedMedecin);
+  
+      if (response.status === 200) {
+        console.log('Informations du médecin mises à jour avec succès');
+        // Mettre à jour l'état medecin avec les nouvelles informations
+        const updatedMedecin = response.data;
+        // Vous pouvez mettre à jour le contexte AuthContextMed ici si nécessaire
+        setIsEditing(false);
+      } else {
+        console.error('Erreur lors de la mise à jour des informations du médecin');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la requête de mise à jour des informations du médecin', error);
+    }
+  };
+
+
+  const handleNomChange = (event) => {
+    setUpdatedMedecin({ ...updatedMedecin, nom: event.target.value });
+  };
+
+  const handlePrenomChange = (event) => {
+    setUpdatedMedecin({ ...updatedMedecin, prenom: event.target.value });
+  };
+
+  const handleSpecialiteChange = (event) => {
+    setUpdatedMedecin({ ...updatedMedecin, specialite: event.target.value });
+  };
+
+  const handleAdresseChange = (event) => {
+    setUpdatedMedecin({ ...updatedMedecin, adresse: event.target.value });
+  };
+
+  const handleNumeroTelChange = (event) => {
+    setUpdatedMedecin({ ...updatedMedecin, numero_tel: event.target.value });
   };
 
   const handleRecherchePatient = () => {
-    // Logique pour rechercher le patient dans la base de données
     console.log(`Rechercher le patient avec l'email: ${email}`);
   };
 
-  const handleAjouterPatient = () => {
-    setShowSignupForm(true);
-  };
+
 
   return (
-    <Box className={classes.root}>
-      <Box className={classes.aside}>
-        <Avatar  className={classes.avatar} src={profil} />
-        <Typography variant="h6">Profil</Typography>
-        <Typography>Nom: {nom}</Typography>
-        <Typography>Prénom: {prenom}</Typography>
-        <Typography>Spécialité: {specialite}</Typography>
-        <Typography>Adresse: {adresse}</Typography>
-        <Typography>Numéro de téléphone: {numero_tel}</Typography>
-        <Button onClick={handleModifier} style={{ margin: '5px' }} variant="contained" color="primary">
-          Modifier
-        </Button>
-        <Button onClick={logout} style={{ margin: '5px'}} variant="contained" color="secondary">
-          Déconnexion
-        </Button>
-      </Box>
-      <Box className={classes.content}>
-        <Box className={classes.searchBar}>
+    <>
+      <Box className={classes.root}>
+        <Box className={classes.aside}>
+          <Avatar className={classes.avatar} src={profil} />
+          <Typography variant="h6">Profil</Typography>
           <TextField
-            label="Chercher patient"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            label="Nom"
+            value={isEditing ? updatedMedecin.nom : nom}
+            onChange={handleNomChange}
+            disabled={!isEditing}
           />
-          <Button onClick={handleRecherchePatient}  variant="contained" color="primary">
-            Rechercher
+          <TextField
+            label="Prénom"
+            value={isEditing ? updatedMedecin.prenom : prenom}
+            onChange={handlePrenomChange}
+            disabled={!isEditing}
+          />
+          <TextField
+            label="Spécialité"
+            value={isEditing ? updatedMedecin.specialite : specialite}
+            onChange={handleSpecialiteChange}
+            disabled={!isEditing}
+          />
+          <TextField
+            label="Adresse"
+            value={isEditing ? updatedMedecin.adresse : adresse}
+            onChange={handleAdresseChange}
+            disabled={!isEditing}
+          />
+          <TextField
+            label="Numéro de téléphone"
+            value={isEditing ? updatedMedecin.numero_tel : numero_tel}
+            onChange={handleNumeroTelChange}
+            disabled={!isEditing}
+          />
+          {isEditing ? (
+            <Button style={{margin:'10px'}} onClick={handleEnregistrer} variant="contained" color="primary">
+              Enregistrer
+            </Button>
+          ) : (
+            <Button style={{margin:'10px'}} onClick={handleModifier} variant="contained" color="primary">
+              Modifier
+            </Button>
+          )}
+          <Button onClick={logout} variant="contained" color="secondary">
+            Déconnexion
           </Button>
         </Box>
-        <Button onClick={handleAjouterPatient} variant="contained" color="primary">
-          Ajouter nouveau patient
-        </Button>
-        {showSignupForm && (
-            <Box>
-              <Typography variant="h6">Ajouter un nouveau patient</Typography>
-              {/* Ajoutez ici les champs pour le formulaire d'inscription */}
-              <TextField label="Nom" />
-              <TextField label="Prénom" />
-              <TextField label="Email" />
-              <TextField label="Date naissance" />
-              <Select label="Sexe">
-                <MenuItem value="M">Homme</MenuItem>
-                <MenuItem value="F">Femme</MenuItem>
-              </Select>
-              
-            </Box>
-          )}
+        <Box className={classes.content}>
+          <Box className={classes.searchBar}>
+            <TextField
+              label="Chercher patient"
+              value={email}
+             
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Button onClick={handleRecherchePatient} variant="contained" color="primary">
+              Rechercher
+            </Button>
+          </Box>
+         
+        </Box>
       </Box>
-    </Box>
+      <Footer />
+    </>
   );
 };
 

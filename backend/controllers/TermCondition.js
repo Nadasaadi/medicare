@@ -22,4 +22,5 @@ const TermConditionController = {
   }
 };
 
+
 module.exports = TermConditionController;

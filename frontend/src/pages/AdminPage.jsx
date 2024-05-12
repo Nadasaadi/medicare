@@ -117,10 +117,14 @@ const fetchTermCondition = async () => {
 // Function to update terms and conditions
 const updateTermCondition = async () => {
   try {
-    await TermConditionController.updateTermCondition({ texte: newTermCondition });
-    fetchTermCondition(); // Récupérer les nouveaux termes et conditions
-    setIsEditingTerm(false);
-    setNewTermCondition(''); // Réinitialiser le champ d'édition
+    const response = await axios.put(TERM_URL, { texte: newTermCondition });
+    if (response.status === 200) {
+      fetchTermCondition(); // Récupérer les nouveaux termes et conditions
+      setIsEditingTerm(false);
+      setNewTermCondition(''); // Réinitialiser le champ d'édition
+    } else {
+      console.error('Erreur lors de la mise à jour des termes et conditions :', response.data.error);
+    }
   } catch (error) {
     console.error('Erreur lors de la mise à jour des termes et conditions :', error);
   }
@@ -150,14 +154,18 @@ const updateTermCondition = async () => {
 };
 
  // Fonction pour mettre à jour la politique de confidentialité dans le backend
- const updatePrivacyPolicy = async () => {
+const updatePrivacyPolicy = async () => {
   try {
-    await PrivacyPolicyController.updatePrivacyPolicy({ texte: newPrivacyPolicy });
-    fetchPrivacyPolicy(); // Récupérer la nouvelle politique de confidentialité
-    setIsEditingPrivacy(false);
-    setNewPrivacyPolicy(''); // Réinitialiser le champ d'édition
+    const response = await axios.put(PRIVACY_POLICY_URL, { texte: newPrivacyPolicy });
+    if (response.status === 200) {
+      fetchPrivacyPolicy(); // Récupérer les nouveaux privacy policy
+      setIsEditingPrivacy(false);
+      setNewPrivacyPolicy(''); // Réinitialiser le champ d'édition
+    } else {
+      console.error('Erreur lors de la mise à jour des politique de confidentialité :', response.data.error);
+    }
   } catch (error) {
-    console.error('Erreur lors de la mise à jour de la politique de confidentialité :', error);
+    console.error('Erreur lors de la mise à jour des termes et conditions :', error);
   }
 };
  // Récupérer la politique de confidentialité au chargement du composant
@@ -202,7 +210,7 @@ const updateTermCondition = async () => {
       <TableCell>{message.ID}</TableCell>
       <TableCell>{message.Email}</TableCell>
       <TableCell>{message.Message}</TableCell>
-      <TableCell>{message.DateEnvoi}</TableCell>
+      <TableCell>{new Date(message.DateEnvoi).toLocaleDateString()}</TableCell>
       <TableCell>{message.Read ? 'Yes' : 'No'}</TableCell>
       <TableCell>
   <Button onClick={() => markAsRead(message.ID)}>marqué comme lu</Button>

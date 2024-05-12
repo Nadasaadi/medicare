@@ -12,8 +12,12 @@ import LoginForm from "./Loginform"
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
 import { useFontSize } from '../context/FontSizeContext'; // Importez le hook du contexte
 import '../css/navbarstyle.css'; // Import du fichier CSS
-
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContextMED } from "../hooks/useAuthContextMed";
 const Navbar = () => {
+  const  {user} = useAuthContext()
+  const  {medecin} = useAuthContextMED()
+
   const location = useLocation();
   const { largeFont, setLargeFont } = useFontSize(); // Utilisez le hook du contexte pour lire et mettre à jour l'état
   const [openMenu, setOpenMenu] = useState(false);
@@ -32,11 +36,13 @@ const Navbar = () => {
       icon: <IoHome />,
       link: "/"
     },
+    
     {
       text: "Espace Patient",
       icon: <FaHospitalUser />,
-      link: "authenticate-patient"
+      link: user? "espace-patient" :"/authenticate-patient"
     },
+    
     {
       text: "Espace Professionnel",
       icon: <FaUserMd />,
@@ -54,8 +60,8 @@ const Navbar = () => {
         <img className="nav-logo-container" src={Logo} alt="" />
         <nav className="navbar-links-container">
           {menuOptions.map((item, index) => (
-            // <NavLink key={index} to={item.link} activeClassName="activeLink">
-            <NavLink key={index} to={item.link} >
+            <NavLink key={index} to={item.link} activeClassName="activeLink">
+            {/* <NavLink key={index} to={item.link} > */}
               <span>{item.text}</span>
             </NavLink>
           ))}

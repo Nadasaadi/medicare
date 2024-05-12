@@ -14,8 +14,48 @@ class Medecin {
         this.numero_tel = numero_tel;
     };
    
-  
-
+    static async updateMedecin(id, { nom = null, prenom = null, specialite = null, adresse = null, numero_tel = null }) {
+        const updateFields = [];
+        const values = [];
+      
+        if (nom !== null) {
+          updateFields.push('nom = ?');
+          values.push(nom);
+        }
+      
+        if (prenom !== null) {
+          updateFields.push('prenom = ?');
+          values.push(prenom);
+        }
+      
+        if (specialite !== null) {
+          updateFields.push('specialite = ?');
+          values.push(specialite);
+        }
+      
+        if (adresse !== null) {
+          updateFields.push('adresse = ?');
+          values.push(adresse);
+        }
+      
+        if (numero_tel !== null) {
+          updateFields.push('numero_tel = ?');
+          values.push(numero_tel);
+        }
+      
+        if (updateFields.length === 0) {
+          return; // Aucun champ à mettre à jour
+        }
+      
+        const query = `
+          UPDATE medecin
+          SET ${updateFields.join(', ')}
+          WHERE id = ?
+        `;
+      
+        values.push(id);
+        return await db.execute(query, values);
+      }
     static async testExistEmail(email) {
         return await db.execute( `SELECT email from medecin WHERE email = "${email}" ;` )
     }

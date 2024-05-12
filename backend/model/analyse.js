@@ -1,7 +1,8 @@
 //Importe le module database depuis le répertoire util.
 const db =  require("../util/database");
 
-class AnalyseSanguine {
+
+class Analyse {
   // Définit le constructeur de la classe. Le constructeur est une méthode spéciale qui est appelée lors de la création d'une nouvelle instance de la classe
     constructor(date, type, marqueurSanguin, resultat, uniteMesure, autresInformations) {
       this.date = date;
@@ -12,12 +13,12 @@ class AnalyseSanguine {
       this.autresInformations = autresInformations;
 
     }
-    static async getAllAnalysesSanguines(id_patient) {
-      const analysesSanguines = await db.query('SELECT * FROM AnalysesSanguines WHERE ID_Patient = ?', [id_patient]);
-      console.log(analysesSanguines,"message--------------------- ");
-      return analysesSanguines;
+    static async getAllAnalyses(id_patient) {
+      
+      const [analyse] = await db.query('SELECT * FROM analyse WHERE id_patient = ?', [id_patient]);
+      return analyse;
     }
     
 }
-  module.exports = AnalyseSanguine;//Exporte la classe AnalyseSanguine afin qu'elle puisse être importée et utilisée dans d'autres fichiers de l'application.
+  module.exports = Analyse;//Exporte la classe AnalyseSanguine afin qu'elle puisse être importée et utilisée dans d'autres fichiers de l'application.
   

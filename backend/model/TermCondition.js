@@ -10,7 +10,7 @@ class TermCondition {
   }
 
   static async updateTermCondition(texte) {
-    return await db.execute('UPDATE term_condition` SET texte = ? LIMIT 1', [texte]);
+    return await db.execute('UPDATE term_condition SET texte = ? LIMIT 1', [texte]);
   }
 }
 

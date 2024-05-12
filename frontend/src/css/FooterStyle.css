@@ -5,12 +5,13 @@
   }
   .footer-icons {
     margin-top: 2.5rem;
+    margin-left: 2rem;
   }
   .footer-icons svg {
     font-size: 1.5rem;
     margin-right: 1.25rem;
     color: #585858;
-    color: #aed6f141;
+
   }
 
 

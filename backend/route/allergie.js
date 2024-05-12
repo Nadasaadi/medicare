@@ -3,9 +3,9 @@ const express  = require("express");
 const router = express.Router();
 
 
-const analyseSanguineController = require('../controllers/analyse');
+const Allergie = require('../controllers/allergie');
 
 // Route pour récupérer toutes les analyses sanguines
-router.get('/', analyseSanguineController.getAllAnalyses);
+router.get('/', Allergie.getAllAllergies);
 
 module.exports = router;
