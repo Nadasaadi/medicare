@@ -14,29 +14,8 @@ const signupM = async (req, res) => {
     res.status(400).json({ error: error.toString() });
   }
 };
-const updateMedecin = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { nom, prenom, specialite, adresse, numero_tel } = req.body;
 
-    // Vérifier si l'ID du médecin est valide
-    const [[medecin]] = await db.execute(`SELECT * FROM medecin WHERE id = ?`, [id]);
-    if (!medecin) {
-      return res.status(404).json({ error: 'Médecin non trouvé' });
-    }
 
-    // Mettre à jour les informations du médecin
-    await Medecin.updateMedecin(id, { nom, prenom, specialite, adresse, numero_tel });
-
-    // Récupérer les nouvelles informations du médecin
-    const [[updatedMedecin]] = await db.execute(`SELECT * FROM medecin WHERE id = ?`, [id]);
-
-    res.status(200).json(updatedMedecin);
-  } catch (error) {
-    console.error('Erreur lors de la mise à jour des informations du médecin', error);
-    res.status(500).json({ error: 'Une erreur est survenue lors de la mise à jour des informations du médecin' });
-  }
-};
 const loginM = async (req, res) => {
   const {email, password} = req.body;
   try {
@@ -48,6 +27,31 @@ const loginM = async (req, res) => {
       console.log(error.message)
       res.status(400).json({message: error.message});
   }
-}
+  
+}; const updateMedecin = async (req, res) => {
+  try {
+    const { id_medecin } = req.params;
+    const { nom, prenom, specialite, adresse, numero_tel, email } = req.body;
 
-module.exports = { signupM, loginM,updateMedecin };
+    // Vérifier si l'ID du médecin est valide
+    const [[medecin]] = await db.execute(`SELECT * FROM medecin WHERE id_medecin = ?`, [id_medecin]);
+    if (!medecin) {
+      return res.status(404).json({ error: 'Médecin non trouvé' });
+    }
+
+    // Mettre à jour les informations du médecin
+    const [result] = await db.execute(
+      `UPDATE medecin SET nom = ?, prenom = ?, specialite = ?, adresse = ?, numero_tel = ?, email = ? WHERE id_medecin = ?`,
+      [nom, prenom, specialite, adresse, numero_tel, email, id_medecin]
+    );
+
+    // Récupérer les nouvelles informations du médecin
+    const [[updatedMedecin]] = await db.execute(`SELECT * FROM medecin WHERE id_medecin = ?`, [id_medecin]);
+    res.status(200).json(updatedMedecin);
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour des informations du médecin :', error);
+    res.status(500).json({ error: `Une erreur est survenue lors de la mise à jour des informations du médecin : ${error.message}` });
+  }
+};
+
+module.exports = { signupM, loginM, updateMedecin };

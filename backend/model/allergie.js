@@ -14,6 +14,11 @@ class Allergie {
       return allergie;
     }
     
-}
+    async addAllergie(id_patient) {
+      const query = 'INSERT INTO allergie (nom_allergie, description, patient_id) VALUES (?, ?, ?)';
+      const values = [this.nom_allergie,  this.description, id_patient];
+      await db.query(query, values);
+    }
+  }
   module.exports = Allergie;//Exporte la classe vaccin afin qu'elle puisse être importée et utilisée dans d'autres fichiers de l'application.
   

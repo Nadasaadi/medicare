@@ -44,6 +44,33 @@ class User {
         }
         return await db.execute( `Insert INTO patient (email, password, nom, prenom , date_naissance , sexe  , lieu_naissance) VALUES ("${email}", "${password}", "${nom}", "${prenom}",  "${date_naissance}", "${sexe}", "${lieu_naissance}");` );
     }
+    static async findPatientByEmail(email) {
+        const [[patient]] = await db.execute(`SELECT * FROM patient WHERE email = "${email}";`);
+        if (!patient) {
+          return null; // Ou vous pouvez lancer une erreur si vous préférez
+        }
+        
+        const patientId = patient.id_patient; // Récupérez l'identifiant du patient
+      
+        // Récupérez les données des tables liées au patient
+        const [analyses] = await db.execute(`SELECT * FROM analyse WHERE id_patient = ${patientId}`);
+        const [vaccins] = await db.execute(`SELECT * FROM vaccin WHERE patient_id = ${patientId}`);
+        const [allergies] = await db.execute(`SELECT * FROM allergie WHERE patient_id = ${patientId}`);
+        const [maladiesChroniques] = await db.execute(`SELECT * FROM maladiechronique WHERE patient_id = ${patientId}`);
+        const [imageries] = await db.execute(`SELECT * FROM imageriemedicale WHERE patient_id = ${patientId}`);
+      
+        // Construisez un objet contenant toutes les données du patient et des tables liées
+        const patientData = {
+          ...patient,
+          analyses,
+          vaccins,
+          allergies,
+          maladiesChroniques,
+          imageries
+        };
+      
+        return patientData;
+      }
 }
 
 

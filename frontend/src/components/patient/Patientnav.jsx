@@ -9,7 +9,6 @@ import ImageIcon from '@mui/icons-material/Image';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { HiOutlineBars3 } from "react-icons/hi2";
 import { NavLink } from 'react-router-dom';
-import AnalyseNav from '../analyse/AnalyseNav';
 import { Divider } from '@mui/material';
 import { AuthContext } from '../../context/AuthContext';
 import { useAuthContext } from '../../hooks/useAuthContext';
@@ -65,10 +64,10 @@ const Patientnav = ({ onNavigationChange }) => {
           </li>
           <Divider />
           <li className="patient-nav-item">
-            <NavLink className="patient-nav-link" href="#imagerie-medicale" to={'imagerie-medicale'}>
-              <ImageIcon /> Imagerie médicale
-            </NavLink>
-          </li>
+  <NavLink className="patient-nav-link" to={`imagerie/${user.id_patient}`}>
+    <ImageIcon /> Imagerie médicale
+  </NavLink>
+</li>
           <Divider />
           <li className="patient-nav-item">
             <button onClick={logout} className="logout-button1">

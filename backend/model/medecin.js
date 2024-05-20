@@ -14,48 +14,7 @@ class Medecin {
         this.numero_tel = numero_tel;
     };
    
-    static async updateMedecin(id, { nom = null, prenom = null, specialite = null, adresse = null, numero_tel = null }) {
-        const updateFields = [];
-        const values = [];
-      
-        if (nom !== null) {
-          updateFields.push('nom = ?');
-          values.push(nom);
-        }
-      
-        if (prenom !== null) {
-          updateFields.push('prenom = ?');
-          values.push(prenom);
-        }
-      
-        if (specialite !== null) {
-          updateFields.push('specialite = ?');
-          values.push(specialite);
-        }
-      
-        if (adresse !== null) {
-          updateFields.push('adresse = ?');
-          values.push(adresse);
-        }
-      
-        if (numero_tel !== null) {
-          updateFields.push('numero_tel = ?');
-          values.push(numero_tel);
-        }
-      
-        if (updateFields.length === 0) {
-          return; // Aucun champ à mettre à jour
-        }
-      
-        const query = `
-          UPDATE medecin
-          SET ${updateFields.join(', ')}
-          WHERE id = ?
-        `;
-      
-        values.push(id);
-        return await db.execute(query, values);
-      }
+   
     static async testExistEmail(email) {
         return await db.execute( `SELECT email from medecin WHERE email = "${email}" ;` )
     }
@@ -76,26 +35,16 @@ class Medecin {
         // Retourner les données de l'utilisateur si le mot de passe est correct
         return userData;
     }
-
-    static async signupM({ email, password, nom, prenom, specialite, adresse, numero_tel }) {
-        const [[existEmail]] = await Medecin.testExistEmail(email);
-        if (existEmail) {
-          throw Error("email alredy exist");
+    static async signupM({ email, password, nom, prenom, specialite, adresse, numero_tel }) {{
+      
+            const [[existEmail]] = await Medecin.testExistEmail(email);
+            if(existEmail){
+                throw Error("email alredy exist");
+            }
+            return await db.execute( `  INSERT INTO medecin (email, password, nom, prenom, specialite, adresse, numero_tel) VALUES ("${email}", "${password}", "${nom}", "${prenom}",  "${specialite}", "${adresse}", "${numero_tel}");` );
         }
-      
-        // Hasher le mot de passe avant de l'insérer dans la base de données
-        const hashedPassword = await bcrypt.hash(password, 10);
-      
-        // Utiliser des paramètres préparés pour éviter les injections SQL
-        const query = `
-          INSERT INTO medecin (email, password, nom, prenom, specialite, adresse, numero_tel)
-          VALUES (?, ?, ?, ?, ?, ?, ?)
-        `;
-        const values = [email, hashedPassword, nom, prenom, specialite, adresse, numero_tel];
-      
-        return await db.execute(query, values);
-      }
+    }
 }
-
+    
 
 module.exports = Medecin;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, styled } from '@mui/material';
-import { useLoaderData, useParams } from 'react-router-dom';
+import { useLoaderData, useParams,useNavigate } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)({
   fontWeight: 'bold',
@@ -18,7 +18,7 @@ const AllergieSection = styled('div')({
 const Allergie = () => {
   const allergies = useLoaderData();
   const { id_patient } = useParams();
-
+  const navigate = useNavigate();
   return (
     <AllergieSection>
       <Typography variant="h5" gutterBottom sx={{ color: '#3f51b5', position: 'relative', display: 'inline-block', '&::after': { content: '""', position: 'absolute', bottom: 0, left: 0, width: '100%', height: '2px', backgroundColor: '#3f51b5', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s ease-in-out' }, '&:hover::after': { transform: 'scaleX(1)' } }}>
@@ -42,9 +42,14 @@ const Allergie = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button variant="contained" color="primary" style={{ marginTop: '16px' }}>
-        Suivant
-      </Button>
+      <Button
+  variant="contained"
+  onClick={() => navigate(`/espace-patient/maladie/${id_patient}`)}
+  color="primary"
+  sx={{ marginTop: "20px", marginLeft: 'auto' }}
+>
+  Suivant
+</Button>
     </AllergieSection>
   );
 };

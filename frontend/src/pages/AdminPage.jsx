@@ -5,6 +5,27 @@ import '../css/AdminStyle.css'; // Import du fichier CSS
 import { useNavigate } from 'react-router-dom';
 import { Margin } from '@mui/icons-material';
 import Modal from 'react-modal';
+import { makeStyles } from '@material-ui/core/styles';
+import {  Typography, Box } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+  termConditionItem: {
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
+  termConditionHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(1),
+  },
+  termConditionId: {
+    fontWeight: 'bold',
+  },
+  termConditionText: {
+    whiteSpace: 'pre-wrap',
+  },
+}));
 
 
 const MESSAGE_URL = 'http://localhost:9000/message/';
@@ -12,6 +33,7 @@ const PRIVACY_POLICY_URL = 'http://localhost:9000/privacyPolicy'; // URL pour r�
 const TERM_URL ='http://localhost:9000/termCondition';
 
 const AdminPage = () => {
+  const classes = useStyles();
   const [messages, setMessages] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
@@ -96,9 +118,11 @@ useEffect(() => {
 
 //gestion des termes et condition 
 const [isEditingTerm, setIsEditingTerm] = useState(false);
+const [editingTermId, setEditingTermId] = useState(null);
 const [newTermCondition, setNewTermCondition] = useState('');
 const [isLoadingTerm, setIsLoadingTerm] = useState(true)
 const [termCondition, setTermCondition] = useState([]);
+
 
 // Function to fetch terms and conditions from the backend
 const fetchTermCondition = async () => {
@@ -115,13 +139,14 @@ const fetchTermCondition = async () => {
 };
 
 // Function to update terms and conditions
-const updateTermCondition = async () => {
+const updateTermCondition = async (id, texte) => {
   try {
-    const response = await axios.put(TERM_URL, { texte: newTermCondition });
+    const response = await axios.put(`${TERM_URL}/${id}`, { texte });
     if (response.status === 200) {
       fetchTermCondition(); // Récupérer les nouveaux termes et conditions
       setIsEditingTerm(false);
-      setNewTermCondition(''); // Réinitialiser le champ d'édition
+      setNewTermCondition('');
+      setEditingTermId(null);
     } else {
       console.error('Erreur lors de la mise à jour des termes et conditions :', response.data.error);
     }
@@ -129,17 +154,48 @@ const updateTermCondition = async () => {
     console.error('Erreur lors de la mise à jour des termes et conditions :', error);
   }
 };
+//function to delete terms
+const deleteTermCondition = async (id) => {
+  try {
+    const response = await axios.delete(`${TERM_URL}/${id}`);
+    if (response.status === 200) {
+      fetchTermCondition(); // Récupérer les nouveaux termes et conditions après suppression
+    } else {
+      console.error('Erreur lors de la suppression des termes et conditions :', response.data.error);
+    }
+  } catch (error) {
+    console.error('Erreur lors de la suppression des termes et conditions :', error);
+  }
+};
+//function to add terms
+const addTermCondition = async () => {
+  try {
+    const response = await axios.post(TERM_URL, { texte: newTermCondition });
+    if (response.status === 201) {
+      fetchTermCondition(); // Récupérer les nouveaux termes et conditions
+      setIsEditingTerm(false);
+      setNewTermCondition('');
+    } else {
+      console.error('Erreur lors de l\'ajout des termes et conditions :', response.data.error);
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout des termes et conditions :', error);
+  }
+};
+
+
    // Récupérer la politique de confidentialité au chargement du composant
    useEffect(() => {
      fetchTermCondition();
    }, []);
 
+
  // Gestion de la politique de confidentialité
  const [isEditingPrivacy, setIsEditingPrivacy] = useState(false);
- const [privacyPolicy, setPrivacyPolicy] = useState('');
+ const [privacyPolicy, setPrivacyPolicy] = useState([]);
  const [newPrivacyPolicy, setNewPrivacyPolicy] = useState('');
  const [isLoadingPrivacy, setIsLoadingPrivacy] = useState(true);
-
+ const [editingPolicyId, setEditingPolicyId] = useState(null);
  // Fonction pour récupérer la politique de confidentialité depuis le backend
  const fetchPrivacyPolicy = async () => {
   try {
@@ -152,22 +208,52 @@ const updateTermCondition = async () => {
     setIsLoadingPrivacy(false);
   }
 };
-
- // Fonction pour mettre à jour la politique de confidentialité dans le backend
-const updatePrivacyPolicy = async () => {
+// Function to update politique de confidentialité
+const updatePrivacyPolicy = async (id, texte) => {
   try {
-    const response = await axios.put(PRIVACY_POLICY_URL, { texte: newPrivacyPolicy });
+    const response = await axios.put(`${PRIVACY_POLICY_URL}/${id}`, { texte });
     if (response.status === 200) {
-      fetchPrivacyPolicy(); // Récupérer les nouveaux privacy policy
+      fetchPrivacyPolicy(); // Récupérer les nouveaux termes et conditions
       setIsEditingPrivacy(false);
-      setNewPrivacyPolicy(''); // Réinitialiser le champ d'édition
+      setNewPrivacyPolicy('');
+      setEditingPolicyId(null);
     } else {
-      console.error('Erreur lors de la mise à jour des politique de confidentialité :', response.data.error);
+      console.error('Erreur lors de la mise à jour des politiques de confidentialtés :', response.data.error);
     }
   } catch (error) {
-    console.error('Erreur lors de la mise à jour des termes et conditions :', error);
+    console.error('Erreur lors de la mise à jour des politiques de confidentialités :', error);
   }
 };
+//function to delete privacy policy
+const deletePrivacyPolicy = async (id) => {
+  try {
+    const response = await axios.delete(`${PRIVACY_POLICY_URL}/${id}`);
+    if (response.status === 200) {
+      fetchPrivacyPolicy(); // Récupérer les nouveaux politiques après suppression
+    } else {
+      console.error('Erreur lors de la suppression de politique de confidentialité :', response.data.error);
+    }
+  } catch (error) {
+    console.error('Erreur lors de la suppression de politique de confidentialité :', error);
+  }
+};
+//function to add privacy policy
+const addPrivacyPolicy = async () => {
+  try {
+    const response = await axios.post(PRIVACY_POLICY_URL, { texte: newPrivacyPolicy });
+    if (response.status === 201) {
+      fetchPrivacyPolicy(); // Récupérer les nouveaux politiques
+      setIsEditingPrivacy(false);
+      setNewPrivacyPolicy('');
+    } else {
+      console.error('Erreur lors de l\'ajout de politique de confidentialité :', response.data.error);
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout des politiques de confidentialités :', error);
+  }
+};
+
+
  // Récupérer la politique de confidentialité au chargement du composant
  useEffect(() => {
    fetchPrivacyPolicy();
@@ -211,7 +297,7 @@ const updatePrivacyPolicy = async () => {
       <TableCell>{message.Email}</TableCell>
       <TableCell>{message.Message}</TableCell>
       <TableCell>{new Date(message.DateEnvoi).toLocaleDateString()}</TableCell>
-      <TableCell>{message.Read ? 'Yes' : 'No'}</TableCell>
+      <TableCell>{message.Read ? 'Oui' : 'Non'}</TableCell>
       <TableCell>
   <Button onClick={() => markAsRead(message.ID)}>marqué comme lu</Button>
   <Button onClick={() => deleteMessage(message.ID, message.Read)}>Supprimer</Button>
@@ -230,37 +316,83 @@ const updatePrivacyPolicy = async () => {
 
 
 {/* Terms & Conditions Section */}
-     <section id="terms">
-        <h2 className="titre-section">Terms & Conditions</h2>
-        {isEditingTerm ? (
-          <div className="content">
-            <TextField
-              multiline
-              fullWidth
-              style={{ width: '100%' }}
-              value={ newTermCondition || termCondition.map(element => element.texte).join('\n')}
-              onChange={(e) => setNewTermCondition(e.target.value)}
-            />
-            <div className="edit-buttons">
-              <Button onClick={updateTermCondition}>Enregistrer</Button>
-              <Button onClick={handleCancelEditing}>Annuler</Button>
-            </div>
-          </div>
+<section id="terms">
+  <h2 className="titre-section">Terms & Conditions</h2>
+  {isEditingTerm ? (
+    <div className="content">
+      <TextField
+        multiline
+        fullWidth
+        style={{ width: '100%' }}
+        value={newTermCondition}
+        onChange={(e) => setNewTermCondition(e.target.value)}
+      />
+      <div className="edit-buttons">
+        {editingTermId === null ? (
+          <Button  onClick={addTermCondition}>Ajouter</Button>
         ) : (
-          <div className="content">
-            {isLoadingTerm ? (
-              <p>Chargement des termes et conditions...</p>
-            ) : (
-              <>
-                {termCondition.map((element, index) => (
-                  <p key={index}>{element.texte}</p>
-                ))}
-                <Button className='modifier' onClick={() => setIsEditingTerm(true)}>Modifier</Button>
-              </>
-            )}
-          </div>
+          <Button onClick={() => updateTermCondition(editingTermId, newTermCondition)}>Enregistrer</Button>
         )}
-      </section>
+        <Button onClick={handleCancelEditing}>Annuler</Button>
+      </div>
+    </div>
+  ) : (
+    <div className="content">
+      {isLoadingTerm ? (
+        <p>Chargement des termes et conditions...</p>
+      ) : (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setIsEditingTerm(true);
+              setEditingTermId(null);
+              setNewTermCondition('');
+            }}
+            style={{marginBottom:10}}
+          >
+            Ajouter
+          </Button>
+          {termCondition.map((element, index) => (
+            <Paper key={index} className={classes.termConditionItem} elevation={3}>
+              <Box className={classes.termConditionHeader}>
+                <Typography variant="subtitle1" className={classes.termConditionId}>
+                  ID : {element.id}
+                </Typography>
+                <div>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      setIsEditingTerm(true);
+                      setEditingTermId(element.id);
+                      setNewTermCondition(element.texte);
+                    }}
+                  >
+                      Modifier
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => deleteTermCondition(element.id)}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    Supprimer
+                  </Button>
+                </div>
+              </Box>
+              <Typography variant="body1" className={classes.termConditionText}>
+                {element.texte}
+              </Typography>
+            </Paper>
+          ))}
+        </>
+      )}
+    </div>
+  )}
+</section>
+
 
 </div>
 
@@ -329,30 +461,74 @@ const updatePrivacyPolicy = async () => {
               multiline
               fullWidth
               style={{ width: '100%' }}
-              value={newPrivacyPolicy || privacyPolicy.map(element => element.texte).join('\n')}
+              value={newPrivacyPolicy}
               onChange={(e) => setNewPrivacyPolicy(e.target.value)}
             />
             <div className="edit-buttons">
-              <Button onClick={updatePrivacyPolicy}>Enregistrer</Button>
-              <Button onClick={handleCancelEditing}>Annuler</Button>
-            </div>
-          </div>
+            {editingPolicyId === null ? (
+          <Button onClick={addPrivacyPolicy}>Ajouter</Button>
         ) : (
-          <div className="content">
-            {isLoadingPrivacy ? (
-              <p>Chargement de la politique de confidentialité...</p>
-            ) : (
-              <>
-                {privacyPolicy.map((element, index) => (
-                  <p key={index}>{element.texte}</p>
-                ))}
-                <Button className='modifier' onClick={() => setIsEditingPrivacy(true)}>Modifier</Button>
-              </>
-            )}
-          </div>
+          <Button onClick={() => updatePrivacyPolicy(editingPolicyId, newPrivacyPolicy)}>Enregistrer</Button>
         )}
-      </section>
-
+        <Button onClick={handleCancelEditing}>Annuler</Button>
+      </div>
+    </div>
+  ) : (
+    <div className="content">
+      {isLoadingPrivacy ? (
+        <p>Chargement des politiques de confidentialité...</p>
+      ) : (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setIsEditingPrivacy(true);
+              setEditingPolicyId(null);
+              setNewPrivacyPolicy('');
+            }}
+            style={{marginBottom:10}}
+          >
+            Ajouter
+          </Button>
+          {privacyPolicy.map((element, index) => (
+            <Paper key={index} className={classes.termConditionItem} elevation={3}>
+              <Box className={classes.termConditionHeader}>
+                <Typography variant="subtitle1" className={classes.termConditionId}>
+                  ID : {element.id}
+                </Typography>
+                <div>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      setIsEditingPrivacy(true);
+                      setEditingPolicyId(element.id);
+                      setNewPrivacyPolicy(element.texte);
+                    }}
+                  >
+                      Modifier
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => deletePrivacyPolicy(element.id)}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    Supprimer
+                  </Button>
+                </div>
+              </Box>
+              <Typography variant="body1" className={classes.termConditionText}>
+                {element.texte}
+              </Typography>
+            </Paper>
+          ))}
+        </>
+      )}
+    </div>
+  )}
+</section>
 
 
   </div>

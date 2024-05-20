@@ -1,12 +1,16 @@
+// Importation des composants React nécessaires depuis les bibliothèques MUI et react-router-dom
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, styled } from '@mui/material';
-import { useLoaderData, useParams } from 'react-router-dom';
+import { useLoaderData, useParams,useNavigate } from 'react-router-dom';
 
+
+// Définition d'un TableCell personnalisé avec des styles spécifiques
 const StyledTableCell = styled(TableCell)({
   fontWeight: 'bold',
   color: '#3f51b5', // Modifiez la couleur selon vos préférences
 });
 
+// Définition d'une section de style pour les informations sur les vaccins
 const VaccinSection = styled('div')({
   marginTop: '24px',
   backgroundColor: '#f5f5f5',
@@ -14,25 +18,38 @@ const VaccinSection = styled('div')({
   borderRadius: '4px',
 });
 
+// Définition du composant fonctionnel Vaccin
 const Vaccin = () => {
+  
+const navigate = useNavigate();
+  // Récupération des données des vaccins à partir du hook useLoaderData
   const vaccins = useLoaderData();
+  // Récupération des paramètres d'URL à partir du hook useParams
   const { id_patient } = useParams();
 
+  // Rendu du composant Vaccin
   return (
     <VaccinSection>
-      <Typography variant="h5" gutterBottom sx={{ color: '#3f51b5', position: 'relative', display: 'inline-block', '&::after': { content: '""', position: 'absolute', bottom: 0, left: 0, width: '100%', height: '2px', backgroundColor: '#3f51b5', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s ease-in-out' }, '&:hover::after': { transform: 'scaleX(1)' } }}>
+      {/* Titre de la section des vaccins avec un effet de survol */}
+      <Typography variant="h5" gutterBottom sx={{ color: '#3f51b5', position: 'relative', display: 'inline-block', 
+      '&::after': { content: '""', position: 'absolute', bottom: 0, left: 0, width: '100%', height: '2px', 
+      backgroundColor: '#3f51b5', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s ease-in-out' }, 
+      '&:hover::after': { transform: 'scaleX(1)' } }}>
         Section Vaccins
       </Typography>
+      {/* Tableau affichant les données des vaccins */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
+              {/* En-têtes de colonne personnalisées avec le composant StyledTableCell */}
               <StyledTableCell>Nom du Vaccin</StyledTableCell>
               <StyledTableCell>Date de Vaccination</StyledTableCell>
               <StyledTableCell>Remarques</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
+            {/* Mapping des données des vaccins pour afficher chaque entrée dans une ligne du tableau */}
             {vaccins.data.map((vaccin, index) => (
               <TableRow key={index}>
                 <TableCell>{vaccin.nom_vaccin}</TableCell>
@@ -43,11 +60,18 @@ const Vaccin = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button variant="contained" color="primary" style={{ marginTop: '16px' }}>
-        Suivant
-      </Button>
+      {/* Bouton Suivant */}
+      <Button
+  variant="contained"
+  onClick={() => navigate(`/espace-patient/allergie/${id_patient}`)}
+  color="primary"
+  sx={{ marginTop: "20px", marginLeft: 'auto' }}
+>
+  Suivant
+</Button>
     </VaccinSection>
   );
 };
 
+// Exportation du composant Vaccin pour pouvoir l'utiliser dans d'autres fichiers de l'application
 export default Vaccin;

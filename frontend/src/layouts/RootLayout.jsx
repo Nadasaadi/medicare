@@ -1,20 +1,21 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
+import React from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const RootLayout = () => {
+  const location = useLocation();
+  const isAdminPage = location.pathname === '/AdminPage';
+
   return (
     <div>
-      <div>
-        <Navbar/>
-      </div>
+      <div>{!isAdminPage && <Navbar />}</div>
       <main>
-        <Outlet/>
+        <Outlet />
       </main>
       {/* <Footer/> */}
     </div>
-  )
-}
+  );
+};
 
-export default RootLayout
+export default RootLayout;

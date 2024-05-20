@@ -46,7 +46,7 @@ const Navbar = () => {
     {
       text: "Espace Professionnel",
       icon: <FaUserMd />,
-      link: "/authenticate-medecin"
+      link:  medecin? "/MedecinProfil" :"/authenticate-medecin"
     },
     {
       text: "Contact",

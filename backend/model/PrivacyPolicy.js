@@ -1,3 +1,4 @@
+const { deletePrivacyPolicy } = require("../controllers/privacyPolicyController");
 const db =  require("../util/database");
 class PrivacyPolicy{
   
@@ -8,11 +9,16 @@ class PrivacyPolicy{
   };
 
   static async getPrivacyPolicy(texte) {
-    return await db.execute( `SELECT texte from Politique_de_confidentialité ;` )
+    return await db.execute( `SELECT * from Politique_de_confidentialité ;` )
 }
-
-static async updatePrivacyPolicy(texte) {
-  return await db.execute('UPDATE Politique_de_confidentialité` SET texte = ? LIMIT 1', [texte]);
+static async deletePrivacyPolicy(id) {
+  return await db.execute('DELETE FROM Politique_de_confidentialité WHERE id = ?', [id]);
+}
+static async updatePrivacyPolicy(id,texte) {
+    return await db.execute('UPDATE Politique_de_confidentialité SET texte = ? WHERE id = ?', [texte, id]);
+}
+static async addPrivacyPolicy(texte) {
+  return await db.execute('INSERT INTO Politique_de_confidentialité (texte) VALUES (?)', [texte]);
 }
 
 

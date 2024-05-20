@@ -28,9 +28,14 @@ const Analyse = () => {
           <Typography variant="h5" gutterBottom sx={{ color: '#3f51b5', position: 'relative', display: 'inline-block', '&::after': { content: '""', position: 'absolute', bottom: 0, left: 0, width: '100%', height: '2px', backgroundColor: '#3f51b5', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s ease-in-out' }, '&:hover::after': { transform: 'scaleX(1)' } }}>
             Section Analyses
           </Typography>
-          <Button variant="contained" onClick={() => navigate('/vaccin')}  color="primary" sx={{ marginTop :"20px", marginLeft: 'auto' }}>
-            Suivant
-          </Button>
+          <Button
+  variant="contained"
+  onClick={() => navigate(`/espace-patient/vaccin/${id_patient}`)}
+  color="primary"
+  sx={{ marginTop: "20px", marginLeft: 'auto' }}
+>
+  Suivant
+</Button>
         </Box>
         {Object.entries(analysesByType).map(([type, analyses]) => (
           <Box key={type} sx={{ mb: 4 }}>

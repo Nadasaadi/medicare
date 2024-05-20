@@ -19,7 +19,7 @@ import AuthenticateMedecin from './pages/medecin/AuthenticateMedecin.jsx';
 import MedecinProfil from './pages/medecin/MedecinProfil.jsx';
 import Savoir_plus from './pages/Savoir_plus'
 import Contact from './pages/Contact';
-
+import Imagerie from './pages/patient/Imagerie.jsx';
 
 
 
@@ -56,6 +56,7 @@ function App() {
             <Route path='analyse/:id_patient'  loader={analyseLoader} element={<Analyse/>}/>
             <Route path='allergie/:id_patient'  loader={allergieLoader} element={<Allergie/>}/>
             <Route path='maladie/:id_patient'  loader={maladieLoader} element={<MaladieCH/>}/>
+            <Route path='imagerie/:id_patient' element={<Imagerie/>}/>
 
             {/* <Route  path='analyse/sanguine/:id_patient' loader={analyseSanguineLoader} element={<AnalyseSanguine/>}/>
             <Route  path='analyse/urinaire' element={<AnalyseUrinaire/>}/>

@@ -5,6 +5,7 @@
   align-items: center; /* Aligner verticalement la section au centre */
   height: 100vh; /* Utiliser toute la hauteur de l'écran */
 }
+
 .main-content {
   max-width: 600px; /* Limiter la largeur de la section pour éviter qu'elle ne prenne toute la largeur de l'écran */
   padding: 20px ;
@@ -21,7 +22,7 @@
 }
 
 .profil-container {
-  background-color: #a9a9ab3d;
+  background-color: #ffffffed;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

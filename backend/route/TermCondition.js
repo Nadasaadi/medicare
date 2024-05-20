@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const termconditionController = require('../controllers/TermCondition');
+const termConditionController = require('../controllers/TermCondition');
 
-router.get('/', termconditionController.getAllTermCondition);
-router.put('/', termconditionController.updateTermCondition);
-
+router.get('/', termConditionController.getAllTermCondition);
+router.put('/:id', termConditionController.updateTermCondition);
+router.delete('/:id', termConditionController.deleteTermCondition);
+router.post('/', termConditionController.addTermCondition);
 module.exports = router;

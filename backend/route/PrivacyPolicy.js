@@ -3,6 +3,8 @@ const router = express.Router();
 const privacyPolicyController = require('../controllers/privacyPolicyController');
 
 router.get('/', privacyPolicyController.getAllPrivacyPolicy);
-router.put('/', privacyPolicyController.updatePrivacyPolicy);
+router.put('/:id', privacyPolicyController.updatePrivacyPolicy);
+router.delete('/:id', privacyPolicyController.deletePrivacyPolicy);
+router.post('/', privacyPolicyController.addPrivacyPolicy);
 
 module.exports = router;

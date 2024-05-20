@@ -13,7 +13,11 @@ class Maladie {
       const [maladie] = await db.query('SELECT * FROM maladiechronique WHERE patient_id = ?', [id_patient]);
       return maladie;
     }
+    async addMaladie(id_patient) {
+      const query = 'INSERT INTO  maladiechronique (nom_maladie,description, patient_id) VALUES (?, ?, ?)';
+      const values = [this.nom_maladie,this.description, id_patient];
+      await db.query(query, values);
+    }
     
 }
-  module.exports = Maladie;//Exporte la classe vaccin afin qu'elle puisse être importée et utilisée dans d'autres fichiers de l'application.
-  
+  module.exports = Maladie;

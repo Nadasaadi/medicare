@@ -1,24 +1,34 @@
-//Importe le module database depuis le répertoire util.
-const db =  require("../util/database");
-
+const db = require("../util/database");
 
 class Analyse {
-  // Définit le constructeur de la classe. Le constructeur est une méthode spéciale qui est appelée lors de la création d'une nouvelle instance de la classe
-    constructor(date, type, marqueurSanguin, resultat, uniteMesure, autresInformations) {
-      this.date = date;
-      this.type = type;
-      this.marqueurSanguin = marqueurSanguin;
-      this.resultat = resultat;
-      this.uniteMesure = uniteMesure;
-      this.autresInformations = autresInformations;
+  constructor(date, type, marqueurSanguin, resultat, uniteMesure, autresInformations) {
+    this.date = date;
+    this.type = type;
+    this.marqueurSanguin = marqueurSanguin;
+    this.resultat = resultat;
+    this.uniteMesure = uniteMesure;
+    this.autresInformations = autresInformations;
+  }
 
-    }
-    static async getAllAnalyses(id_patient) {
-      
-      const [analyse] = await db.query('SELECT * FROM analyse WHERE id_patient = ?', [id_patient]);
-      return analyse;
-    }
-    
-}
-  module.exports = Analyse;//Exporte la classe AnalyseSanguine afin qu'elle puisse être importée et utilisée dans d'autres fichiers de l'application.
+  static async getAllAnalyses(id_patient) {
+    const [analyses] = await db.query(`
+      SELECT a.*, n.type AS nom_analyse
+      FROM analyse a
+      JOIN nom_analyse n ON a.id_nom_analyse = n.id
+      WHERE a.id_patient = ?
+    `, [id_patient]);
+    return analyses;
+  }
+  static async getNomAnalyseById(id) {
+    const nomAnalyse = await db.query(`
+      SELECT type
+      FROM nom_analyse
+      WHERE id = ?
+    `, [id]);
+
+    return nomAnalyse.type;
+  }
   
+}
+
+module.exports = Analyse;

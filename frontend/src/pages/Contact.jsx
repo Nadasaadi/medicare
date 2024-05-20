@@ -34,7 +34,7 @@ const Contact = () => {
           setEmailError(true);
           return;
         }
-      const response = await  axios.post(CONTACT_URL, { email, message });
+      const response =  axios.post(CONTACT_URL, { email, message });
       console.log("Données envoyées avec succès.");
       setEmailError(false);
       setEmail(''); // Réinitialiser les champs
