@@ -1,0 +1,267 @@
+#services {
+
+    padding: 20px;
+  
+    margin-top: 0%;
+    
+    min-height: 300px; /* Définit une hauteur minimale */
+  
+    max-height: 500px; /* Définit une hauteur maximale */
+  
+    overflow: auto; /* Ajoute une barre de défilement si le contenu dépasse la hauteur maximale */
+  
+    background-color: #0d3d6e;
+  
+  }
+  
+   
+  
+  #services h1 {
+  
+    text-align: center;
+  
+    color: #ffffff;
+  
+    margin-left: 5%;
+  
+  }
+  
+   
+  
+  #services h3 {
+  
+    text-align: center;
+  
+    color: #ffffff;  
+  }
+  
+   
+  
+  #services p {
+  
+    text-align: center;
+  
+    color: #ffffff;
+  
+    font-weight: bold;
+  
+  }
+  
+   
+  
+  #services ul {
+  
+    list-style-type: none;
+  
+    padding: 0;
+  
+    margin: 0;
+  
+    display: flex;
+  
+    flex-wrap: wrap;
+  
+    justify-content: center; /* Centre les images horizontalement */
+  
+  }
+  
+   
+  
+  #services li {
+  
+    flex: 0 0 auto; /* Désactive le comportement flex par défaut */
+  
+    padding: 10px;
+  
+    text-align: center;
+  
+    box-sizing: border-box;
+  
+    position: relative;
+  
+    display: none; /* Masque toutes les images par défaut */
+  
+  }
+  
+   
+  
+  #services li.visible {
+  
+    display: block; /* Affiche uniquement les images avec la classe visible */
+  
+  }
+  
+  
+  #services li img {
+    border-radius:80%;
+    width: 400px; /* Augmentation de la largeur des images */
+  
+    height: 250px; /* Augmentation de la hauteur des images */
+  
+    margin: 0 auto 10px; /* Ajout d'une marge inférieure pour les points */
+  
+    display: block;
+  
+    animation-duration: 1s;
+  
+    animation-fill-mode: forwards;
+  
+  }
+  
+   
+  
+  .dots-container {
+  
+    display: flex;
+  
+    justify-content: center;
+  
+    margin-top: 20px; /* Ajuste l'espace entre les images et les points */
+  
+  }
+  
+   
+  
+  .dots-container {
+  
+    display: flex;
+  
+    justify-content: center;
+  
+    margin-top: 20px; /* Ajuste l'espace entre les images et les points */
+  
+  }
+  
+   
+  
+  .dots {
+  
+    display: flex;
+  
+    justify-content: center;
+  
+  }
+  
+   
+  
+  .dots span {
+  
+    width: 10px;
+  
+    height: 10px;
+  
+    background-color: #5c8ab0;
+  
+    border-radius: 50%;
+  
+    margin: 0 5px;
+  
+    opacity: 0.5;
+  
+  }
+  
+   
+  
+  .dots span.active {
+  
+    background-color: #ffffff;
+  
+    opacity: 1;
+  
+    transform: scale(1.2); /* Agrandit légèrement le point actif */
+  
+  }
+  
+  #services li img.slide-in {
+  
+    animation-name: slideInRight;
+  
+  }
+  
+   
+  
+  #services li img.slide-out {
+  
+    animation-name: slideOutLeft;
+  
+  }
+  
+   
+  
+  #services li p {
+  
+    font-size: 1.2rem;
+  
+    color: #ffffff;
+  
+    margin-bottom: 0;
+    display: block;
+  
+  }
+  
+   
+  
+  .services-section {
+  
+    opacity: 0;
+    
+  
+    transition: opacity 0.5s, transform 0.5s;
+  
+    transform: translateY(50px); /* Décale le texte de 50px vers le bas au départ */
+  
+  }
+  
+   
+  
+  .services-section.show {
+  
+    opacity: 1;
+  
+    transform: translateY(0); /* Annule le décalage vers le bas lorsque la classe show est appliquée */
+  
+  }
+  
+   
+  
+  @keyframes slideInRight {
+  
+    0% {
+  
+      transform: translateX(100%);
+  
+      opacity: 0;
+  
+    }
+  
+    100% {
+  
+      transform: translateX(0);
+  
+      opacity: 1;
+  
+    }
+  
+  }
+  
+   
+  
+  @keyframes slideOutLeft {
+  
+    0% {
+  
+      transform: translateX(0);
+  
+      opacity: 1;
+  
+    }
+  
+    100% {
+  
+      transform: translateX(-100%);
+  
+      opacity: 0;
+  
+    }
+  
+  }

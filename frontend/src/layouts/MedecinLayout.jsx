@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom'
 
 const MedecinLayout = () => {
   return (
-    <div>
+    <div >
       <Outlet/>
     </div>
   )

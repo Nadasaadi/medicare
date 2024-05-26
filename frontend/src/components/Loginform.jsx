@@ -91,17 +91,17 @@ const LoginForm = ({ onLogin }) => {
         />
       )}
       {step === 0 && (
-        <Button className="boutonhomeform" color="primary" onClick={handleNextStep}>
+        <Button style={{color:"#ccd9e6"}} className="boutonhomeform" color="primary" onClick={handleNextStep}>
           Admin
         </Button>
       )}
       {step === 1 && (
-        <Button className="boutonhomeform" color="primary" onClick={handleNextStep}>
+        <Button style={{color:"#ccd9e6"}} className="boutonhomeform" color="primary" onClick={handleNextStep}>
           Next
         </Button>
       )}
       {step === 2 && (
-        <Button className="boutonhomeform" color="primary" onClick={handleLogin}>
+        <Button style={{color:"#ccd9e6"}} className="boutonhomeform" color="primary" onClick={handleLogin}>
           Login
         </Button>
       )}

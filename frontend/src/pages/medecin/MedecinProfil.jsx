@@ -1,23 +1,29 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContextMed } from '../../context/AuthContextMed';
 import { Box, Typography, Button, TextField, makeStyles, Avatar, Modal } from '@material-ui/core';
-import profil from '../../assets/personne.png';
+import { Card, CardHeader, CardContent, IconButton } from '@mui/material';
+import profil from '../../assets/image_2024-05-22_154251923-removebg-preview.png';
 import Footer from "../../components/Footer";
 import axios from 'axios';
 import {TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper,Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
-import { motion } from 'framer-motion';
+import { color, motion } from 'framer-motion';
+import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 
-const UPDATE_URL = 'http://localhost:9000/medecin/medecin/';
+
+
 const FIND_PATIENT_URL = ' http://localhost:9000/user/user/';
 const VACCIN_URL='http://localhost:9000/vaccin/add/';
 const ALLERGIE_URL='http://localhost:9000/allergie/add';
-const MALADIE_URL ='http://localhost:9000/maladie/add'
+const MALADIE_URL ='http://localhost:9000/maladie/add';
+const UPDATE_URL = 'http://localhost:9000/medecin/updateMedecin';
+const CONSULTATION_URL = 'http://localhost:9000/consultation';
+const AJOUTER_CONSULTATION_URL = 'http://localhost:9000/consultation/addConsultation';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
+    //justifyContent: 'center',
+    //alignItems: 'center',
+  
   },
   aside: {
     width: '200px',
@@ -30,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'start',
     height: '100%',
+  
   },
   content: {
     flex: 1,
@@ -50,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
   searchTitle: {
     marginBottom: theme.spacing(2),
-    color: '#3f51b5',
+    color: '#0d3d6e',
     animation: '$fadeInUp 0.5s ease-in-out',
   },
   avatar: {
@@ -82,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
   },
   dialog: {
     '& .MuiDialogTitle-root': {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: "#4d7094",
       color: theme.palette.common.white,
     },
     '& .MuiDialogContent-root': {
@@ -100,14 +107,43 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   addButton: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
+    backgroundColor: theme.palette.common.white,
+    color: '#0d3d6e',
     '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: theme.palette.common.white,
+      color:" #006600"
     },
   },
   cancelButton: {
     color: theme.palette.primary.main,
+  },
+  navbar: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(4),
+    
+  },
+  navItem: {
+    display: 'inline-block',
+    width :'150px',
+    padding: 5,
+    backgroundColor : 'white',
+    borderRadius : '10%',
+    margin :3,
+    alignSelf:'end',
+    cursor: 'pointer',
+    color: '#0d3d6e',
+    '&:hover': {
+      backgroundColor: '#0d3d6e',
+      textDecoration: 'underline',
+      color :'white'
+    },
+  },
+  navLink: {
+  
+    textDecoration: 'none',
+    color: 'inherit',
   },
 }));
 
@@ -117,10 +153,10 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MedecinProfil = () => {
   const [showSearchBar, setShowSearchBar] = useState(true);
   const classes = useStyles();
-  const { medecin, logoutMedecin } = useContext(AuthContextMed);
+  const { medecin} = useContext(AuthContextMed);
   const [email, setEmail] = useState('');
   const [updatedMedecin, setUpdatedMedecin] = useState({
-
+    id_medecin :medecin.id_medecin,
     nom: '',
     prenom: '',
     specialite: '',
@@ -138,25 +174,27 @@ const MedecinProfil = () => {
   const handleModifier = () => {
     setIsEditing(true);
     setUpdatedMedecin({
-      id_medecin: medecin.id_medecin,
+      id_medecin : medecin.id_medecin,
       nom: medecin.nom,
       prenom: medecin.prenom,
       specialite: medecin.specialite,
       adresse: medecin.adresse,
       numero_tel: medecin.numero_tel,
-      email: medecin.email, // Ajouter l'email du médecin
     });
   };
   
   const handleEnregistrer = async () => {
+    console.log(updatedMedecin)
     try {
-      const response = await axios.put(`${UPDATE_URL}/${updatedMedecin.id_medecin}`, updatedMedecin);
+     const response = await axios.put(UPDATE_URL, updatedMedecin); 
+     console.log(response)   
       if (response.status === 200) {
         console.log('Informations du médecin mises à jour avec succès');
         const updatedMedecinData = response.data;
-        setMedecin(updatedMedecinData);
-        setUpdatedMedecin(updatedMedecinData); // Réinitialiser updatedMedecin avec les nouvelles données
+        //setMedecin(updatedMedecinData);
+        setUpdatedMedecin(updatedMedecinData);
         setIsEditing(false);
+   
       } else {
         console.error('Erreur lors de la mise à jour des informations du médecin');
       }
@@ -165,11 +203,6 @@ const MedecinProfil = () => {
     }
   };
   
-  useEffect(() => {
-    if (updatedMedecin.id_medecin) {
-      setMedecin(updatedMedecin);
-    }
-  }, [updatedMedecin]);
   const handleNomChange = (event) => {
     setUpdatedMedecin({ ...updatedMedecin, nom: event.target.value });
   };
@@ -218,16 +251,13 @@ const MedecinProfil = () => {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
-//gestion des analyses 
-const [searchYearAnalyse, setSearchYearAnalyse] = useState('');
-const handleSearchYearChangeAnalyse = (event) => {
-  setSearchYearAnalyse(event.target.value);
-};
+
 
 //gestion d'ajout d'une nouvelle maladie chronique
 const [openMaladie, setOpenMaladie] = useState(false);
 const [newMaladie, setNewMaladie] = useState({ nom_maladie: '',  description: '' });
 const [successMessageMaladie, setSuccessMessageMaladie] = useState('');
+const [nomMaladieError, setNomMaladieError] = useState(false);
 const handleOpenMaladie = () => {
   setOpenMaladie(true);
 };
@@ -242,22 +272,29 @@ const handleChangeMaladie = (e) => {
 };
 
 const handleSubmitMaladie = async () => {
+  if (newMaladie.nom_maladie.trim() === '') {
+    setNomMaladieError(true);
+    return;
+  }
+
+  setNomMaladieError(false);
+
   try {
     const response = await axios.post(MALADIE_URL, {
       nom_maladie: newMaladie.nom_maladie,
       description: newMaladie.description,
       id_patient: patient.id_patient, // Ajoutez l'id_patient ici
     });
+
     if (response.status === 201) {
-      //  ajouté avec succès
-      setSuccessMessageMaladie('Nouvelle maladie chronique ajouté avec succès');
+      // ajouté avec succès
+      setSuccessMessageMaladie('Nouvelle maladie chronique ajoutée avec succès');
       setNewMaladie({ nom_maladie: '', description: '' });
       handleCloseMaladie();
-
-      // Mettre à jour la liste  immédiatement
+      // Mettre à jour la liste immédiatement
       fetchMaladie();
     } else {
-      // Une erreur s'est produite lors de l'ajout du vaccin
+      // Une erreur s'est produite lors de l'ajout de la maladie
       console.error('Erreur lors de l\'ajout de la maladie', response.data);
     }
   } catch (error) {
@@ -280,10 +317,12 @@ const fetchMaladie = async () => {
   }
 };
 
+
 //gestion d'ajout d'une nouvelle allergie
 const [openAllergie, setOpenAllergie] = useState(false);
 const [newAllergie, setNewAllergie] = useState({ nom_allergie: '',  description: '' });
 const [successMessageAllergie, setSuccessMessageAllergie] = useState('');
+const [nomAllergieError, setNomAllergieError] = useState(false);
 const handleOpenAllergie = () => {
   setOpenAllergie(true);
 };
@@ -298,22 +337,26 @@ const handleChangeAllergie = (e) => {
 };
 
 const handleSubmitAllergie = async () => {
+  if (newAllergie.nom_allergie.trim() === '') {
+    setNomAllergieError(true);
+    return;
+  }
+
+  setNomAllergieError(false);
+
   try {
     const response = await axios.post(ALLERGIE_URL, {
       nom_allergie: newAllergie.nom_allergie,
       description: newAllergie.description,
-      id_patient: patient.id_patient, // Ajoutez l'id_patient ici
+      id_patient: patient.id_patient,
     });
+
     if (response.status === 201) {
-      //  ajouté avec succès
-      setSuccessMessageAllergie('Nouvelle allergie ajouté avec succès');
+      setSuccessMessageAllergie('Nouvelle allergie ajoutée avec succès');
       setNewAllergie({ nom_allergie: '', description: '' });
       handleCloseAllergie();
-
-      // Mettre à jour la liste  immédiatement
       fetchAllergie();
     } else {
-      // Une erreur s'est produite lors de l'ajout du vaccin
       console.error('Erreur lors de l\'ajout de l\'allergie', response.data);
     }
   } catch (error) {
@@ -337,7 +380,8 @@ const fetchAllergie = async () => {
 };
 
 
-  //gestion d'ajout de nouveau vaccin
+
+//gestion d'ajout de nouveau vaccin
   const [searchYear, setSearchYear] = useState('');
   const [open, setOpen] = useState(false);
   const [newVaccin, setNewVaccin] = useState({ nom_vaccin: '', date_administration: '', remarques: '' });
@@ -356,23 +400,39 @@ const fetchAllergie = async () => {
   };
 
   const handleSubmit = async () => {
+    let hasErrors = false;
+    const newErrors = { nomVaccin: false, dateAdministration: false };
+  
+    if (!newVaccin.nom_vaccin) {
+      newErrors.nomVaccin = true;
+      hasErrors = true;
+    }
+  
+    if (!newVaccin.date_administration) {
+      newErrors.dateAdministration = true;
+      hasErrors = true;
+    }
+  
+    setErrors(newErrors);
+  
+    if (hasErrors) {
+      return;
+    }
+  
     try {
       const response = await axios.post(VACCIN_URL, {
         nom_vaccin: newVaccin.nom_vaccin,
         date_administration: newVaccin.date_administration,
         remarques: newVaccin.remarques,
-        id_patient: patient.id_patient, // Ajoutez l'id_patient ici
+        id_patient: patient.id_patient,
       });
+  
       if (response.status === 201) {
-        // Le vaccin a été ajouté avec succès
         setSuccessMessage('Nouveau vaccin ajouté avec succès');
         setNewVaccin({ nom_vaccin: '', date_administration: '', remarques: '' });
         handleClose();
-  
-        // Mettre à jour la liste des vaccins immédiatement
         fetchVaccins();
       } else {
-        // Une erreur s'est produite lors de l'ajout du vaccin
         console.error('Erreur lors de l\'ajout du vaccin', response.data);
       }
     } catch (error) {
@@ -397,6 +457,7 @@ const fetchAllergie = async () => {
   const handleSearchYearChange = (event) => {
     setSearchYear(event.target.value);
   };
+
 // Gestion des états et fonctions des imageries 
 const [file, setFile] = useState(null);
 const [descriptionimage, setDescriptionimage] = useState('');
@@ -434,8 +495,28 @@ const handleCloseDetails = () => {
 const handleSearchYearChangeimagerie = (event) => {
   setSearchYearimagerie(event.target.value);
 };
+const [errors, setErrors] = useState({ file: false, datePrise: false });
 
 const handleUpload = async () => {
+  let hasErrors = false;
+  const newErrors = { file: false, datePrise: false };
+
+  if (!file) {
+    newErrors.file = true;
+    hasErrors = true;
+  }
+
+  if (!datePrise) {
+    newErrors.datePrise = true;
+    hasErrors = true;
+  }
+
+  setErrors(newErrors);
+
+  if (hasErrors) {
+    return;
+  }
+
   try {
     const formData = new FormData();
     formData.append('file', file);
@@ -469,6 +550,78 @@ const fetchImages = async () => {
     console.error(err);
   }
 };
+//gestion des consultations 
+const [consultations, setConsultations] = useState([]);
+ // Fonction pour récupérer les consultations
+ const fetchConsultations = async () => {
+  try {
+    const response = await axios.get(`${CONSULTATION_URL}?id_patient=${patient.id_patient}`);
+    setConsultations(response.data);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des consultations :', error);
+  }
+};
+ // Effet pour récupérer les consultations lorsque le patient change
+ useEffect(() => {
+  if (patient && patient.id_patient) {
+    fetchConsultations();
+  }
+}, [patient]);
+const [openAjouterConsultation, setOpenAjouterConsultation] = useState(false);
+  const [nouvelleConsultation, setNouvelleConsultation] = useState({
+    date_consultation: '',
+    medecin_nom: medecin.nom,
+    medecin_prenom: medecin.prenom,
+    conclusion: '',
+    // Autres champs nécessaires
+  });
+
+  const handleOpenAjouterConsultation = () => {
+    setOpenAjouterConsultation(true);
+  };
+
+  const handleCloseAjouterConsultation = () => {
+    setOpenAjouterConsultation(false);
+    setNouvelleConsultation({
+      date_consultation: '',
+      medecin_nom: medecin.nom,
+      medecin_prenom: medecin.prenom,
+      conclusion: '',
+      // Réinitialisez les autres champs
+    });
+  };
+
+  const handleInputChange = (e) => {
+    setNouvelleConsultation({
+      ...nouvelleConsultation,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleAjouterConsultation = async () => {
+    try {
+      const response = await axios.post(AJOUTER_CONSULTATION_URL, nouvelleConsultation);
+      console.log(response)
+      if (response.status === 201) {
+        console.log('Consultation ajoutée avec succès');
+        handleCloseAjouterConsultation();
+        // Rafraîchir la liste des consultations
+        fetchConsultations();
+      } else {
+        console.error('Erreur lors de l\'ajout de la consultation', response.data);
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de la consultation :', error);
+    }
+  };
+
+//gestion des analyses 
+const [searchYearAnalyse, setSearchYearAnalyse] = useState('');
+const handleSearchYearChangeAnalyse = (event) => {
+  setSearchYearAnalyse(event.target.value);
+};
+
+
  
   return (
     <>
@@ -478,9 +631,9 @@ const fetchImages = async () => {
           <Typography variant="h6">Profil</Typography>
           <TextField
             label="Nom"
-            value={isEditing ? updatedMedecin.nom : nom}
+            value={isEditing ? updatedMedecin.nom : nom }
             onChange={handleNomChange}
-            disabled={!isEditing}
+           disabled={!isEditing}
           />
           <TextField
             label="Prénom"
@@ -507,15 +660,15 @@ const fetchImages = async () => {
             disabled={!isEditing}
           />
           {isEditing ? (
-            <Button style={{margin:'10px'}} onClick={handleEnregistrer} variant="contained" color="primary">
+            <Button style={{backgroundColor:'#339966', margin:'10px'}} onClick={handleEnregistrer} variant="contained"  color="primary">
               Enregistrer
             </Button>
           ) : (
-            <Button style={{margin:'10px'}} onClick={handleModifier} variant="contained" color="primary">
+            <Button style={{backgroundColor: '#26527d' ,margin:'10px'}} onClick={handleModifier} variant="contained"  color="primary">
               Modifier
             </Button>
           )}
-          <Button onClick={logout} variant="contained" color="secondary">
+          <Button onClick={logout} variant="contained" color="secondary" style={{backgroundColor:'#cc6600'}}>
             Déconnexion
           </Button>
         </Box>
@@ -553,28 +706,163 @@ const fetchImages = async () => {
             </motion.div>
           ) : (
             <Box>
+  
   {patient && (
     <>
-    <Box display="flex" alignItems="center" mb={4}>
-    
-        <Box style={{marginTop:800}}>
-          <Typography style={{ color: '#3f51b5',textAlign:'center' }} variant="h6">Données du patient</Typography>
-          <Typography style={{ textAlign:'center' }}>Nom: {patient.nom}</Typography>
-          <Typography style={{ textAlign:'center' }}>Prénom: {patient.prenom}</Typography>
-          <Typography style={{ textAlign:'center' }}>Date de naissance: {patient.date_naissance.split('T')[0]}</Typography>
-          <Typography style={{ textAlign:'center' }}>Lieu de naissance: {patient.lieu_naissance}</Typography>
-          <Typography style={{ textAlign:'center' }}>Sexe: {patient.sexe}</Typography>
-        </Box>
-      </Box>
+    <Box component="nav" style={{height:60}}className={classes.navbar}>
+      <List component="div" sx={{ display: 'flex', flexDirection: 'row', padding: 0}}>
+        <ListItem button component="a" href="#profil" className={classes.navItem}>
+          <ListItemText primary="Profil" className={classes.navLink} />
+        </ListItem>
+        <ListItem button component="a" href="#analyse" className={classes.navItem}>
+          <ListItemText primary="Analyses" className={classes.navLink} />
+        </ListItem>
+        <ListItem button component="a" href="#vaccin" className={classes.navItem}>
+          <ListItemText primary="Vaccin" className={classes.navLink} />
+        </ListItem>
+        <ListItem button component="a" href="#allergie" className={classes.navItem}>
+          <ListItemText primary="Allergie" className={classes.navLink} />
+        </ListItem>
+        <ListItem button component="a" href="#maladiechronique" className={classes.navItem}>
+          <ListItemText primary="Maladie chronique" className={classes.navLink} />
+        </ListItem>
+        <ListItem button component="a" href="#imagerie" className={classes.navItem}>
+          <ListItemText primary="Imagerie médicale" className={classes.navLink} />
+        </ListItem>
+      </List>
+    </Box>
+    <Box >
+      <Card style={{ marginLeft:"30px", width: '58rem' }}>
+        <CardHeader
+          sx={{ paddingBottom: 0, backgroundColor: '#26527d', paddingTop: 5 }}
+        />
+        <CardContent>
+          <Box display="flex" flexDirection="column" alignItems="flex-start" mb={2}>
+            <Typography variant="h6" fontWeight="bold" color="#003366">
+              {patient.nom} {patient.prenom}
+            </Typography>
+            <Box display="flex" alignItems="center">
+              <Typography variant="body1" ml={1}>
+                Sexe : {patient.sexe}
+              </Typography>
+            </Box>
+          </Box>
+          <Box display="flex" alignItems="center" mb={1}>
+            
+            <Typography variant="body1" ml={1}>
+              Date de naissance : {new Date(patient.date_naissance).toLocaleDateString()}
+            </Typography>
+          </Box>
+          <Box display="flex" alignItems="center" mb={1}>
+         
+            <Typography variant="body1" ml={1}>
+              Lieu de naissance : {patient.lieu_naissance}
+            </Typography>
+          </Box></CardContent>
+      </Card>
+    </Box>
+      
+  {/* Consultations */}
+        <Box mb={4} id="consultation" style={{ margin: '30px' }}>
+          <Typography style={{ color: '#0d3d6e' }} variant="h6" gutterBottom>
+            Consultations
+          </Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+              
+              <TableCell>Date consultation</TableCell>
+              <TableCell>Médecin consultant</TableCell>
+              <TableCell>Conclusion</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {consultations.map((consultation) => (
+                  <TableRow key={consultation.id_consultation}>
+                  <TableCell>{new Date(consultation.date_consultation).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleOpenModal(consultation)}>
+                      {consultation.medecin_nom} {consultation.medecin_prenom}
+                    </Button>
+                  </TableCell>
+                  <TableCell>{consultation.conclusion}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
+          {/* Bouton pour ajouter une nouvelle consultation */}
+          <Button
+          variant="contained"
+          color="primary"
+          style={{ backgroundColor: '#0d3d6e', marginTop: 16 }}
+          onClick={handleOpenAjouterConsultation}
+        >
+          Ajouter
+        </Button>
+        </Box>
+       {/* Fenêtre modale pour ajouter une nouvelle consultation */}
+       <Dialog open={openAjouterConsultation} onClose={handleCloseAjouterConsultation}>
+        <DialogTitle>Ajouter une nouvelle consultation</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Date de consultation"
+            type="date"
+            name="date_consultation"
+            value={nouvelleConsultation.date_consultation}
+            onChange={handleInputChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            margin="normal"
+            fullWidth
+          />
+          <TextField
+            label="Nom du médecin"
+            name="medecin_nom"
+            value={nouvelleConsultation.medecin_nom}
+            disabled
+            margin="normal"
+            fullWidth
+          />
+          <TextField
+            label="Prénom du médecin"
+            name="medecin_prenom"
+            value={nouvelleConsultation.medecin_prenom}
+            disabled
+            margin="normal"
+            fullWidth
+          />
+          <TextField
+            label="Conclusion"
+            name="conclusion"
+            value={nouvelleConsultation.conclusion}
+            onChange={handleInputChange}
+            margin="normal"
+            fullWidth
+            multiline
+          />
+          {/* Autres champs nécessaires */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAjouterConsultation} color="secondary">
+            Annuler
+          </Button>
+          <Button onClick={handleAjouterConsultation} color="primary">
+            Ajouter
+          </Button>
+        </DialogActions>
+      </Dialog>
       {/* Analyses */}
-      <Box mb={4}>
-        <Typography style={{ color: '#3f51b5' }} variant="h6" gutterBottom>
+      <Box mb={4} id='analyse' style={{ margin : '30px'}}>
+        <Typography style={{ color: '#0d3d6e' }} variant="h6" gutterBottom>
           Analyses
           <TextField
           label="Rechercher par année"
           type="number"
-          style={{ marginLeft: 16 }}
+          style={{ marginLeft: 700 }}
           value={searchYearAnalyse}
           onChange={handleSearchYearChangeAnalyse}
         />
@@ -583,14 +871,14 @@ const fetchImages = async () => {
           <Table>
             <TableHead>
               <TableRow>
-              <TableCell sx={{ color: '#3f51b5' }}>Type d'analyse</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Date de l'analyse</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Nom de l'analyse</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Marquer</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Résultat</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Unité</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Norme</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Autres informations</TableCell>
+              <TableCell sx={{ color: '#0d3d6e' }}>Type d'analyse</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Date de l'analyse</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Nom de l'analyse</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Marquer</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Résultat</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Unité</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Norme</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Autres informations</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -606,7 +894,7 @@ const fetchImages = async () => {
                       <TableCell>{analyse.date_analyse.split('T')[0]}</TableCell>
                       <TableCell>{analyse.id_nom_analyse}</TableCell>
                       <TableCell>{analyse.marquer}</TableCell>
-                      <TableCell sx={{ color: '#3f51b5', fontWeight: 'bold' }}>{analyse.resultat}</TableCell>
+                      <TableCell sx={{ color: ' #3333cc', fontWeight: 'bold' }}>{analyse.resultat}</TableCell>
                       <TableCell>{analyse.unite}</TableCell>
                       <TableCell>{analyse.norme}</TableCell>
                       <TableCell>{analyse.autres_informations}</TableCell>
@@ -616,19 +904,19 @@ const fetchImages = async () => {
             </TableBody>
           </Table>
         </TableContainer>}
-        <Button variant="contained" color="primary" style={{ marginTop: 16 }}>
+        <Button variant="contained" color="primary" style={{ backgroundColor:'#0d3d6e' ,marginTop: 16 }}>
           Ajouter
         </Button>
       </Box>
 
       {/* Vaccins */}
-      <Box mb={4}>
-  <Typography style={{ color: '#3f51b5' }} variant="h6" gutterBottom>
+      <Box mb={4} id='vaccin' style={{ margin : '30px'}}>
+  <Typography style={{ color: '#0d3d6e' }} variant="h6" gutterBottom>
     Vaccins
     <TextField
           label="Rechercher par année"
           type="number"
-          style={{ marginLeft: 16 }}
+          style={{ marginLeft: 700 }}
           value={searchYear}
           onChange={handleSearchYearChange}
         />
@@ -670,8 +958,7 @@ const fetchImages = async () => {
 
   <Button
     variant="contained"
-    color="primary"
-    style={{ marginTop: 16 }}
+    color="primary" style={{ backgroundColor:'#0d3d6e' ,marginTop: 16 }}
     onClick={handleOpen}
   >
     Ajouter
@@ -679,26 +966,30 @@ const fetchImages = async () => {
   <Dialog open={open} onClose={handleClose} className={classes.dialog}>
     <DialogTitle>Ajouter un nouveau vaccin</DialogTitle>
     <DialogContent>
-      <TextField
-        label="Nom du vaccin"
-        name="nom_vaccin"
-        value={newVaccin.nom_vaccin}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Date d'administration"
-        name="date_administration"
-        type="date"
-        value={newVaccin.date_administration}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
+    <TextField
+  label="Nom du vaccin"
+  name="nom_vaccin"
+  value={newVaccin.nom_vaccin}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+  required
+  error={errors.nomVaccin}
+  helperText={errors.nomVaccin ? 'Ce champ est requis' : ''}
+/>
+<TextField
+  label="Date d'administration"
+  name="date_administration"
+  type="date"
+  value={newVaccin.date_administration}
+  onChange={handleChange}
+  fullWidth
+  margin="normal"
+  InputLabelProps={{ shrink: true }}
+  required
+  error={errors.dateAdministration}
+  helperText={errors.dateAdministration ? 'Ce champ est requis' : ''}
+/>
       <TextField
         label="Remarques"
         name="remarques"
@@ -711,7 +1002,7 @@ const fetchImages = async () => {
     </DialogContent>
     <DialogActions>
       <Button onClick={handleClose}>Annuler</Button>
-      <Button onClick={handleSubmit} color="primary">
+      <Button onClick={handleSubmit} className={classes.addButton}>
         Ajouter
       </Button>
     </DialogActions>
@@ -720,8 +1011,8 @@ const fetchImages = async () => {
 
 
       {/* Allergies */}
-      <Box mb={4}>
-        <Typography style={{ color: '#3f51b5' }} variant="h6" gutterBottom>
+      <Box mb={4} id="allergie" style={{ margin : '30px'}}>
+        <Typography style={{ color: '#0d3d6e' }} variant="h6" gutterBottom>
           Allergies
         </Typography>
         <TableContainer component={Paper}>
@@ -750,7 +1041,7 @@ const fetchImages = async () => {
   </Box>
 )}
 
-        <Button variant="contained" color="primary" style={{ marginTop: 16 }} onClick={handleOpenAllergie} >
+        <Button variant="contained" color="primary" style={{ backgroundColor:'#0d3d6e' ,marginTop: 16 }} onClick={handleOpenAllergie} >
           Ajouter
         </Button>
 {/*formulaire d'ajout d'allergie
@@ -758,14 +1049,17 @@ const fetchImages = async () => {
     <Dialog open={openAllergie} onClose={handleCloseAllergie} className={classes.dialog}>
     <DialogTitle>Ajouter une nouvelle allergie</DialogTitle>
     <DialogContent>
-      <TextField
-        label="Nom de l'allergie"
-        name="nom_allergie"
-        value={newAllergie.nom_allergie}
-        onChange={handleChangeAllergie}
-        fullWidth
-        margin="normal"
-      />
+    <TextField
+  label="Nom de l'allergie"
+  name="nom_allergie"
+  value={newAllergie.nom_allergie}
+  onChange={handleChangeAllergie}
+  fullWidth
+  margin="normal"
+  required
+  error={nomAllergieError}
+  helperText={nomAllergieError ? 'Le nom de l\'allergie est requis' : ''}
+/>
       
       <TextField
         label="Description"
@@ -779,7 +1073,7 @@ const fetchImages = async () => {
     </DialogContent>
     <DialogActions>
       <Button onClick={handleCloseAllergie}>Annuler</Button>
-      <Button onClick={handleSubmitAllergie} color="primary">
+      <Button onClick={handleSubmitAllergie} className={classes.addButton}>
         Ajouter
       </Button>
     </DialogActions>
@@ -787,8 +1081,8 @@ const fetchImages = async () => {
       </Box>
 
       {/* Maladies chroniques */}
-<Box mb={4}>
-  <Typography style={{ color: '#3f51b5' }} variant="h6" gutterBottom>
+<Box mb={4} id='maladiechronique' style={{ margin : '30px'}}>
+  <Typography style={{ color: '#0d3d6e' }} variant="h6" gutterBottom>
     Maladies chroniques
   </Typography>
   <TableContainer component={Paper}>
@@ -820,8 +1114,7 @@ const fetchImages = async () => {
   )}
   <Button
     variant="contained"
-    color="primary"
-    style={{ marginTop: 16 }}
+    color="primary" style={{ backgroundColor:'#0d3d6e' ,marginTop: 16 }}
     onClick={handleOpenMaladie}
   >
     Ajouter
@@ -833,11 +1126,14 @@ const fetchImages = async () => {
     <DialogContent>
     <TextField
   label="Nom de la maladie chronique"
-  name="nom_maladie" 
+  name="nom_maladie"
   value={newMaladie.nom_maladie}
   onChange={handleChangeMaladie}
   fullWidth
   margin="normal"
+  required
+  error={nomMaladieError}
+  helperText={nomMaladieError ? 'Le nom de la maladie est requis' : ''}
 />
       
       <TextField
@@ -852,7 +1148,7 @@ const fetchImages = async () => {
     </DialogContent>
     <DialogActions>
       <Button onClick={handleCloseMaladie}>Annuler</Button>
-      <Button onClick={handleSubmitMaladie} color="primary">
+      <Button onClick={handleSubmitMaladie} className={classes.addButton}>
         Ajouter
       </Button>
     </DialogActions>
@@ -860,13 +1156,13 @@ const fetchImages = async () => {
 </Box>
 
       {/* Imageries */}
-      <Box mb={4}>
-      <Typography style={{ color: '#3f51b5' }} variant="h6" gutterBottom>
+      <Box mb={4} id='imagerie'style={{ margin : '30px'}}>
+      <Typography style={{ color: '#0d3d6e' }} variant="h6" gutterBottom>
         Imagerie médicale
         <TextField
           label="Rechercher par année"
           type="number"
-          style={{ marginLeft: 16 }}
+          style={{marginLeft: 700 }}
           value={searchYearimagerie}
           onChange={handleSearchYearChangeimagerie}
         />
@@ -915,8 +1211,7 @@ const fetchImages = async () => {
 
       <Button
         variant="contained"
-        color="primary"
-        style={{ marginTop: 16 }}
+        color="primary" style={{ backgroundColor:'#0d3d6e' ,marginTop: 16 }}
         onClick={handleOpenimagerie}
       >
         Ajouter
@@ -934,21 +1229,30 @@ const fetchImages = async () => {
             fullWidth
           />
           <TextField
-            label="Date de prise"
-            type="date"
-            value={datePrise}
-            onChange={(e) => setDatePrise(e.target.value)}
-            fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+  label="Date de prise"
+  type="date"
+  value={datePrise}
+  onChange={(e) => setDatePrise(e.target.value)}
+  fullWidth
+  InputLabelProps={{
+    shrink: true,
+  }}
+  required
+  error={errors.datePrise}
+  helperText={errors.datePrise ? 'Ce champ est requis' : ''}
+/>
+          <input
+  type="file"
+  onChange={(e) => setFile(e.target.files[0])}
+  required
+  error={errors.file}
+/>
+{errors.file && <Typography variant="caption" color="error">Ce champ est requis</Typography>}
         </div>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleCloseimagerie} className={classes.cancelButton}>Annuler</Button>
-        <Button onClick={handleUpload} className={classes.addButton}>Ajouter</Button>
+        <Button onClick={handleUpload}  className={classes.addButton}>Ajouter</Button>
       </DialogActions>
     </Dialog>
       {/* Modal pour afficher les détails de l'image */}

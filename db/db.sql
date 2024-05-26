@@ -38,16 +38,24 @@ CREATE TABLE medecin (
 
 
 --les tables qui va stocker le dossier  
+--table consultation 
+CREATE TABLE consultation (
+    id_consultation INT AUTO_INCREMENT PRIMARY KEY,
+    id_medecin INT NOT NULL,
+    id_patient INT NOT NULL,
+    date_consultation DATE NOT NULL,
+    conclusion TEXT,
+    FOREIGN KEY (id_patient) REFERENCES patient(id_patient),
+    FOREIGN KEY (id_medecin) REFERENCES medecin(id_medecin)
+);
 
 --table analyse 
-
-
 CREATE TABLE analyse (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom_analyse VARCHAR(255),
     date_analyse DATE,
     id_patient INT,
-    id_type_analyse INT,
+    id_nom_analyse INT,
     marquer VARCHAR(200),
     resultat DECIMAL(12,2),
     unite VARCHAR(50),
@@ -59,17 +67,13 @@ CREATE TABLE analyse (
 
 
 --table type analyse
-
-
-CREATE TABLE types_analyse (
+CREATE TABLE nom_analyse (
     id INT AUTO_INCREMENT PRIMARY KEY,
     type VARCHAR(255) UNIQUE
 );
 
 
 --table vaccin 
-
-
 CREATE TABLE Vaccin (
     id INT AUTO_INCREMENT PRIMARY KEY,
     patient_id INT,

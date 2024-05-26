@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
-import { TextField, Button, IconButton, InputAdornment } from '@mui/material';
+import { TextField, Button, IconButton, InputAdornment, Select, MenuItem, FormControl, InputLabel, Grid } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useFontSize } from '../../context/FontSizeContext';
 import '../../css/Styleprofissionel.css'; // Import du fichier CSS
 import axios from 'axios'; // Importez Axios
 import Footer from "../../components/Footer"
 import { useAuthContextMED } from "../../hooks/useAuthContextMed";
+import { countries } from 'countries-list';
+
 const SIGNUPM_URL = 'http://localhost:9000/medecin/signupM';
 const LOGINM_URL = 'http://localhost:9000/medecin//loginM';
+const specialtyList = [
+  'Médecine générale',
+  'Cardiologie',
+  'Dermatologie',
+  'Pédiatrie',
+  
+];
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 const AuthenticateMedecin = () => {
   const { largeFont } = useFontSize();
-  // update user context 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nom, setNom] = useState('');
@@ -18,133 +28,112 @@ const AuthenticateMedecin = () => {
   const [specialite, setSpecialite] = useState('');
   const [adresse, setAdresse] = useState('');
   const [numero_tel, setNumero_tel] = useState('');
+  const [countryCode, setCountryCode] = useState('+213');
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
-// Déclarez un état pour stocker le message d'erreur
-const [emailErrorMessage, setEmailErrorMessage] = useState('');
-const [errorMessage, setErrorMessage] = useState('');
-const {dispatch} = useAuthContextMED();
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-  };
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const { dispatch } = useAuthContextMED();
 
-  const handleNameChange = (e) => {
-    setNom(e.target.value);
-  };
-
-  const handleSurnameChange = (e) => {
-    setPrenom(e.target.value);
-  };
-
-  const handleSpecialtyChange = (e) => {
-    setSpecialite(e.target.value);
-  };
-
-  const handleAddressChange = (e) => {
-    setAdresse(e.target.value);
-  };
-
+  const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePhoneNumberChange = (e) => {
-    setNumero_tel(e.target.value);
+    const value = e.target.value.replace(/\D/g, ''); // Supprime tous les caractères non numériques
+    if (value.length <= 10) { // Limite le nombre de chiffres à 10
+      setNumero_tel(value);
+    }
   };
+  const handleCountryCodeChange = (e) => setCountryCode(e.target.value);
+  const handleSpecialtyChange = (e) => setSpecialite(e.target.value === 'other' ? '' : e.target.value);
+  const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleNameChange = (e) => setNom(e.target.value);
+  const handleSurnameChange = (e) => setPrenom(e.target.value);
+  const handleAddressChange = (e) => setAdresse(e.target.value);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    
     try {
-      // Validation de l'e-mail
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         setEmailErrorMessage('Veuillez entrer une adresse e-mail valide.');
         return;
       }
- 
-      // Si l'e-mail est valide, réinitialiser l'erreur d'e-mail
       setEmailErrorMessage('');
-      // Vérifier si le mot de passe et la confirmation du mot de passe correspondent
-    if (isSignUp && password !== confirmPassword) {
-      setErrorMessage('Le mot de passe et la confirmation du mot de passe ne correspondent pas.');
-      return;
-    }
-      if (isSignUp) {
-        // Logic for signing up
-        const response = await axios.post(SIGNUPM_URL, {
-          email,
-           password,
-            nom, 
-            prenom, 
-            specialite ,
-             adresse, 
-             numero_tel
-        });
 
-        console.log(response.data);
-        if(response.data){
-          dispatch({type: "loginM", payload: response.data});
-          localStorage.setItem("medecin", JSON.stringify(response.data));
-        }
-      } else {
-        // Logic for logging in
-        const response = await axios.post(LOGINM_URL, {
-          email,
-          password,
-        });
-        if(response.data){
-          dispatch({type: "loginM", payload: response.data});
-          localStorage.setItem("medecin", JSON.stringify(response.data));
-        }
+      if (isSignUp && password !== confirmPassword) {
+        setErrorMessage('Le mot de passe et la confirmation du mot de passe ne correspondent pas.');
+        return;
       }
-   // Navigate to another page after login/signup
-  } catch (error) {
-    if (error.response) {
-      setErrorMessage(error.response.data.message);
-    } else {
-      console.error('Error while submitting the form:', error);
+
+      const payload = {
+        email, password, nom, prenom, specialite, adresse, numero_tel
+      };
+
+      const url = isSignUp ? SIGNUPM_URL : LOGINM_URL;
+      const response = await axios.post(url, payload);
+
+      if (response.data) {
+        dispatch({ type: "loginM", payload: response.data });
+        localStorage.setItem("medecin", JSON.stringify(response.data));
+      }
+    } catch (error) {
+      if (error.response) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        console.error('Error while submitting the form:', error);
+      }
     }
-  }
   };
+  const getPasswordErrorMessage = () => {
+    if (isSignUp) {
+      if (password.length < 8) {
+        return <p style={{color:'red'}}>Le mot de passe doit contenir au moins 8 caractères.</p>
+      } else if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+        return <p style={{color:'red'}}>Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule et un chiffre.</p>
+      } else if (!passwordRegex.test(password)) {
+        return <p style={{color:'orange'}}>Le mot de passe doit contenir au moins un caractère spécial.</p>
+      } else {
+        return <p style={{color:'green'}}>Mot de passe valide.</p>
+      }
+    }
+    return '';
+  };
+
 
   return (
     <>
-    <div className={`professional-page ${largeFont ? 'large-font' : ''}`}>
-      <div className="form-section">
-      
-        <h1>Bienvenue dans notre espace professionnel!</h1>
-        <form onSubmit={handleFormSubmit}>
-          {isSignUp && (
-            <>
-              <TextField
-                type="text"
-                label="Nom"
-                value={nom}
-                onChange={handleNameChange}
-                variant="outlined"
-                fullWidth
-                required
-                InputProps={{
-        style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
-    }}
-              />
-              <TextField
-                type="text"
-                label="Prénom"
-                value={prenom}
-                onChange={handleSurnameChange}
-                variant="outlined"
-                fullWidth
-                required
-                InputProps={{
-        style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
-    }}
-              />
-              <TextField
+      <div className={`professional-page ${largeFont ? 'large-font' : ''}`}>
+        <div className="form-section">
+          <h1>Bienvenue dans notre espace professionnel!</h1>
+          <form onSubmit={handleFormSubmit}>
+            {isSignUp && (
+              <>
+                <TextField
+                  type="text"
+                  label="Nom"
+                  value={nom}
+                  onChange={handleNameChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                  InputProps={{
+                    style: { paddingLeft: '8px' }
+                  }}
+                />
+                <TextField
+                  type="text"
+                  label="Prénom"
+                  value={prenom}
+                  onChange={handleSurnameChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                  InputProps={{
+                    style: { paddingLeft: '8px' }
+                  }}
+                />
+           <TextField
                 type="text"
                 label="Spécialité"
                 value={specialite}
@@ -156,19 +145,19 @@ const {dispatch} = useAuthContextMED();
         style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
     }}
               />
-              <TextField
-                type="text"
-                label="Adresse"
-                value={adresse}
-                onChange={handleAddressChange}
-                variant="outlined"
-                fullWidth
-                required 
-                InputProps={{
-        style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
-    }}
-              />
-              <TextField
+                <TextField
+                  type="text"
+                  label="Adresse"
+                  value={adresse}
+                  onChange={handleAddressChange}
+                  variant="outlined"
+                  fullWidth
+                  required
+                  InputProps={{
+                    style: { paddingLeft: '8px' }
+                  }}
+                />
+                 <TextField
                 type="tel"
                 label="Numéro de téléphone"
                 value={numero_tel}
@@ -180,71 +169,69 @@ const {dispatch} = useAuthContextMED();
         style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
     }}
               />
-            </>
-          )}
-          <TextField
-            type="email"
-            label="Email"
-            value={email}
-            onChange={handleEmailChange}
-            variant="outlined"
-            placeholder="XXXX@gmail.com"
-            fullWidth
-            InputProps={{
-            style: { paddingLeft: '8px' } // Ajoute une marge intérieure de 8 pixels à gauche du texte
-            }}
-            required
-            
-          />
-          <TextField
-            type={showPassword ? "text" : "password"}
-            label="Mot de passe"
-            value={password}
-            onChange={handlePasswordChange}
-            variant="outlined"
-            fullWidth
-            required
-            InputProps={{
-        style: { paddingLeft: '8px' }, // Ajoute une marge intérieure de 8 pixels à gauche du texte
-        endAdornment: (
-            <InputAdornment position="end" >
-                <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    style={{ position: "absolute", right: 0, bottom:0, top:0}}
-                >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-            </InputAdornment>
-        ),
-    }}
-          />
-          {isSignUp && (
+              </>
+            )}
             <TextField
-      type={showPassword ? "text" : "password"}
-      label="Confirmer le mot de passe"
-      value={confirmPassword}
-      onChange={handleConfirmPasswordChange}
-      variant="outlined"
-      fullWidth
-      required
-      InputProps={{
-        style: { paddingLeft: '8px' }
-      }}
-    />
-          )}
-          <Button className='login-bouton' type="submit" variant="contained" color="primary">
-            {isSignUp ? 'S\'inscrire' : 'Se connecter'}
+              type="email"
+              label="Email"
+              value={email}
+              onChange={handleEmailChange}
+              variant="outlined"
+              placeholder="XXXX@gmail.com"
+              fullWidth
+              InputProps={{
+                style: { paddingLeft: '8px' }
+              }}
+              required
+            />
+            <TextField
+              type={showPassword ? "text" : "password"}
+              label="Mot de passe"
+              value={password}
+              onChange={handlePasswordChange}
+              variant="outlined"
+              fullWidth
+              required
+              InputProps={{
+                style: { paddingLeft: '8px' },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      style={{ position: "absolute", right: 0, bottom: 0, top: 0 }}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+             <p>{getPasswordErrorMessage()}</p>
+            {isSignUp && (
+              <TextField
+                type={showPassword ? "text" : "password"}
+                label="Confirmer le mot de passe"
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+                variant="outlined"
+                fullWidth
+                required
+                InputProps={{
+                  style: { paddingLeft: '8px' }
+                }}
+              />
+            )}
+            <Button className='login-bouton' type="submit" variant="contained" color="primary">
+              {isSignUp ? 'S\'inscrire' : 'Se connecter'}
+            </Button>
+          </form>
+          <Button onClick={() => setIsSignUp(!isSignUp)}>
+            {isSignUp ? 'Déjà un compte ? Se connecter' : 'Pas encore de compte ? S\'inscrire'}
           </Button>
-        </form>
-        <Button  onClick={() => setIsSignUp(!isSignUp)}>
-          {isSignUp ? 'Déjà un compte ? Se connecter' : 'Pas encore de compte ? S\'inscrire'}
-        </Button>
-        {errorMessage && (<p className="error-message">{errorMessage}</p> )}
-       
+          {errorMessage && (<p className="error-message">{errorMessage}</p>)}
+        </div>
       </div>
-  
-    </div>
-    <Footer/>
+      <Footer />
     </>
   );
 };

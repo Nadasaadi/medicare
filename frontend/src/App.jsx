@@ -35,6 +35,9 @@ import { vaccinLoader } from './loaders/vaccinLoader.js';
 import { allergieLoader } from './loaders/allergieLoader.js';
 import { maladieLoader } from './loaders/maladieLoader.js';
 import MaladieCH from './pages/patient/MaladieCH.jsx';
+import Consultation from './pages/patient/Consultation.jsx';
+import { consultationLoader } from './loaders/consultationLoader.js';
+
 
 
 // import { QueryClient, QueryClientProvider } from 'react-query';
@@ -57,6 +60,7 @@ function App() {
             <Route path='allergie/:id_patient'  loader={allergieLoader} element={<Allergie/>}/>
             <Route path='maladie/:id_patient'  loader={maladieLoader} element={<MaladieCH/>}/>
             <Route path='imagerie/:id_patient' element={<Imagerie/>}/>
+            <Route path='consultation/:id_patient' loader={consultationLoader} element={<Consultation/>}/>
 
             {/* <Route  path='analyse/sanguine/:id_patient' loader={analyseSanguineLoader} element={<AnalyseSanguine/>}/>
             <Route  path='analyse/urinaire' element={<AnalyseUrinaire/>}/>

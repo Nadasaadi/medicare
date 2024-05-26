@@ -73,7 +73,7 @@
   margin-bottom: 10px;
   margin-left: 5%;
   margin-top: 25px;
-  background-color: #3369ff;
+  background-color: #26527d ;
   color: white;
   border: 1px solid #fdfdfd;
   padding: 7px 10px;
@@ -85,7 +85,7 @@
   vertical-align: middle;
 }
 .logout-button1:hover {
-  background-color: #cc0000;
+  background-color: #d63333;
 }
 .button-resp{
   display: flex;

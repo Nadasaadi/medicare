@@ -12,9 +12,9 @@ const Contact = () => {
   const { largeFont } = useFontSize();
   const questions = [
     { id: 1, question: "Où puis-je trouver mes résultats d'analyses ?", response: " Vos résultats d'analyses seront disponibles dans la section Analyse de votre dossier médical en ligne, généralement dans les 24 à 48 heures suivant les tests." },
-    { id: 2, question: " Comment mettre à jour mes informations personnelles ?", response: " Vous pouvez mettre à jour vos informations personnelles en vous connectant à votre compte patient et en sélectionnant l'option Modifier les informations personnelles." },
+    { id: 2, question: " Comment mettre à jour mes informations personnelles ?", response: " Vous pouvez mettre à jour vos informations personnelles en vous connectant à votre compte professionnel et en sélectionnant l'option Modifier les informations personnelles." },
     { id: 3, question: " Comment puis-je accéder aux dossiers médicaux de mes patients ?", response: "Vous pouvez accéder aux dossiers médicaux de vos patients en vous connectant à votre compte professionnel et chercher le patient avec son e-mail." },
-    { id: 4, question: "Comment puis-je mettre à jour les Allergies médicaux de mes patients ?", response: " Vous pouvez mettre à jour les antécédents médicaux de vos patients en sélectionnant le patient concerné dans votre compte professionnel et en utilisant l'option Modifier dans la section allergie" },
+    { id: 4, question: "Comment puis-je mettre à jour les Vaccins de mes patients ?", response: " Vous pouvez mettre à jour les vaccins de vos patients en recherchant le patient concerné d'aprés la barre de recherche dans votre compte professionnel, et puis vous choisissiez l'option Ajouter dans la section vaccin" },
   ];
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [email, setEmail] = useState('');

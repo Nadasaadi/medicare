@@ -7,7 +7,7 @@ import { useLoaderData, useParams,useNavigate } from 'react-router-dom';
 // Définition d'un TableCell personnalisé avec des styles spécifiques
 const StyledTableCell = styled(TableCell)({
   fontWeight: 'bold',
-  color: '#3f51b5', // Modifiez la couleur selon vos préférences
+  color: '#0d3d6e', // Modifiez la couleur selon vos préférences
 });
 
 // Définition d'une section de style pour les informations sur les vaccins
@@ -31,9 +31,9 @@ const navigate = useNavigate();
   return (
     <VaccinSection>
       {/* Titre de la section des vaccins avec un effet de survol */}
-      <Typography variant="h5" gutterBottom sx={{ color: '#3f51b5', position: 'relative', display: 'inline-block', 
+      <Typography variant="h5" gutterBottom sx={{ color: '#0d3d6e', position: 'relative', display: 'inline-block', 
       '&::after': { content: '""', position: 'absolute', bottom: 0, left: 0, width: '100%', height: '2px', 
-      backgroundColor: '#3f51b5', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s ease-in-out' }, 
+      backgroundColor: '#0d3d6e', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s ease-in-out' }, 
       '&:hover::after': { transform: 'scaleX(1)' } }}>
         Section Vaccins
       </Typography>
@@ -64,8 +64,7 @@ const navigate = useNavigate();
       <Button
   variant="contained"
   onClick={() => navigate(`/espace-patient/allergie/${id_patient}`)}
-  color="primary"
-  sx={{ marginTop: "20px", marginLeft: 'auto' }}
+  sx={{ marginTop: "20px", marginLeft: 'auto',backgroundColor : '#26527d' }}
 >
   Suivant
 </Button>

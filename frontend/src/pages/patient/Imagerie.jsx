@@ -49,23 +49,23 @@ const Imagerie = () => {
 
   const ImageSection = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(3),
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: '#f5f5f5',
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
   }));
 
   return (
     <ImageSection>
-      <Typography variant="h6" gutterBottom align="center">
+      <Typography variant="h5" gutterBottom sx={{ color: '#0d3d6e', position: 'relative', display: 'inline-block', '&::after': { content: '""', position: 'absolute', bottom: 0, left: 0, width: '100%', height: '2px', backgroundColor: '#0d3d6e', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s ease-in-out' }, '&:hover::after': { transform: 'scaleX(1)' } }}>
         Section Imagerie médicale
       </Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Image</TableCell>
-              <TableCell>Date de prise</TableCell>
-              <TableCell>Description</TableCell>
+              <TableCell sx={{ color: '#0d3d6e' }}>Image</TableCell>
+              <TableCell sx={{ color: '#0d3d6e' }} >Date de prise</TableCell>
+              <TableCell sx={{ color: '#0d3d6e' }} >Description</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

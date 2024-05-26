@@ -31,6 +31,7 @@ const termCondition=require("./route/TermCondition");
 const vaccin = require('./route/vaccin');
 const allergie =require ('./route/allergie');
 const maladie =require ('./route/maladie');
+const consultation =require('./route/consultation');
 
 app.use("/user", user);// Importe le module de route pour les utilisateurs à partir du fichier user.js situé dans le répertoire route. Ces modules de route contiennent la logique pour gérer les différentes requêtes HTTP liées aux utilisateurs.
 app.use("/analyse", analyse);
@@ -43,7 +44,7 @@ app.use("/termCondition",termCondition);
 app.use("/vaccin", vaccin);
 app.use("/allergie", allergie);
 app.use("/maladie", maladie);
-
+app.use("/consultation",consultation)
 
 // Start server
 app.listen(PORT, () => {

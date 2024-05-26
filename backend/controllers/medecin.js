@@ -28,29 +28,24 @@ const loginM = async (req, res) => {
       res.status(400).json({message: error.message});
   }
   
-}; const updateMedecin = async (req, res) => {
+}; 
+const updateMedecin = async (req, res) => {
   try {
-    const { id_medecin } = req.params;
-    const { nom, prenom, specialite, adresse, numero_tel, email } = req.body;
+    const { id_medecin, nom, prenom, specialite, adresse, numero_tel } = req.body;
 
-    // Vérifier si l'ID du médecin est valide
-    const [[medecin]] = await db.execute(`SELECT * FROM medecin WHERE id_medecin = ?`, [id_medecin]);
-    if (!medecin) {
-      return res.status(404).json({ error: 'Médecin non trouvé' });
-    }
+    const updatedMedecin = await Medecin.updateMed({
+      id_medecin,
+      nom,
+      prenom,
+      specialite,
+      adresse,
+      numero_tel
+    });
 
-    // Mettre à jour les informations du médecin
-    const [result] = await db.execute(
-      `UPDATE medecin SET nom = ?, prenom = ?, specialite = ?, adresse = ?, numero_tel = ?, email = ? WHERE id_medecin = ?`,
-      [nom, prenom, specialite, adresse, numero_tel, email, id_medecin]
-    );
-
-    // Récupérer les nouvelles informations du médecin
-    const [[updatedMedecin]] = await db.execute(`SELECT * FROM medecin WHERE id_medecin = ?`, [id_medecin]);
     res.status(200).json(updatedMedecin);
   } catch (error) {
-    console.error('Erreur lors de la mise à jour des informations du médecin :', error);
-    res.status(500).json({ error: `Une erreur est survenue lors de la mise à jour des informations du médecin : ${error.message}` });
+    console.log(error.message);
+    res.status(400).json({ message: error.message });
   }
 };
 

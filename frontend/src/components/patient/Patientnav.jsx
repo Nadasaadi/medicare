@@ -7,6 +7,7 @@ import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import ImageIcon from '@mui/icons-material/Image';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import { HiOutlineBars3 } from "react-icons/hi2";
 import { NavLink } from 'react-router-dom';
 import { Divider } from '@mui/material';
@@ -32,17 +33,18 @@ const Patientnav = ({ onNavigationChange }) => {
             </NavLink>
           </li>
           
-        {/*  <li className="patient-nav-item">
-            <AnalyseNav />
-          </li>*/}
           <Divider />
+          <li className="patient-nav-item">
+  <NavLink className="patient-nav-link" to={`consultation/${user.id_patient}`}>
+  <MedicalServicesIcon />
+ Consultations
+  </NavLink>
+</li>
+<Divider />
           <li className="patient-nav-item">
             <NavLink to={`analyse/:${user.id_patient}`} className="patient-nav-link" >
               <AnalyticsIcon/> Analyse
             </NavLink>
-            {/* <NavLink to={`analyse/:${user?.id_patient}`} className="patient-nav-link" >
-              <AnalyticsIcon/> Analyse
-            </NavLink> */}
           </li>
           <Divider />
           <li className="patient-nav-item">
@@ -69,8 +71,9 @@ const Patientnav = ({ onNavigationChange }) => {
   </NavLink>
 </li>
           <Divider />
+
           <li className="patient-nav-item">
-            <button onClick={logout} className="logout-button1">
+            <button onClick={logout} color='primary' className="logout-button1">
               Déconnexion <LogoutIcon />
             </button>
           </li>

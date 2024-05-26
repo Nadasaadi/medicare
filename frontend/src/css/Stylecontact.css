@@ -12,11 +12,12 @@
   
   h1 {
     text-align: center;
-    color: #0050d2;
+    color: #26527d;
   }
   
   .questions-container {
     margin-bottom: 40px;
+    background-color: #ffffff;
     transition: transform 0.3s ease; /* Ajoutez une transition pour une animation fluide */
   }
   
@@ -26,7 +27,8 @@
   
   .questions-container h2 {
     margin-bottom: 10px;
-    color: #0050d2;
+    color: #26527d;
+    background-color: #ffffff;
   }
   
   .questions-container ul {
@@ -38,7 +40,7 @@
   .questions-container li {
     cursor: pointer;
     padding: 10px;
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     margin-bottom: 5px;
   }
   
@@ -62,7 +64,7 @@
   }
   
   .form-container button {
-    background-color: #007bff;
+    background-color: #26527d;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -76,7 +78,7 @@
   }
   
   .form-container h2 {
-    color: #0050d2;
+    color: #26527d;
     margin: 30px;
     text-align: center;
   }

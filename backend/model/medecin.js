@@ -19,9 +19,7 @@ class Medecin {
         return await db.execute( `SELECT email from medecin WHERE email = "${email}" ;` )
     }
     
-    static async testExistPassword(password) {
-        return await db.execute( `SELECT password from medecin WHERE password = "${password}" ;` )
-    }
+
     static async loginM({email, password}) {
         const [[userData]] = await db.execute( `SELECT * from medecin WHERE email = "${email}";` );
         if (!userData) {
@@ -44,6 +42,11 @@ class Medecin {
             return await db.execute( `  INSERT INTO medecin (email, password, nom, prenom, specialite, adresse, numero_tel) VALUES ("${email}", "${password}", "${nom}", "${prenom}",  "${specialite}", "${adresse}", "${numero_tel}");` );
         }
     }
+    static async updateMed({ id_medecin, nom , prenom , specialite, adresse, numero_tel }) {
+        return await db.execute(
+          `UPDATE medecin SET nom = ?, prenom = ?, specialite = ?, adresse = ?, numero_tel = ? WHERE id_medecin = ?`,[nom,prenom,specialite,adresse,numero_tel,id_medecin]
+        );
+      }
 }
     
 

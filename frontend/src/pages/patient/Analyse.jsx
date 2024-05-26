@@ -25,35 +25,27 @@ const Analyse = () => {
       <Box sx={{ flex: '0 0 90px' }}></Box> {/* Espace réservé à gauche */}
       <Box sx={{ flex: '1 1 auto' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h5" gutterBottom sx={{ color: '#3f51b5', position: 'relative', display: 'inline-block', '&::after': { content: '""', position: 'absolute', bottom: 0, left: 0, width: '100%', height: '2px', backgroundColor: '#3f51b5', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s ease-in-out' }, '&:hover::after': { transform: 'scaleX(1)' } }}>
+          <Typography variant="h5" gutterBottom sx={{ color: '#0d3d6e', position: 'relative', display: 'inline-block', '&::after': { content: '""', position: 'absolute', bottom: 0, left: 0, width: '100%', height: '2px', backgroundColor: '#3f51b5', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s ease-in-out' }, '&:hover::after': { transform: 'scaleX(1)' } }}>
             Section Analyses
           </Typography>
-          <Button
-  variant="contained"
-  onClick={() => navigate(`/espace-patient/vaccin/${id_patient}`)}
-  color="primary"
-  sx={{ marginTop: "20px", marginLeft: 'auto' }}
->
-  Suivant
-</Button>
         </Box>
         {Object.entries(analysesByType).map(([type, analyses]) => (
           <Box key={type} sx={{ mb: 4 }}>
-            <Typography variant="h6" gutterBottom sx={{ color: '#3f51b5' }}>
+            <Typography variant="h6" gutterBottom sx={{ color: '#0d3d6e' }}>
               {type}
             </Typography>
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ color: '#3f51b5' }}>Type d'analyse</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Date de l'analyse</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Nom de l'analyse</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Marquer</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Résultat</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Unité</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Norme</TableCell>
-                    <TableCell sx={{ color: '#3f51b5' }}>Autres informations</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Type d'analyse</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Date de l'analyse</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Nom de l'analyse</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Marquer</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Résultat</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Unité</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Norme</TableCell>
+                    <TableCell sx={{ color: '#0d3d6e' }}>Autres informations</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -74,6 +66,14 @@ const Analyse = () => {
             </TableContainer>
           </Box>
         ))}
+         <Button
+  variant="contained"
+  onClick={() => navigate(`/espace-patient/vaccin/${id_patient}`)}
+
+  sx={{ marginTop: "20px",marginBottom:'30px', marginLeft: 'auto',backgroundColor : '#26527d' }}
+>
+  Suivant
+</Button>
       </Box>
     </Box>
   );
