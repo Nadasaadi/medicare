@@ -892,7 +892,7 @@ const handleSearchYearChangeAnalyse = (event) => {
               >
                 <TableCell>{analyse.type_analyse}</TableCell>
                       <TableCell>{analyse.date_analyse.split('T')[0]}</TableCell>
-                      <TableCell>{analyse.id_nom_analyse}</TableCell>
+                      <TableCell>{analyse.nom_analyse}</TableCell>
                       <TableCell>{analyse.marquer}</TableCell>
                       <TableCell sx={{ color: ' #3333cc', fontWeight: 'bold' }}>{analyse.resultat}</TableCell>
                       <TableCell>{analyse.unite}</TableCell>
