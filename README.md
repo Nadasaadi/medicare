@@ -16,13 +16,6 @@ Medicare est une application web permettant de gérer des informations médicale
 - MySQL  
 
 ### Étapes d'installation
-
-#### Clonez le dépôt :
-
-```bash
-git clone https://github.com/votre-utilisateur/medicare.git
-cd medicare
-```
   Installez les dépendances pour le frontend et le backend :
 
 Copier le code
