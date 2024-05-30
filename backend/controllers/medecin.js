@@ -29,6 +29,26 @@ const loginM = async (req, res) => {
   }
   
 }; 
+const getMedecin = async (req, res, next) => {
+  const { id_medecin } = req.query; // Extraire l'id_medecin des paramètres de requête
+
+  try {
+    // Call the getMed function from the Medecin model
+    const [rows] = await Medecin.getMed(id_medecin);
+    // Log the entire response to understand its structure
+    console.log('Database response:', rows);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Médecin non trouvé' });
+    }
+
+    // Return the medecin data
+    res.status(200).json(rows[0]);
+  } catch (error) {
+    console.error('Erreur lors de la récupération du médecin :', error);
+    res.status(500).json({ message: 'Erreur interne du serveur' });
+  }
+};
 const updateMedecin = async (req, res) => {
   try {
     const { id_medecin, nom, prenom, specialite, adresse, numero_tel } = req.body;
@@ -49,4 +69,4 @@ const updateMedecin = async (req, res) => {
   }
 };
 
-module.exports = { signupM, loginM, updateMedecin };
+module.exports = { signupM, loginM, updateMedecin,getMedecin };

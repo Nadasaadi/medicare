@@ -180,7 +180,7 @@ const AuthenticateMedecin = () => {
               placeholder="XXXX@gmail.com"
               fullWidth
               InputProps={{
-                style: { paddingLeft: '8px' }
+                style: { paddingLeft: '8px',height:'50px' }
               }}
               required
             />

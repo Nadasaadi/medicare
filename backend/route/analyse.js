@@ -5,7 +5,9 @@ const router = express.Router();
 
 const analyseSanguineController = require('../controllers/analyse');
 
-// Route pour récupérer toutes les analyses sanguines
 router.get('/', analyseSanguineController.getAllAnalyses);
+router.get('/nomAnalyses', analyseSanguineController.getNomAnalyses);
+router.post('/addnomAnalyses', analyseSanguineController.addNomAnalyse);
+router.post('/ajouter/:id_patient', analyseSanguineController.ajouterAnalyse);
 
 module.exports = router;

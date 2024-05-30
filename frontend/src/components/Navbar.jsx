@@ -25,7 +25,7 @@ const Navbar = () => {
   const handleLogin = ({ email, password }) => {
     console.log("Email:", email);
     console.log("Password:", password);
-    // Gérer la connexion ou rediriger l'utilisateur après connexion
+
   };
   const toggleLargeFont = () => {
     setLargeFont(!largeFont); // Inversez l'état de l'agrandissement du texte

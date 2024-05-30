@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useLoaderData, useParams } from 'react-router-dom';
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
 const Analyse = () => {
   const navigate = useNavigate();
   const [analyses, setAnalyses] = useState([]);
@@ -29,51 +30,52 @@ const Analyse = () => {
             Section Analyses
           </Typography>
         </Box>
-        {Object.entries(analysesByType).map(([type, analyses]) => (
-          <Box key={type} sx={{ mb: 4 }}>
-            <Typography variant="h6" gutterBottom sx={{ color: '#0d3d6e' }}>
-              {type}
-            </Typography>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ color: '#0d3d6e' }}>Type d'analyse</TableCell>
-                    <TableCell sx={{ color: '#0d3d6e' }}>Date de l'analyse</TableCell>
-                    <TableCell sx={{ color: '#0d3d6e' }}>Nom de l'analyse</TableCell>
-                    <TableCell sx={{ color: '#0d3d6e' }}>Marquer</TableCell>
-                    <TableCell sx={{ color: '#0d3d6e' }}>Résultat</TableCell>
-                    <TableCell sx={{ color: '#0d3d6e' }}>Unité</TableCell>
-                    <TableCell sx={{ color: '#0d3d6e' }}>Norme</TableCell>
-                    <TableCell sx={{ color: '#0d3d6e' }}>Autres informations</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {analyses.map((ana, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{ana.type_analyse}</TableCell>
-                      <TableCell>{ana.date_analyse.split('T')[0]}</TableCell>
-                      <TableCell>{ana.nom_analyse}</TableCell>
-                      <TableCell>{ana.marquer}</TableCell>
-                      <TableCell sx={{ color: '#3f51b5', fontWeight: 'bold' }}>{ana.resultat}</TableCell>
-                      <TableCell>{ana.unite}</TableCell>
-                      <TableCell>{ana.norme}</TableCell>
-                      <TableCell>{ana.autres_informations}</TableCell>
+        <Box sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
+          {Object.entries(analysesByType).map(([type, analyses]) => (
+            <Box key={type} sx={{ mb: 4 }}>
+              <Typography variant="h6" gutterBottom sx={{ color: '#0d3d6e' }}>
+                {type}
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ color: '#0d3d6e' }}>Type d'analyse</TableCell>
+                      <TableCell sx={{ color: '#0d3d6e' }}>Date de l'analyse</TableCell>
+                      <TableCell sx={{ color: '#0d3d6e' }}>Nom de l'analyse</TableCell>
+                      <TableCell sx={{ color: '#0d3d6e' }}>Marquer</TableCell>
+                      <TableCell sx={{ color: '#0d3d6e' }}>Résultat</TableCell>
+                      <TableCell sx={{ color: '#0d3d6e' }}>Unité</TableCell>
+                      <TableCell sx={{ color: '#0d3d6e' }}>Norme</TableCell>
+                      <TableCell sx={{ color: '#0d3d6e' }}>Autres informations</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-        ))}
-         <Button
-  variant="contained"
-  onClick={() => navigate(`/espace-patient/vaccin/${id_patient}`)}
-
-  sx={{ marginTop: "20px",marginBottom:'30px', marginLeft: 'auto',backgroundColor : '#26527d' }}
->
-  Suivant
-</Button>
+                  </TableHead>
+                  <TableBody>
+                    {analyses.map((ana, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{ana.type_analyse}</TableCell>
+                        <TableCell>{ana.date_analyse.split('T')[0]}</TableCell>
+                        <TableCell>{ana.nom_analyse}</TableCell>
+                        <TableCell>{ana.marquer}</TableCell>
+                        <TableCell sx={{ color: '#3f51b5', fontWeight: 'bold' }}>{ana.resultat}</TableCell>
+                        <TableCell>{ana.unite}</TableCell>
+                        <TableCell>{ana.norme}</TableCell>
+                        <TableCell>{ana.autres_informations}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          ))}
+        </Box>
+        <Button
+          variant="contained"
+          onClick={() => navigate(`/espace-patient/vaccin/${id_patient}`)}
+          sx={{ marginTop: "20px", marginBottom: '30px', marginLeft: 'auto', backgroundColor: '#26527d' }}
+        >
+          Suivant
+        </Button>
       </Box>
     </Box>
   );

@@ -17,7 +17,6 @@ import Allergie from './pages/patient/Allergie.jsx'
 
 import AuthenticateMedecin from './pages/medecin/AuthenticateMedecin.jsx';
 import MedecinProfil from './pages/medecin/MedecinProfil.jsx';
-import Savoir_plus from './pages/Savoir_plus'
 import Contact from './pages/Contact';
 import Imagerie from './pages/patient/Imagerie.jsx';
 
@@ -72,7 +71,7 @@ function App() {
           <Route path='/MedecinProfil' element={ <MedecinProfil/> }/>
           </Route>
           
-          <Route path="/savoir_plus" element={<Savoir_plus/>} />
+          
           <Route path="/contact" element={<Contact/>} />
         </Route>
     )

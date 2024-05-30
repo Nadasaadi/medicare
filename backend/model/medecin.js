@@ -47,7 +47,11 @@ class Medecin {
           `UPDATE medecin SET nom = ?, prenom = ?, specialite = ?, adresse = ?, numero_tel = ? WHERE id_medecin = ?`,[nom,prenom,specialite,adresse,numero_tel,id_medecin]
         );
       }
-}
-    
+      static async getMed(id_medecin) {
+        return await db.execute(
+          `SELECT * FROM medecin WHERE id_medecin = "${id_medecin}";`
+        );
+      }
+    } 
 
 module.exports = Medecin;

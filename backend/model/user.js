@@ -53,11 +53,16 @@ class User {
         const patientId = patient.id_patient; // Récupérez l'identifiant du patient
       
         // Récupérez les données des tables liées au patient
-        const [analyses] = await db.execute(`SELECT * FROM analyse WHERE id_patient = ${patientId}`);
+        const [analyses] = await db.execute(`select type_analyse, date_analyse, type, marquer, resultat, unite, norme, autres_informations
+        from analyse, nom_analyse
+        where analyse.id_nom_analyse=nom_analyse.id
+        and analyse.id_patient =${patientId}`);
         const [vaccins] = await db.execute(`SELECT * FROM vaccin WHERE patient_id = ${patientId}`);
         const [allergies] = await db.execute(`SELECT * FROM allergie WHERE patient_id = ${patientId}`);
         const [maladiesChroniques] = await db.execute(`SELECT * FROM maladiechronique WHERE patient_id = ${patientId}`);
         const [imageries] = await db.execute(`SELECT * FROM imageriemedicale WHERE patient_id = ${patientId}`);
+        const [Consultations] = await db.execute(`SELECT * FROM consultation WHERE id_patient = ${patientId}`);
+      
       
         // Construisez un objet contenant toutes les données du patient et des tables liées
         const patientData = {
@@ -66,7 +71,8 @@ class User {
           vaccins,
           allergies,
           maladiesChroniques,
-          imageries
+          imageries,
+          Consultations
         };
       
         return patientData;

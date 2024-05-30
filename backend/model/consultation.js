@@ -22,21 +22,25 @@ class Consultation {
     const [consultations] = await db.query(query, [id_patient]);
     return consultations;
   }
+  static async getAllConsultationsForMedecin(id_medecin) {
+    const query = `
+      SELECT consultation.*, 
+             patient.nom AS patient_nom, 
+             patient.prenom AS patient_prenom, 
+             patient.email AS patient_email
+      FROM consultation
+      INNER JOIN patient ON consultation.id_patient = patient.id_patient
+      WHERE consultation.id_medecin = ?
+    `;
+    const [consultations] = await db.query(query, [id_medecin]);
+    return consultations;
+  }
 
   async addConsultation(id_patient, id_medecin) {
-    const query =
-      'INSERT INTO consultation (id_patient, id_medecin, date_consultation, conclusion) VALUES (?, ?, ?, ?)';
-    const values = [
-      id_patient,
-      id_medecin,
-      this.date_consultation,
-      this.conclusion,
-    ];
-    try {
-      await db.query(query, values);
-    } catch (error) {
-      throw new Error(`Unable to add consultation: ${error.message}`);
-    }
+    const query = 'INSERT INTO consultation (id_patient, id_medecin, date_consultation, conclusion) VALUES (?, ?, ?, ?)';
+    const values = [id_patient, id_medecin, this.date_consultation, this.conclusion];
+    console.log('Adding consultation with values:', values);
+    await db.query(query, values);
   }
 }
 

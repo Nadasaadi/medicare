@@ -1,13 +1,17 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect,useRef } from 'react';
 import { AuthContextMed } from '../../context/AuthContextMed';
-import { Box, Typography, Button, TextField, makeStyles, Avatar, Modal } from '@material-ui/core';
+import { Box, Typography, Button, TextField, makeStyles, Avatar, Modal, Divider } from '@material-ui/core';
 import { Card, CardHeader, CardContent, IconButton } from '@mui/material';
 import profil from '../../assets/image_2024-05-22_154251923-removebg-preview.png';
 import Footer from "../../components/Footer";
 import axios from 'axios';
-import {TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper,Dialog, DialogTitle, DialogContent, DialogActions} from '@material-ui/core';
+import {TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper,Dialog, DialogTitle,DialogContentText, DialogContent, DialogActions} from '@material-ui/core';
 import { color, motion } from 'framer-motion';
+import { 
+  MenuItem 
+} from '@mui/material';
 import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import Chart from 'chart.js/auto';
 
 
 
@@ -16,8 +20,14 @@ const VACCIN_URL='http://localhost:9000/vaccin/add/';
 const ALLERGIE_URL='http://localhost:9000/allergie/add';
 const MALADIE_URL ='http://localhost:9000/maladie/add';
 const UPDATE_URL = 'http://localhost:9000/medecin/updateMedecin';
-const CONSULTATION_URL = 'http://localhost:9000/consultation';
-const AJOUTER_CONSULTATION_URL = 'http://localhost:9000/consultation/addConsultation';
+const CONSULTATION_URL= 'http://localhost:9000/consultation/medecin';
+const CONSULTATION_URL_PATIENT ='http://localhost:9000/consultation/';
+const AJOUTER_ANALYSE_URL ='http://localhost:9000/analyse/ajouter';
+const ANALYSE_URL ='http://localhost:9000/analyse';
+const NOM_ANALYSE_URL ='http://localhost:9000/analyse/nomAnalyses';
+const AJOUTER_NOM_ANALYSE_URL ='http://localhost:9000/analyse/addnomAnalyses';
+const AJOUTER_CONSULTATION_URL = 'http://localhost:9000/consultation/add';
+const FETCHMED_URL = 'http://localhost:9000/medecin/getmed';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -48,12 +58,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    marginTop: theme.spacing(5),
     marginBottom: theme.spacing(4),
     padding: theme.spacing(4),
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', // Ombre
+    borderRadius: theme.spacing(2), // Border radius
     backgroundColor: '#ffffff',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
-    borderRadius: theme.shape.borderRadius,
-    width: '500px',
+    width: '900px',
   },
   searchTitle: {
     marginBottom: theme.spacing(2),
@@ -145,6 +156,17 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     color: 'inherit',
   },
+  consultationsSection: {
+    width: '900px', // Augmenter la largeur
+    backgroundColor: '#FFFFFF', // Fond blanc
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', // Ombre
+    borderRadius: theme.spacing(2), // Border radius
+    padding: theme.spacing(3), // Espacement interne
+    marginBottom: theme.spacing(3), // Marge inférieure
+  },
+  consultationsTitle:{
+    color:'#0d3d6e'
+  }
 }));
 
 
@@ -157,17 +179,17 @@ const MedecinProfil = () => {
   const [email, setEmail] = useState('');
   const [updatedMedecin, setUpdatedMedecin] = useState({
     id_medecin :medecin.id_medecin,
-    nom: '',
-    prenom: '',
-    specialite: '',
-    adresse: '',
-    numero_tel: '',
+    nom: medecin.nom,
+    prenom: medecin.prenom,
+    specialite: medecin.specialite,
+    adresse: medecin.adresse,
+    numero_tel: medecin.numero_tel,
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [patient, setPatient] = useState(null);
   const [openModal, setOpenModal] = useState(false); // État pour la fenêtre modale
-
+  const [openSuccessModalchange, setOpenSuccessModalchange] = useState(false);
   const { logout } = React.useContext(AuthContextMed);
   const { id_medecin, nom, prenom, specialite, adresse, numero_tel } = medecin ? medecin : {};
 
@@ -175,26 +197,34 @@ const MedecinProfil = () => {
     setIsEditing(true);
     setUpdatedMedecin({
       id_medecin : medecin.id_medecin,
-      nom: medecin.nom,
-      prenom: medecin.prenom,
-      specialite: medecin.specialite,
-      adresse: medecin.adresse,
-      numero_tel: medecin.numero_tel,
+      nom: updatedMedecin.nom,
+      prenom: updatedMedecin.prenom,
+      specialite: updatedMedecin.specialite,
+      adresse: updatedMedecin.adresse,
+      numero_tel: updatedMedecin.numero_tel,
     });
+  };
+  const fetchProfil = async () => {
+    try {
+      const response = await axios.get(`${FETCHMED_URL}?id_medecin=${medecin.id_medecin}`);
+      console.log(response.data);
+      setUpdatedMedecin(response.data);
+    } catch (error) {
+      console.error('Erreur lors de la récupération du profil :', error);
+    }
   };
   
   const handleEnregistrer = async () => {
-    console.log(updatedMedecin)
     try {
-     const response = await axios.put(UPDATE_URL, updatedMedecin); 
-     console.log(response)   
+      const response = await axios.put(UPDATE_URL, updatedMedecin);
+      console.log(updatedMedecin);
+
       if (response.status === 200) {
         console.log('Informations du médecin mises à jour avec succès');
-        const updatedMedecinData = response.data;
-        //setMedecin(updatedMedecinData);
-        setUpdatedMedecin(updatedMedecinData);
+        // Mettre à jour le profil après une mise à jour réussie
+        fetchProfil();
         setIsEditing(false);
-   
+        setOpenSuccessModalchange(true); // Ouvrir la fenêtre modale
       } else {
         console.error('Erreur lors de la mise à jour des informations du médecin');
       }
@@ -202,7 +232,9 @@ const MedecinProfil = () => {
       console.error('Erreur lors de la requête de mise à jour des informations du médecin', error);
     }
   };
-  
+  const handleCloseSuccessModalchange = () => {
+    setOpenSuccessModalchange(false);
+  };
   const handleNomChange = (event) => {
     setUpdatedMedecin({ ...updatedMedecin, nom: event.target.value });
   };
@@ -228,6 +260,9 @@ const MedecinProfil = () => {
     setEmail(emailValue);
     setIsEmailValid(emailRegex.test(emailValue));
   };
+  
+  const [consultationsmed, setConsultationsmed] = useState([]);
+  const [showConsultations, setShowConsultations] = useState(false);
 
   const handleRecherchePatient = async () => {
     if (isEmailValid) {
@@ -237,6 +272,7 @@ const MedecinProfil = () => {
         setPatient(patientData);
         console.log('Données du patient :', patientData);
         setShowSearchBar(false); // Masquer la barre de recherche
+        setShowConsultations(true);
       } catch (error) {
         console.error('Erreur lors de la recherche du patient :', error);
         setPatient(null);
@@ -248,9 +284,27 @@ const MedecinProfil = () => {
       setOpenModal(false); // Fermer la fenêtre modale
     }
   };
+
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+  // Récupérer les consultations du médecin connecté au chargement du composant
+  useEffect(() => {
+    const fetchConsultationsMed = async () => {
+      try {
+
+        const response = await axios.get(`${CONSULTATION_URL}?id_medecin=${medecin.id_medecin}`);
+        setConsultationsmed(response.data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des consultations :', error);
+      }
+    };
+
+    if (medecin && medecin.id_medecin) {
+      fetchConsultationsMed();
+    }
+  }, [medecin]);
+
 
 
 //gestion d'ajout d'une nouvelle maladie chronique
@@ -550,130 +604,406 @@ const fetchImages = async () => {
     console.error(err);
   }
 };
-//gestion des consultations 
+// Gestion des consultations
 const [consultations, setConsultations] = useState([]);
- // Fonction pour récupérer les consultations
- const fetchConsultations = async () => {
+const [openAjouterConsultation, setOpenAjouterConsultation] = useState(false);
+const [searchYearConsultation, setSearchYearConsultation] = useState('');
+
+
+const handleSearchYearChangeConsultation = (event) => {
+  setSearchYearConsultation(event.target.value);
+};
+const [nouvelleConsultation, setNouvelleConsultation] = useState({
+  date_consultation: '',
+  id_medecin: medecin ? medecin.id_medecin : '',  // Vérifiez si medecin est défini
+  id_patient: patient ? patient.id_patient : '',  // Vérifiez si patient est défini
+  conclusion: '',
+});
+
+// Fonction pour récupérer les consultations
+const fetchConsultations = async () => {
+  if (!patient || !patient.id_patient) {
+    console.error('Patient non défini ou sans identifiant');
+    return;
+  }
+
   try {
-    const response = await axios.get(`${CONSULTATION_URL}?id_patient=${patient.id_patient}`);
-    setConsultations(response.data);
+    const response = await axios.get(`${CONSULTATION_URL_PATIENT}?id_patient=${patient.id_patient}`);
+    setConsultations(response.data) ;
   } catch (error) {
     console.error('Erreur lors de la récupération des consultations :', error);
   }
 };
- // Effet pour récupérer les consultations lorsque le patient change
- useEffect(() => {
+
+// Effet pour récupérer les consultations lorsque le patient change
+useEffect(() => {
   if (patient && patient.id_patient) {
     fetchConsultations();
   }
 }, [patient]);
-const [openAjouterConsultation, setOpenAjouterConsultation] = useState(false);
-  const [nouvelleConsultation, setNouvelleConsultation] = useState({
+
+const handleOpenAjouterConsultation = () => {
+  setOpenAjouterConsultation(true);
+};
+
+const handleCloseAjouterConsultation = () => {
+  setOpenAjouterConsultation(false);
+  setNouvelleConsultation({
     date_consultation: '',
-    medecin_nom: medecin.nom,
-    medecin_prenom: medecin.prenom,
+    id_medecin: medecin ? medecin.id_medecin : '',
+    id_patient: patient ? patient.id_patient : '',
     conclusion: '',
-    // Autres champs nécessaires
   });
+};
 
-  const handleOpenAjouterConsultation = () => {
-    setOpenAjouterConsultation(true);
-  };
+const handleInputChange = (e) => {
+  setNouvelleConsultation({
+    ...nouvelleConsultation,
+    [e.target.name]: e.target.value,
+  });
+};
 
-  const handleCloseAjouterConsultation = () => {
-    setOpenAjouterConsultation(false);
-    setNouvelleConsultation({
-      date_consultation: '',
-      medecin_nom: medecin.nom,
-      medecin_prenom: medecin.prenom,
-      conclusion: '',
-      // Réinitialisez les autres champs
-    });
-  };
-
-  const handleInputChange = (e) => {
-    setNouvelleConsultation({
-      ...nouvelleConsultation,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleAjouterConsultation = async () => {
-    try {
-      const response = await axios.post(AJOUTER_CONSULTATION_URL, nouvelleConsultation);
-      console.log(response)
-      if (response.status === 201) {
-        console.log('Consultation ajoutée avec succès');
-        handleCloseAjouterConsultation();
-        // Rafraîchir la liste des consultations
-        fetchConsultations();
-      } else {
-        console.error('Erreur lors de l\'ajout de la consultation', response.data);
-      }
-    } catch (error) {
-      console.error('Erreur lors de l\'ajout de la consultation :', error);
+const handleAjouterConsultation = async () => {
+  if (!patient.id_patient || !nouvelleConsultation.id_medecin) {
+    console.error('Identifiant du patient ou du médecin manquant');
+    console.log(id_medecin);
+    console.log(patient.id_patient);
+    console.log(consultations.id_patient);
+    return;
+  }
+  
+  
+  try {
+  nouvelleConsultation.id_patient= patient.id_patient;
+    const response = await axios.post(AJOUTER_CONSULTATION_URL, nouvelleConsultation);
+    if (response.status === 201) {
+      console.log('Consultation ajoutée avec succès');
+      handleCloseAjouterConsultation();
+      fetchConsultations(); // Rafraîchir la liste des consultations
+    } else {
+      console.error('Erreur lors de l\'ajout de la consultation', response.data);
     }
-  };
-
-//gestion des analyses 
-const [searchYearAnalyse, setSearchYearAnalyse] = useState('');
-const handleSearchYearChangeAnalyse = (event) => {
-  setSearchYearAnalyse(event.target.value);
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout de la consultation :', error);
+  }
 };
 
 
+//gestion des analyse 
+// États pour la recherche par année et l'ouverture de la boîte de dialogue d'ajout d'analyse
+const [searchYearAnalyse, setSearchYearAnalyse] = useState('');
+const [openAjouterAnalyse, setOpenAjouterAnalyse] = useState(false);
+
+const handleSearchYearChangeAnalyse = (event) => {
+  setSearchYearAnalyse(event.target.value);
+};
+// État pour les détails d'une nouvelle analyse
+const [nouvelleAnalyse, setNouvelleAnalyse] = useState({
+  type_analyse: '',
+  date_analyse: '',
+  nom_analyse: '',
+  marquer: '',
+  resultat: '',
+  unite: '',
+  norme: '',
+  autres_informations: '',
+});
+
+
+
+// Fonction pour ouvrir la boîte de dialogue d'ajout d'analyse
+const handleOpenAjouterAnalyse = () => {
+  setOpenAjouterAnalyse(true);
+};
+
+// Fonction pour fermer la boîte de dialogue d'ajout d'analyse et réinitialiser les états
+const handleCloseAjouterAnalyse = () => {
+  setOpenAjouterAnalyse(false);
+  setNouvelleAnalyse({
+    type_analyse: '',
+    date_analyse: '',
+    id_nom_analyse: '',
+    marquer: '',
+    resultat: '',
+    unite: '',
+    norme: '',
+    autres_informations: '',
+    id_patient: patient.id_patient
+  });
+  setShowNewNomAnalyseField(false);
+};
+
+// Fonction pour gérer les changements dans les champs de la nouvelle analyse
+const handleInputChangeanalyse = (e) => {
+  setNouvelleAnalyse({ ...nouvelleAnalyse, [e.target.name]: e.target.value });
+};
+
+const [nomAnalyseOptions, setNomAnalyseOptions] = useState([]);
+const [showNewNomAnalyseField, setShowNewNomAnalyseField] = useState(false);
+const [nouveauNomAnalyse, setNouveauNomAnalyse] = useState('');
+
+useEffect(() => {
+  // Récupérer les noms d'analyse depuis le backend
+  const fetchNomAnalyses = async () => {
+    try {
+      const response = await axios.get(NOM_ANALYSE_URL);
+      setNomAnalyseOptions(response.data);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des noms d\'analyse :', error);
+    }
+  };
+
+  fetchNomAnalyses();
+}, []);
+
+const handleInputChangeAnalyse = (e) => {
+  setNouvelleAnalyse({ ...nouvelleAnalyse, [e.target.name]: e.target.value });
+};
+const handleAjouterAnalyse = async () => {
+  try {
+    const response = await axios.post(`${AJOUTER_ANALYSE_URL}/${patient.id_patient}`, nouvelleAnalyse);
+    if (response.status === 201) {
+      console.log('Analyse ajoutée avec succès');
+      onClose();
+    } else {
+      console.error('Erreur lors de l\'ajout de l\'analyse', response.data);
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout de l\'analyse :', error);
+  }
+};
+
+
+  const handleAjouterNomAnalyse = async () => {
+    
+    try {
+      const response = await axios.post(AJOUTER_NOM_ANALYSE_URL, { type: nouveauNomAnalyse });
+      if (response.status === 201) {
+        console.log('Nom d\'analyse ajouté avec succès');
+        setShowNewNomAnalyseField(false);
+        setNouveauNomAnalyse('');
+        // Re-fetch the nom analyses to include the new one
+        const nomAnalysesResponse = await axios.get(NOM_ANALYSE_URL);
+        setNomAnalyseOptions(nomAnalysesResponse.data);
+      } else {
+        console.error('Erreur lors de l\'ajout du nom d\'analyse', response.data);
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du nom d\'analyse :', error);
+    }
+  };
+
+// Fonction pour récupérer les analyses du patient
+const fetchAnalyses = async () => {
+  if (!patient || !patient.id_patient) {
+    console.error('Patient non défini ou sans identifiant');
+    return;
+  }
+
+  try {
+    const response = await axios.get(`${ANALYSE_URL}?id_patient=${patient.id_patient}`);
+    setAnalyses(response.data);
+
+    // Extraire les options de nom_analyse à partir des données récupérées
+    const nomAnalyseOptionsFromData = new Set(response.data.map((analyse) => analyse.nom_analyse));
+    setNomAnalyseOptions(Array.from(nomAnalyseOptionsFromData));
+  } catch (error) {
+    console.error('Erreur lors de la récupération des analyses :', error);
+  }
+};
+
+// Effet pour récupérer les analyses lorsque le patient change
+useEffect(() => {
+  if (patient && patient.id_patient) {
+    fetchAnalyses();
+  }
+}, [patient]);
+const chartContainer = useRef(null); // Référence pour le conteneur du graphique
+const chartInstance = useRef(null); // Référence pour l'instance du graphique
+
+const getDatesOfMonth = (month, year) => {
+  const dates = [];
+  const lastDay = new Date(year, month + 1, 0).getDate(); // Dernier jour du mois
+
+  for (let day = 1; day <= lastDay; day++) {
+    const date = new Date(year, month, day);
+    dates.push(date.toISOString().split('T')[0]); // Ajouter la date au format 'YYYY-MM-DD'
+  }
+
+  return dates;
+};
+
+useEffect(() => {
+  renderChart(); // Appel à la fonction pour initialiser le graphique
+
+  return () => {
+  destroyChart(); // Appel à la fonction pour détruire le graphique lorsque le composant est démonté
+  };
+}, [consultations]); // Exécuté chaque fois que les consultations sont mises à jour
+
+// Fonction pour regrouper les consultations par jour et compter le nombre de consultations
+const groupConsultationsByDay = (consultations) => {
+  const counts = {};
+  consultations.forEach((consultation) => {
+    const date = consultation.date_consultation.split('T')[0]; // Récupérer la date sans l'heure
+    counts[date] = (counts[date] || 0) + 1; // Incrémenter le compteur pour cette date
+  });
+  return counts;
+};
+
+// Fonction pour préparer les données du graphique
+const prepareChartData = (consultations) => {
+  const counts = groupConsultationsByDay(consultations);
+  const currentMonth = new Date().getMonth(); // Mois actuel (0-11)
+  const currentYear = new Date().getFullYear(); // Année actuelle
+  const dates = getDatesOfMonth(currentMonth, currentYear); // Tableau contenant toutes les dates du mois actuel
+
+  const values = dates.map((date) => counts[date] || 0); // Remplacer les valeurs manquantes par 0
+
+  return {
+    labels: dates,
+    datasets: [
+      {
+        label: 'Nombre de consultations par jour',
+        data: values,
+        fill: true,
+        backgroundColor: 'rgba(0, 128, 0, 0.2)',
+        borderColor: 'rgb(0, 128, 0)',
+        tension: 0.1
+      }
+    ]
+  };
+};
+
+// Fonction pour détruire le graphique existant
+const destroyChart = () => {
+  if (chartInstance.current) {
+    chartInstance.current.destroy(); // Détruire le graphique existant
+  }
+};
+
+// Fonction pour créer ou mettre à jour le graphique
+const renderChart = () => {
+  destroyChart(); // Détruire le graphique existant si nécessaire
+  const ctx = chartContainer.current; // Récupérer le canevas
+  if (ctx && consultationsmed.length > 0) { // Vérifier si le canevas et les données sont disponibles
+    const data = prepareChartData(consultationsmed); // Préparer les données du graphique
+    chartInstance.current = new Chart(ctx, {
+      type: 'line',
+      data: data,
+      options: {
+        scales: {
+          y: {
+            ticks: {
+              stepSize: 1 // Configure les incréments de l'axe Y à 1
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+useEffect(() => {
+  renderChart(); // Appel à la fonction pour initialiser le graphique
+  return () => {
+    destroyChart(); // Appel à la fonction pour détruire le graphique lorsque le composant est démonté
+  };
+}, [consultationsmed]); // Exécuté chaque fois que les consultations sont mises à jour
+
+//search dans les consultations de medecin 
+const [searchDateFilter, setSearchDateFilter] = useState('');
+const [searchPatientNameFilter, setSearchPatientNameFilter] = useState('');
+const filteredConsultations = consultationsmed.filter((consultation) => {
+  const date = consultation.date_consultation.split('T')[0];
+  const patientName = `${consultation.patient_prenom} ${consultation.patient_nom}`.toLowerCase();
+  return (
+    date.includes(searchDateFilter.toLowerCase()) &&
+    patientName.includes(searchPatientNameFilter.toLowerCase())
+  );
+});
  
   return (
     <>
       <Box className={classes.root}>
-        <Box className={classes.aside}>
-        <Avatar className={classes.avatar} src={profil} />
-          <Typography variant="h6">Profil</Typography>
-          <TextField
-            label="Nom"
-            value={isEditing ? updatedMedecin.nom : nom }
-            onChange={handleNomChange}
-           disabled={!isEditing}
-          />
-          <TextField
-            label="Prénom"
-            value={isEditing ? updatedMedecin.prenom : prenom}
-            onChange={handlePrenomChange}
-            disabled={!isEditing}
-          />
-          <TextField
-            label="Spécialité"
-            value={isEditing ? updatedMedecin.specialite : specialite}
-            onChange={handleSpecialiteChange}
-            disabled={!isEditing}
-          />
-          <TextField
-            label="Adresse"
-            value={isEditing ? updatedMedecin.adresse : adresse}
-            onChange={handleAdresseChange}
-            disabled={!isEditing}
-          />
-          <TextField
-            label="Numéro de téléphone"
-            value={isEditing ? updatedMedecin.numero_tel : numero_tel}
-            onChange={handleNumeroTelChange}
-            disabled={!isEditing}
-          />
-          {isEditing ? (
-            <Button style={{backgroundColor:'#339966', margin:'10px'}} onClick={handleEnregistrer} variant="contained"  color="primary">
-              Enregistrer
-            </Button>
-          ) : (
-            <Button style={{backgroundColor: '#26527d' ,margin:'10px'}} onClick={handleModifier} variant="contained"  color="primary">
-              Modifier
-            </Button>
-          )}
-          <Button onClick={logout} variant="contained" color="secondary" style={{backgroundColor:'#cc6600'}}>
-            Déconnexion
-          </Button>
-        </Box>
+      <Box className={classes.aside}>
+  <Avatar className={classes.avatar} src={profil} />
+  <Typography variant="h6">Profil</Typography>
+  <TextField
+    label="Nom"
+    value={updatedMedecin.nom}
+    onChange={handleNomChange}
+    disabled={!isEditing}
+  />
+  <TextField
+    label="Prénom"
+    value={updatedMedecin.prenom}
+    onChange={handlePrenomChange}
+    disabled={!isEditing}
+  />
+  <TextField
+    label="Spécialité"
+    value={updatedMedecin.specialite}
+    onChange={handleSpecialiteChange}
+    disabled={!isEditing}
+  />
+  <TextField
+    label="Adresse"
+    value={updatedMedecin.adresse}
+    onChange={handleAdresseChange}
+    disabled={!isEditing}
+  />
+  <TextField
+    label="Numéro de téléphone"
+    value={updatedMedecin.numero_tel}
+    onChange={handleNumeroTelChange}
+    disabled={!isEditing}
+  />
+  {isEditing ? (
+    <Button
+      style={{ backgroundColor: '#339966', margin: '10px' }}
+      onClick={handleEnregistrer}
+      variant="contained"
+      color="primary"
+    >
+      Enregistrer
+    </Button>
+  ) : (
+    <Button
+      style={{ backgroundColor: '#26527d', margin: '10px' }}
+      onClick={handleModifier}
+      variant="contained"
+      color="primary"
+    >
+      Modifier
+    </Button>
+  )}
+  <Button
+    onClick={logout}
+    variant="contained"
+    color="secondary"
+    style={{ backgroundColor: '#cc6600' }}
+  >
+    Déconnexion
+  </Button>
+</Box>
+
+{/* Le composant Dialog est placé en dehors du Box */}
+<Dialog
+  open={openSuccessModalchange}
+  onClose={handleCloseSuccessModalchange}
+  aria-labelledby="success-modal-title"
+  aria-describedby="success-modal-description"
+>
+  <DialogContent>
+    <DialogContentText id="success-modal-description" style={{ color: 'green' }}>
+      Enregistrement réussi !
+    </DialogContentText>
+  </DialogContent>
+</Dialog>
         <Box className={classes.content}>
           {showSearchBar ? (
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
             <motion.div
               className={classes.searchBar}
               initial={{ opacity: 0, y: -20 }}
@@ -704,6 +1034,60 @@ const handleSearchYearChangeAnalyse = (event) => {
                 Rechercher
               </Button>
             </motion.div>
+            
+            <Box className={classes.consultationsSection}>
+              
+              <Typography variant="h6" className={classes.consultationsTitle}>
+                Mes Consultations
+              </Typography>
+              <div>
+              <TextField
+              label="Recherche par date"
+              style={{margin:'30px', width:'300px',height:'40px'}}
+                type="text"
+                placeholder="année ou mois ou jours ou YYYY-MM-JJ"
+                value={searchDateFilter}
+                onChange={(e) => setSearchDateFilter(e.target.value)}
+              />
+              <TextField
+              label="Recherche par patient"
+              style={{margin:'30px', width:'300px',height:'40px' }}
+                type="text"
+                placeholder="Nom ou prénom ou les deux"
+                value={searchPatientNameFilter}
+                onChange={(e) => setSearchPatientNameFilter(e.target.value)}
+              />
+                </div>
+              <Table>
+  <TableHead>
+    <TableRow>
+      <TableCell style={{ color: '#0d3d6e', fontWeight: 'bold' }}>Date</TableCell>
+      <TableCell style={{ color: '#0d3d6e', fontWeight: 'bold' }}>Conclusion</TableCell>
+      <TableCell style={{ color: '#0d3d6e', fontWeight: 'bold' }}>Patient</TableCell>
+      <TableCell style={{ color: '#0d3d6e', fontWeight: 'bold' }}>Email du Patient</TableCell>
+    </TableRow>
+  </TableHead>
+  <TableBody>
+  {filteredConsultations
+    .sort((a, b) => new Date(a.date_consultation) - new Date(b.date_consultation))
+    .map((consultation, index) => (
+      <TableRow key={index}>
+        <TableCell style={{ width: '150px' }}>{consultation.date_consultation.split('T')[0]}</TableCell>
+        <TableCell>{consultation.conclusion}</TableCell>
+        <TableCell>{`${consultation.patient_prenom} ${consultation.patient_nom}`}</TableCell>
+        <TableCell style={{ color: '#006666' }}>{consultation.patient_email}</TableCell>
+      </TableRow>
+    ))}
+</TableBody>
+</Table>
+            </Box>
+            <div>
+            <h2 style={{ color: '#0d3d6e' }}>courbe d'activité</h2>
+            <canvas ref={chartContainer} />
+            </div>
+            </div>
+            
+            
           ) : (
             <Box>
   
@@ -766,6 +1150,13 @@ const handleSearchYearChangeAnalyse = (event) => {
         <Box mb={4} id="consultation" style={{ margin: '30px' }}>
           <Typography style={{ color: '#0d3d6e' }} variant="h6" gutterBottom>
             Consultations
+            <TextField
+          label="Rechercher par année"
+          type="number"
+          style={{ marginLeft: 700 }}
+          value={searchYearConsultation}
+          onChange={handleSearchYearChangeConsultation}
+        />
           </Typography>
           <TableContainer component={Paper}>
             <Table>
@@ -779,7 +1170,12 @@ const handleSearchYearChangeAnalyse = (event) => {
               </TableHead>
               <TableBody>
                 {consultations.map((consultation) => (
-                  <TableRow key={consultation.id_consultation}>
+                  <TableRow
+                key={consultation.id_consultation}
+                style={{
+                  backgroundColor: new Date(consultation.date_consultation).getFullYear() === parseInt(searchYearConsultation) ? '#add8e6a9' : 'inherit',
+                }}
+              >
                   <TableCell>{new Date(consultation.date_consultation).toLocaleDateString()}</TableCell>
                   <TableCell>
                     <Button onClick={() => handleOpenModal(consultation)}>
@@ -816,22 +1212,6 @@ const handleSearchYearChangeAnalyse = (event) => {
             InputLabelProps={{
               shrink: true,
             }}
-            margin="normal"
-            fullWidth
-          />
-          <TextField
-            label="Nom du médecin"
-            name="medecin_nom"
-            value={nouvelleConsultation.medecin_nom}
-            disabled
-            margin="normal"
-            fullWidth
-          />
-          <TextField
-            label="Prénom du médecin"
-            name="medecin_prenom"
-            value={nouvelleConsultation.medecin_prenom}
-            disabled
             margin="normal"
             fullWidth
           />
@@ -892,7 +1272,7 @@ const handleSearchYearChangeAnalyse = (event) => {
               >
                 <TableCell>{analyse.type_analyse}</TableCell>
                       <TableCell>{analyse.date_analyse.split('T')[0]}</TableCell>
-                      <TableCell>{analyse.nom_analyse}</TableCell>
+                      <TableCell>{analyse.type}</TableCell>
                       <TableCell>{analyse.marquer}</TableCell>
                       <TableCell sx={{ color: ' #3333cc', fontWeight: 'bold' }}>{analyse.resultat}</TableCell>
                       <TableCell>{analyse.unite}</TableCell>
@@ -904,9 +1284,143 @@ const handleSearchYearChangeAnalyse = (event) => {
             </TableBody>
           </Table>
         </TableContainer>}
-        <Button variant="contained" color="primary" style={{ backgroundColor:'#0d3d6e' ,marginTop: 16 }}>
-          Ajouter
-        </Button>
+        <Button variant="contained" color="primary" style={{ backgroundColor: '#0d3d6e', marginTop: 16 }} onClick={handleOpenAjouterAnalyse}>
+  Ajouter
+</Button>
+
+<Dialog open={openAjouterAnalyse} onClose={handleCloseAjouterAnalyse}>
+  <DialogTitle>Ajouter une nouvelle analyse</DialogTitle>
+  <DialogContent>
+    <TextField
+      select
+      label="Type d'analyse"
+      name="type_analyse"
+      value={nouvelleAnalyse.type_analyse}
+      onChange={handleInputChangeanalyse}
+      margin="normal"
+      fullWidth
+      SelectProps={{
+        native: true,
+      }}
+    >
+      <option value="" />
+      <option value="sanguine">Sanguine</option>
+      <option value="urinaire">Urinaire</option>
+      <option value="microbiologique">Microbiologique</option>
+    </TextField>
+  
+    {/* Champs Date Analyse */}
+    <TextField
+      label="Date d'analyse"
+      type="date"
+      name="date_analyse"
+      value={nouvelleAnalyse.date_analyse}
+      onChange={handleInputChangeanalyse}
+      margin="normal"
+      fullWidth
+      InputLabelProps={{
+        shrink: true,
+      }}
+    />
+  
+    {/* Champs Nom Analyse */}
+    <TextField
+          select
+          label="Nom de l'analyse"
+          name="id_nom_analyse"
+          value={nouvelleAnalyse.id_nom_analyse}
+          onChange={(e) => {
+      handleInputChangeAnalyse(e);
+      if (e.target.value === 'new') {
+        setShowNewNomAnalyseField(true);
+      } else {
+        setShowNewNomAnalyseField(false);
+      }
+    }}
+          margin="normal"
+          fullWidth
+          SelectProps={{
+            native: true,
+          }}
+        >
+          <option value="" />
+          {nomAnalyseOptions.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.type}
+            </option>
+          ))}
+          <option value="new">Ajouter nouveau nom d'analyse</option>
+        </TextField>
+        {showNewNomAnalyseField && (
+          <div>
+            <TextField
+              label="Nouveau nom d'analyse"
+              value={nouveauNomAnalyse}
+              onChange={(e) => setNouveauNomAnalyse(e.target.value)}
+              margin="normal"
+              fullWidth
+            />
+            <Button variant="contained" onClick={handleAjouterNomAnalyse} color="primary">
+              Ajouter
+            </Button>
+          </div>
+        )}
+  
+    {/* Champs Marqueur, Résultat, Unité, Norme, Autres informations */}
+    <TextField
+      label="Marqueur"
+      name="marquer"
+      value={nouvelleAnalyse.marquer}
+      onChange={handleInputChangeanalyse}
+      margin="normal"
+      fullWidth
+    />
+    <TextField
+      label="Résultat"
+      type="number"
+      name="resultat"
+      value={nouvelleAnalyse.resultat}
+      onChange={handleInputChangeanalyse}
+      margin="normal"
+      fullWidth
+    />
+    <TextField
+      label="Unité"
+      name="unite"
+      value={nouvelleAnalyse.unite}
+      onChange={handleInputChangeanalyse}
+      margin="normal"
+      fullWidth
+    />
+    <TextField
+      label="Norme"
+      type="number"
+      name="norme"
+      value={nouvelleAnalyse.norme}
+      onChange={handleInputChangeanalyse}
+      margin="normal"
+      fullWidth
+    />
+    <TextField
+      label="Autres informations"
+      name="autres_informations"
+      value={nouvelleAnalyse.autres_informations}
+      onChange={handleInputChangeanalyse}
+      margin="normal"
+      fullWidth
+      multiline
+    />
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleCloseAjouterAnalyse} color="secondary">
+      Annuler
+    </Button>
+    <Button onClick={handleAjouterAnalyse} color="primary">
+      Ajouter
+    </Button>
+  </DialogActions>
+  </Dialog>
+  
       </Box>
 
       {/* Vaccins */}

@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import {
   Box,
-  Grid,
   Paper,
   Typography,
   styled,
@@ -52,20 +51,51 @@ const Imagerie = () => {
     backgroundColor: '#f5f5f5',
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadius,
+  
+  
+  }));
+
+  const ScrollableTableContainer = styled(TableContainer)(({ theme }) => ({
+    maxHeight: '350px', // Limite la hauteur maximale pour permettre le défilement
+    overflowY: 'auto', // Ajoute une barre de défilement verticale
+    marginTop: theme.spacing(2), // Ajoute un espace au-dessus du tableau
   }));
 
   return (
     <ImageSection>
-      <Typography variant="h5" gutterBottom sx={{ color: '#0d3d6e', position: 'relative', display: 'inline-block', '&::after': { content: '""', position: 'absolute', bottom: 0, left: 0, width: '100%', height: '2px', backgroundColor: '#0d3d6e', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s ease-in-out' }, '&:hover::after': { transform: 'scaleX(1)' } }}>
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{
+          color: '#0d3d6e',
+          position: 'relative',
+          display: 'inline-block',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            width: '100%',
+            height: '2px',
+            backgroundColor: '#0d3d6e',
+            transform: 'scaleX(0)',
+            transformOrigin: 'left',
+            transition: 'transform 0.3s ease-in-out',
+          },
+          '&:hover::after': {
+            transform: 'scaleX(1)',
+          },
+        }}
+      >
         Section Imagerie médicale
       </Typography>
-      <TableContainer component={Paper}>
-        <Table>
+      <ScrollableTableContainer component={Paper}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell sx={{ color: '#0d3d6e' }}>Image</TableCell>
-              <TableCell sx={{ color: '#0d3d6e' }} >Date de prise</TableCell>
-              <TableCell sx={{ color: '#0d3d6e' }} >Description</TableCell>
+              <TableCell sx={{ color: '#0d3d6e' }}>Date de prise</TableCell>
+              <TableCell sx={{ color: '#0d3d6e' }}>Description</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -85,7 +115,7 @@ const Imagerie = () => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </ScrollableTableContainer>
 
       <Modal open={open} onClose={handleClose}>
         <Box
@@ -98,7 +128,6 @@ const Imagerie = () => {
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
-
           }}
         >
           <img
