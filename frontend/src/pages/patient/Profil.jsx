@@ -1,7 +1,6 @@
 import React from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { Button, Typography, Divider, Avatar, Box, Card, CardHeader, CardContent, IconButton } from '@mui/material';
-import { useFontSize } from '../../context/FontSizeContext';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import MaleIcon from '@mui/icons-material/Male';
@@ -15,7 +14,6 @@ import anonymousAvatarFemme from '../../assets/anonymous_avatars_grey_circlesfem
 
 const Profil = () => {
   const { user } = useAuthContext();
-  const { largeFont } = useFontSize();
   const { id_patient, nom, prenom, sexe, date_naissance, lieu_naissance } = user;
   const navigate = useNavigate();
 

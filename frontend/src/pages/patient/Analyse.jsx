@@ -4,12 +4,12 @@ import { useLoaderData, useParams } from 'react-router-dom';
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
+
 const Analyse = () => {
   const navigate = useNavigate();
   const [analyses, setAnalyses] = useState([]);
   const { id_patient } = useParams();
   const analyse = useLoaderData();
-  console.log(analyse);
 
   // Regrouper les analyses par type
   const analysesByType = analyse.data.reduce((acc, ana) => {
@@ -22,7 +22,7 @@ const Analyse = () => {
   }, {});
 
   return (
-    <Box sx={{ maxWidth: '80vw', margin: '0 auto', display: 'flex' }}>
+    <Box sx={{ maxWidth: '80vw', margin: '0 auto', display: 'flex' }}  className='analyse'>
       <Box sx={{ flex: '0 0 90px' }}></Box> {/* Espace réservé à gauche */}
       <Box sx={{ flex: '1 1 auto' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>

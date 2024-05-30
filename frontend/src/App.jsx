@@ -27,7 +27,6 @@ import { useAuthContext } from "./hooks/useAuthContext";
 import { useAuthContextMED } from './hooks/useAuthContextMed.jsx';
 
 // context
-import { FontSizeProvider } from './context/FontSizeContext'; 
 import { analyseLoader } from './loaders/analyseLoader.js';
 import Analyse from './pages/patient/Analyse.jsx';
 import { vaccinLoader } from './loaders/vaccinLoader.js';
@@ -77,13 +76,11 @@ function App() {
     )
   )
     return (
-      // <QueryClientProvider client={queryClient}> 
-      <FontSizeProvider>
+  
       <div>
         <RouterProvider router={router}/>
       </div>
-   </FontSizeProvider>
-  //  </QueryClientProvider>
+  
   
   )
 }

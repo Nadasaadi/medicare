@@ -12,11 +12,13 @@ import {
 } from '@mui/material';
 import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import Chart from 'chart.js/auto';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 
 const FIND_PATIENT_URL = ' http://localhost:9000/user/user/';
 const VACCIN_URL='http://localhost:9000/vaccin/add/';
+const VACCIN_URL_GET ='http://localhost:9000/vaccin/';
 const ALLERGIE_URL='http://localhost:9000/allergie/add';
 const MALADIE_URL ='http://localhost:9000/maladie/add';
 const UPDATE_URL = 'http://localhost:9000/medecin/updateMedecin';
@@ -482,10 +484,11 @@ const fetchAllergie = async () => {
       });
   
       if (response.status === 201) {
+        fetchVaccins();
         setSuccessMessage('Nouveau vaccin ajouté avec succès');
         setNewVaccin({ nom_vaccin: '', date_administration: '', remarques: '' });
         handleClose();
-        fetchVaccins();
+       
       } else {
         console.error('Erreur lors de l\'ajout du vaccin', response.data);
       }
@@ -663,6 +666,20 @@ const handleInputChange = (e) => {
   });
 };
 
+ //le clique sur nom du medecin consultant
+ const [openModalMed, setOpenModalMed] = useState(false);
+ const [selectedMedecin, setSelectedMedecin] = useState(null);
+
+ const handleOpenModalmedc = (medecin) => {
+   setSelectedMedecin(medecin);
+   setOpenModalMed(true);
+ };
+
+ const handleCloseModalmedc = () => {
+   setSelectedMedecin(null);
+   setOpenModalMed(false);
+ };
+
 const handleAjouterConsultation = async () => {
   if (!patient.id_patient || !nouvelleConsultation.id_medecin) {
     console.error('Identifiant du patient ou du médecin manquant');
@@ -671,8 +688,7 @@ const handleAjouterConsultation = async () => {
     console.log(consultations.id_patient);
     return;
   }
-  
-  
+ 
   try {
   nouvelleConsultation.id_patient= patient.id_patient;
     const response = await axios.post(AJOUTER_CONSULTATION_URL, nouvelleConsultation);
@@ -741,6 +757,7 @@ const handleInputChangeanalyse = (e) => {
 const [nomAnalyseOptions, setNomAnalyseOptions] = useState([]);
 const [showNewNomAnalyseField, setShowNewNomAnalyseField] = useState(false);
 const [nouveauNomAnalyse, setNouveauNomAnalyse] = useState('');
+const [successMessageAnalyse, setSuccessMessageAnalyse] = useState('');
 
 useEffect(() => {
   // Récupérer les noms d'analyse depuis le backend
@@ -764,7 +781,8 @@ const handleAjouterAnalyse = async () => {
     const response = await axios.post(`${AJOUTER_ANALYSE_URL}/${patient.id_patient}`, nouvelleAnalyse);
     if (response.status === 201) {
       console.log('Analyse ajoutée avec succès');
-      onClose();
+      setSuccessMessageAnalyse('Nouvelle analyse ajouté avec succès');
+      handleCloseAjouterAnalyse();
     } else {
       console.error('Erreur lors de l\'ajout de l\'analyse', response.data);
     }
@@ -1053,7 +1071,7 @@ const filteredConsultations = consultationsmed.filter((consultation) => {
               label="Recherche par patient"
               style={{margin:'30px', width:'300px',height:'40px' }}
                 type="text"
-                placeholder="Nom ou prénom ou les deux"
+                placeholder="Nom ou prénom ou nom/prenom"
                 value={searchPatientNameFilter}
                 onChange={(e) => setSearchPatientNameFilter(e.target.value)}
               />
@@ -1126,9 +1144,9 @@ const filteredConsultations = consultationsmed.filter((consultation) => {
               {patient.nom} {patient.prenom}
             </Typography>
             <Box display="flex" alignItems="center">
-              <Typography variant="body1" ml={1}>
-                Sexe : {patient.sexe}
-              </Typography>
+            <Typography variant="body1" ml={1}>
+            Sexe : {patient.sexe === 'F' ? 'Femme' : 'Homme'}
+          </Typography>
             </Box>
           </Box>
           <Box display="flex" alignItems="center" mb={1}>
@@ -1178,7 +1196,7 @@ const filteredConsultations = consultationsmed.filter((consultation) => {
               >
                   <TableCell>{new Date(consultation.date_consultation).toLocaleDateString()}</TableCell>
                   <TableCell>
-                    <Button onClick={() => handleOpenModal(consultation)}>
+                    <Button onClick={() => handleOpenModalmedc(consultation)}>
                       {consultation.medecin_nom} {consultation.medecin_prenom}
                     </Button>
                   </TableCell>
@@ -1188,6 +1206,33 @@ const filteredConsultations = consultationsmed.filter((consultation) => {
               </TableBody>
             </Table>
           </TableContainer>
+          <Modal
+        open={openModalMed}
+        onClose={handleCloseModalmedc}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box style={{ display:'absolute', marginTop: '100px', marginLeft: '400px',padding:'50px', texteAlign:'center',width:"400px",height:'300px',borderRadius:"15px",backgroundColor:"White" }} >
+        <Button onClick={handleCloseModalmedc} style={{ position: 'absolute', top: '8px', right: '8px' }}>
+            <CloseIcon />
+          </Button>
+
+          <Typography id="modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
+
+            Profil du médecin
+          </Typography>
+          {selectedMedecin && (
+            <Typography id="modal-description" sx={{ mt: 2 }}>
+              <strong>Nom:</strong> {selectedMedecin.medecin_nom} <br />
+              <strong>Prénom:</strong> {selectedMedecin.medecin_prenom} <br />
+              <strong>Email:</strong> {selectedMedecin.medecin_email} <br />
+              <strong>Spécialité:</strong> {selectedMedecin.medecin_specialite} <br />
+              <strong>Adresse:</strong> {selectedMedecin.medecin_adresse} <br />
+              <strong>Numéro de téléphone:</strong> {selectedMedecin.medecin_numero_tel} <br />
+            </Typography>
+          )}
+        </Box>
+      </Modal>
 
           {/* Bouton pour ajouter une nouvelle consultation */}
           <Button
@@ -1200,7 +1245,7 @@ const filteredConsultations = consultationsmed.filter((consultation) => {
         </Button>
         </Box>
        {/* Fenêtre modale pour ajouter une nouvelle consultation */}
-       <Dialog open={openAjouterConsultation} onClose={handleCloseAjouterConsultation}>
+       <Dialog open={openAjouterConsultation} onClose={handleCloseAjouterConsultation} className={classes.dialog}>
         <DialogTitle>Ajouter une nouvelle consultation</DialogTitle>
         <DialogContent>
           <TextField
@@ -1227,10 +1272,10 @@ const filteredConsultations = consultationsmed.filter((consultation) => {
           {/* Autres champs nécessaires */}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAjouterConsultation} color="secondary">
+          <Button onClick={handleCloseAjouterConsultation} >
             Annuler
           </Button>
-          <Button onClick={handleAjouterConsultation} color="primary">
+          <Button onClick={handleAjouterConsultation} className={classes.addButton}>
             Ajouter
           </Button>
         </DialogActions>
@@ -1283,12 +1328,23 @@ const filteredConsultations = consultationsmed.filter((consultation) => {
               ))}
             </TableBody>
           </Table>
-        </TableContainer>}
+          
+
+        </TableContainer> 
+        
+        }
+        {successMessageAnalyse && (
+  <Box mt={2}>
+    <Typography variant="body1" style={{ color: 'green' }}>
+      {successMessageAnalyse}
+    </Typography>
+  </Box>
+)}
         <Button variant="contained" color="primary" style={{ backgroundColor: '#0d3d6e', marginTop: 16 }} onClick={handleOpenAjouterAnalyse}>
   Ajouter
 </Button>
 
-<Dialog open={openAjouterAnalyse} onClose={handleCloseAjouterAnalyse}>
+<Dialog open={openAjouterAnalyse} onClose={handleCloseAjouterAnalyse} className={classes.dialog}>
   <DialogTitle>Ajouter une nouvelle analyse</DialogTitle>
   <DialogContent>
     <TextField
@@ -1360,10 +1416,13 @@ const filteredConsultations = consultationsmed.filter((consultation) => {
               margin="normal"
               fullWidth
             />
+            
             <Button variant="contained" onClick={handleAjouterNomAnalyse} color="primary">
               Ajouter
             </Button>
+        
           </div>
+          
         )}
   
     {/* Champs Marqueur, Résultat, Unité, Norme, Autres informations */}
@@ -1412,10 +1471,10 @@ const filteredConsultations = consultationsmed.filter((consultation) => {
     />
   </DialogContent>
   <DialogActions>
-    <Button onClick={handleCloseAjouterAnalyse} color="secondary">
+    <Button onClick={handleCloseAjouterAnalyse} >
       Annuler
     </Button>
-    <Button onClick={handleAjouterAnalyse} color="primary">
+    <Button onClick={handleAjouterAnalyse} className={classes.addButton}>
       Ajouter
     </Button>
   </DialogActions>

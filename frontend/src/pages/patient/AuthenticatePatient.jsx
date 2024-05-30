@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import imageform from "../../assets/la-personne.png";
 import { TextField, Button, Select, MenuItem, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useFontSize } from '../../context/FontSizeContext';
 import axios from 'axios';
 import '../../css/patientform.css';
 import background from '../../assets/stethoscope-capsules-bottle-grey-background.jpg';
@@ -15,7 +14,7 @@ const LOGIN_URL = 'http://localhost:9000/user/login';
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 function AuthenticatePatient() {
-  const { largeFont } = useFontSize();
+ 
   const { dispatch } = useAuthContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -100,7 +99,7 @@ function AuthenticatePatient() {
 
   return (
     <div>
-      <div className={`patient-page-container ${largeFont ? 'large-font' : ''}`}>
+      <div className='patient-page-container'>
         <div className="health-image">
           <img src={imageform} alt="Image santé" />
         </div>

@@ -7,10 +7,8 @@ import { FaHospitalUser } from "react-icons/fa";
 import { FaUserMd } from "react-icons/fa";
 import { IoHome } from "react-icons/io5";
 import { MdOutlineAlternateEmail } from "react-icons/md";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import LoginForm from "./Loginform"
-import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
-import { useFontSize } from '../context/FontSizeContext'; // Importez le hook du contexte
 import '../css/navbarstyle.css'; // Import du fichier CSS
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useAuthContextMED } from "../hooks/useAuthContextMed";
@@ -19,7 +17,6 @@ const Navbar = () => {
   const  {medecin} = useAuthContextMED()
 
   const location = useLocation();
-  const { largeFont, setLargeFont } = useFontSize(); // Utilisez le hook du contexte pour lire et mettre à jour l'état
   const [openMenu, setOpenMenu] = useState(false);
   
   const handleLogin = ({ email, password }) => {
@@ -27,9 +24,7 @@ const Navbar = () => {
     console.log("Password:", password);
 
   };
-  const toggleLargeFont = () => {
-    setLargeFont(!largeFont); // Inversez l'état de l'agrandissement du texte
-  };
+
   const menuOptions = [
     {
       text: "Accueil",
@@ -56,7 +51,7 @@ const Navbar = () => {
   ];
 
   return (
-      <header className={`navigation ${largeFont ? 'large-font' : ''}`}> {/* Appliquer une classe conditionnelle pour agrandir le texte */}
+      <header className="navigation "> {/* Appliquer une classe conditionnelle pour agrandir le texte */}
         <img className="nav-logo-container" src={Logo} alt="" />
         <nav className="navbar-links-container">
           {menuOptions.map((item, index) => (
@@ -94,9 +89,7 @@ const Navbar = () => {
         {(location.pathname === "/" ) && (
           <LoginForm onLogin={handleLogin} />
         )}
-                {/* Ajouter un bouton pour activer/désactiver l'agrandissement de la police */}
-                <button onClick={toggleLargeFont} className="font-size-toggle-button">Agrandir 
-                </button>
+          
       </header>
   )
 }

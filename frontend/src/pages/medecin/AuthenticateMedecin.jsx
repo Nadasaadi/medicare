@@ -1,26 +1,18 @@
 import React, { useState } from 'react';
 import { TextField, Button, IconButton, InputAdornment, Select, MenuItem, FormControl, InputLabel, Grid } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useFontSize } from '../../context/FontSizeContext';
 import '../../css/Styleprofissionel.css'; // Import du fichier CSS
 import axios from 'axios'; // Importez Axios
 import Footer from "../../components/Footer"
 import { useAuthContextMED } from "../../hooks/useAuthContextMed";
-import { countries } from 'countries-list';
+
 
 const SIGNUPM_URL = 'http://localhost:9000/medecin/signupM';
 const LOGINM_URL = 'http://localhost:9000/medecin//loginM';
-const specialtyList = [
-  'Médecine générale',
-  'Cardiologie',
-  'Dermatologie',
-  'Pédiatrie',
-  
-];
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 const AuthenticateMedecin = () => {
-  const { largeFont } = useFontSize();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nom, setNom] = useState('');
@@ -28,7 +20,6 @@ const AuthenticateMedecin = () => {
   const [specialite, setSpecialite] = useState('');
   const [adresse, setAdresse] = useState('');
   const [numero_tel, setNumero_tel] = useState('');
-  const [countryCode, setCountryCode] = useState('+213');
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -43,7 +34,7 @@ const AuthenticateMedecin = () => {
       setNumero_tel(value);
     }
   };
-  const handleCountryCodeChange = (e) => setCountryCode(e.target.value);
+ 
   const handleSpecialtyChange = (e) => setSpecialite(e.target.value === 'other' ? '' : e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
@@ -60,31 +51,34 @@ const AuthenticateMedecin = () => {
         return;
       }
       setEmailErrorMessage('');
-
+  
       if (isSignUp && password !== confirmPassword) {
         setErrorMessage('Le mot de passe et la confirmation du mot de passe ne correspondent pas.');
         return;
       }
-
+  
       const payload = {
         email, password, nom, prenom, specialite, adresse, numero_tel
       };
-
+  
       const url = isSignUp ? SIGNUPM_URL : LOGINM_URL;
       const response = await axios.post(url, payload);
-
+  
       if (response.data) {
         dispatch({ type: "loginM", payload: response.data });
         localStorage.setItem("medecin", JSON.stringify(response.data));
       }
     } catch (error) {
       if (error.response) {
-        setErrorMessage(error.response.data.message);
+
+          setErrorMessage('L\'adresse e-mail est déjà utilisée.');
+        
       } else {
         console.error('Error while submitting the form:', error);
       }
     }
   };
+  
   const getPasswordErrorMessage = () => {
     if (isSignUp) {
       if (password.length < 8) {
@@ -103,7 +97,7 @@ const AuthenticateMedecin = () => {
 
   return (
     <>
-      <div className={`professional-page ${largeFont ? 'large-font' : ''}`}>
+      <div className='professional-page'>
         <div className="form-section">
           <h1>Bienvenue dans notre espace professionnel!</h1>
           <form onSubmit={handleFormSubmit}>

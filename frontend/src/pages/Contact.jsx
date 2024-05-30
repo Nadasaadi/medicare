@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../css/Stylecontact.css';
 import axios from 'axios';
-import { useFontSize } from '../context/FontSizeContext';
+
 import TextField from '@material-ui/core/TextField';
 import Footer from "../components/Footer"
 const CONTACT_URL = 'http://localhost:9000/contact/';
@@ -9,7 +9,7 @@ const CONTACT_URL = 'http://localhost:9000/contact/';
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Contact = () => {
-  const { largeFont } = useFontSize();
+
   const questions = [
     { id: 1, question: "Où puis-je trouver mes résultats d'analyses ?", response: " Vos résultats d'analyses seront disponibles dans la section Analyse de votre dossier médical en ligne, généralement dans les 24 à 48 heures suivant les tests." },
     { id: 2, question: " Comment mettre à jour mes informations personnelles ?", response: " Vous pouvez mettre à jour vos informations personnelles en vous connectant à votre compte professionnel et en sélectionnant l'option Modifier les informations personnelles." },
@@ -51,7 +51,7 @@ const Contact = () => {
   };
 
   return (
-    <div className={`container ${largeFont ? 'large-font' : ''}`}>
+    <div className='container'>
       <h1>Contactez-nous</h1>
       <div className="questions-container">
         <h2>Questions fréquentes</h2>
